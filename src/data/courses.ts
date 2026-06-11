@@ -13,6 +13,8 @@ export interface CourseSegment {
   subtitle: string;
   description: string;
   audience: string;
+  /** Logomarca oficial do segmento (arquivo em /public). */
+  logo?: { src: string; alt: string };
   groups: { label: string; classes: CourseClass[] }[];
 }
 
@@ -69,6 +71,7 @@ export const segments: CourseSegment[] = [
     description:
       'Indicado para adolescentes a partir de 12 anos, com foco em aulas dinâmicas e divertidas, onde a meta é aprender de forma rápida e interativa. Inglês para quem não perde tempo: essa é a idade de aproveitar a vida — sem perder o foco no futuro. As turmas conciliam a precisão do Método Callan com a imersão e a diversão que esse público não abre mão.',
     audience: 'A partir de 12 anos',
+    logo: { src: '/logo-teens.png', alt: 'English Academy Teens' },
     groups: [
       {
         label: 'Turmas Teens',
@@ -91,6 +94,7 @@ export const segments: CourseSegment[] = [
     description:
       'Aulas lúdicas, divertidas e diretas com o Callan For Kids. Não perca essa fase especial: aproveite a melhor fase da vida para seu filho aprender inglês de verdade. A infância é o período ideal para a absorção de uma segunda língua — um investimento que renderá frutos por toda a vida.',
     audience: 'A partir de 4 anos',
+    logo: { src: '/logo-kids.png', alt: 'Kids Academy' },
     groups: [
       {
         label: 'Turmas Kids',

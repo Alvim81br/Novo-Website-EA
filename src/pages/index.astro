@@ -160,21 +160,25 @@ const faqSchema = {
           </p>
         </div>
 
-        <!-- Aluna em destaque -->
+        <!-- Aluna em destaque (recorte sem fundo) -->
         <div class="reveal relative mx-auto w-full max-w-sm lg:max-w-md" id="hero-aluna">
-          <div class="absolute -inset-3 rotate-3 rounded-[2rem] border-2 border-gold-400/40" aria-hidden="true"></div>
+          <!-- Brilho e palco atrás da aluna -->
+          <div class="absolute inset-x-8 top-10 bottom-0 rounded-full bg-gradient-to-b from-gold-400/30 via-red-ea/20 to-transparent blur-2xl" aria-hidden="true"></div>
+          <div class="absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2.5rem] border-2 border-white/15 sm:h-80 sm:w-80" aria-hidden="true"></div>
           <img
-            src="/aluna-yasmin.jpg"
+            src="/aluna-yasmin.webp"
             alt="Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan"
-            class="relative w-full rounded-[2rem] object-cover shadow-2xl ring-1 ring-white/20"
-            width="800"
-            height="1000"
+            class="relative z-10 w-full drop-shadow-[0_24px_36px_rgba(0,10,40,0.55)]"
+            width="900"
+            height="1350"
             loading="eager"
             decoding="async"
             fetchpriority="high"
             onerror="document.getElementById('hero-aluna').style.display='none'"
           />
-          <div class="absolute right-4 -bottom-6 left-4 rounded-2xl bg-white p-4 shadow-xl sm:left-auto sm:w-72">
+          <!-- Sombra de apoio -->
+          <div class="absolute bottom-1 left-1/2 z-0 h-6 w-3/4 -translate-x-1/2 rounded-full bg-navy-950/50 blur-md" aria-hidden="true"></div>
+          <div class="absolute bottom-6 left-0 z-20 rounded-2xl bg-white p-4 shadow-xl sm:-left-6">
             <p class="font-display text-lg font-extrabold text-navy-700">Yasmin Victória, 15 anos</p>
             <p class="mt-0.5 flex items-center gap-2 text-sm font-semibold text-red-ea">
               <span class="inline-block h-2 w-2 rounded-full bg-red-ea" aria-hidden="true"></span>

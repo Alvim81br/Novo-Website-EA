@@ -58,14 +58,19 @@ import { defaultWhatsappLink } from '../../data/units';
               <p class="mt-3 font-display text-xl font-semibold text-gold-600">{segment.subtitle}</p>
               <p class="mt-4 text-lg leading-relaxed text-gray-600">{segment.description}</p>
             </div>
-            {segment.logo && (
-              <img
-                src={segment.logo.src}
-                alt={segment.logo.alt}
-                class="h-28 w-auto shrink-0 sm:h-36"
-                loading="lazy"
-                decoding="async"
-              />
+            {segment.logos && (
+              <div class="flex shrink-0 items-center gap-6">
+                {segment.logos.map((logo) => (
+                  <img
+                    src={logo.src}
+                    alt={logo.alt}
+                    class="h-28 w-auto sm:h-36"
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.style.display='none'"
+                  />
+                ))}
+              </div>
             )}
           </div>
 

@@ -7,7 +7,7 @@ const isActive = (href: string) =>
   href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 
-<header class="sticky top-0 z-50 bg-white/95 shadow-md backdrop-blur-sm">
+<header class="sticky top-0 z-50 bg-navy-900/95 shadow-md backdrop-blur-sm">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-8">
     <a href="/" aria-label="English Academy — Página inicial" class="shrink-0">
       <Logo class="h-11 w-auto" />
@@ -21,8 +21,8 @@ const isActive = (href: string) =>
             class:list={[
               'rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
               isActive(item.href)
-                ? 'text-navy-700 bg-navy-50'
-                : 'text-gray-700 hover:text-navy-700 hover:bg-navy-50/60',
+                ? 'text-white bg-white/15'
+                : 'text-navy-100 hover:text-white hover:bg-white/10',
             ]}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -42,7 +42,7 @@ const isActive = (href: string) =>
 
       <button
         id="menu-toggle"
-        class="rounded-lg p-2 text-navy-700 hover:bg-navy-50 lg:hidden"
+        class="rounded-lg p-2 text-white hover:bg-white/10 lg:hidden"
         aria-label="Abrir menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
@@ -54,7 +54,7 @@ const isActive = (href: string) =>
     </div>
   </div>
 
-  <nav id="mobile-menu" class="hidden border-t border-gray-100 bg-white lg:hidden" aria-label="Menu móvel">
+  <nav id="mobile-menu" class="hidden border-t border-white/10 bg-navy-900 lg:hidden" aria-label="Menu móvel">
     <div class="space-y-1 px-4 py-4">
       {
         nav.map((item) => (
@@ -62,7 +62,7 @@ const isActive = (href: string) =>
             href={item.href}
             class:list={[
               'block rounded-lg px-4 py-3 font-semibold',
-              isActive(item.href) ? 'bg-navy-50 text-navy-700' : 'text-gray-700 hover:bg-navy-50',
+              isActive(item.href) ? 'bg-white/15 text-white' : 'text-navy-100 hover:bg-white/10',
             ]}
           >
             {item.label}

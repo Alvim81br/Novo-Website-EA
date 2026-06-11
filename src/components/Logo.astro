@@ -1,15 +1,14 @@
 ---
 // Logomarca oficial da English Academy: escudo (PNG em /public/logo-ea.png)
-// acompanhado do wordmark em texto para legibilidade em tamanhos pequenos.
+// com wordmark na tipografia da marca — "ENGLISH" em Cinzel (serifada clássica,
+// branca) e "ACADEMY" em Montserrat espaçada (dourada), como na arte oficial.
 interface Props {
   class?: string;
-  light?: boolean;
 }
-const { class: className = 'h-10', light = false } = Astro.props;
-const englishColor = light ? '#ffffff' : '#00327D';
+const { class: className = 'h-10' } = Astro.props;
 ---
 
-<span class={`flex items-center gap-2.5 ${className}`}>
+<span class={`flex items-center gap-3 ${className}`}>
   <img
     src="/logo-ea.png"
     alt="English Academy"
@@ -21,10 +20,7 @@ const englishColor = light ? '#ffffff' : '#00327D';
     onerror="this.style.display='none'"
   />
   <span class="flex flex-col justify-center leading-none" aria-hidden="true">
-    <span
-      class="font-display text-[1.15em] font-bold tracking-wide"
-      style={`color: ${englishColor}`}>ENGLISH</span>
-    <span
-      class="font-display mt-1 text-[0.78em] font-medium tracking-[0.35em] text-[#CFA13F]">ACADEMY</span>
+    <span class="font-brand text-[1.2em] font-bold tracking-wide text-white">ENGLISH</span>
+    <span class="font-display mt-1 text-[0.72em] font-medium tracking-[0.42em] text-[#CFA13F]">ACADEMY</span>
   </span>
 </span>

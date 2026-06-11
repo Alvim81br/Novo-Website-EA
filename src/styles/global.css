@@ -28,6 +28,8 @@
 
   --font-display: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Lato', ui-sans-serif, system-ui, sans-serif;
+  /* Tipografia do wordmark da logo (serifada clássica, estilo Trajan) */
+  --font-brand: 'Cinzel', 'Times New Roman', serif;
 }
 
 html {

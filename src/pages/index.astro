@@ -160,32 +160,47 @@ const faqSchema = {
           </p>
         </div>
 
-        <!-- Painel de prova social no hero -->
-        <div class="reveal rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-          <p class="font-display text-sm font-bold tracking-widest text-gold-300 uppercase">The Best English Experience</p>
-          <div class="mt-6 grid grid-cols-2 gap-6">
-            <div>
-              <p class="font-display text-4xl font-extrabold text-white">+7 mil</p>
-              <p class="mt-1 text-sm text-navy-100">alunos rumo à fluência</p>
-            </div>
-            <div>
-              <p class="font-display text-4xl font-extrabold text-white">8</p>
-              <p class="mt-1 text-sm text-navy-100">unidades no PA, MA e online</p>
-            </div>
-            <div>
-              <p class="font-display text-4xl font-extrabold text-white">+40</p>
-              <p class="mt-1 text-sm text-navy-100">países usam o Método Callan</p>
-            </div>
-            <div>
-              <p class="font-display text-4xl font-extrabold text-white">+12</p>
-              <p class="mt-1 text-sm text-navy-100">anos de resultados comprovados</p>
-            </div>
-          </div>
-          <div class="mt-6 border-t border-white/10 pt-5">
-            <p class="text-sm text-navy-100 italic">
-              “Inglês de verdade é na English Academy.”
+        <!-- Aluna em destaque -->
+        <div class="reveal relative mx-auto w-full max-w-sm lg:max-w-md" id="hero-aluna">
+          <div class="absolute -inset-3 rotate-3 rounded-[2rem] border-2 border-gold-400/40" aria-hidden="true"></div>
+          <img
+            src="/aluna-yasmin.jpg"
+            alt="Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan"
+            class="relative w-full rounded-[2rem] object-cover shadow-2xl ring-1 ring-white/20"
+            width="800"
+            height="1000"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            onerror="document.getElementById('hero-aluna').style.display='none'"
+          />
+          <div class="absolute right-4 -bottom-6 left-4 rounded-2xl bg-white p-4 shadow-xl sm:left-auto sm:w-72">
+            <p class="font-display text-lg font-extrabold text-navy-700">Yasmin Victória, 15 anos</p>
+            <p class="mt-0.5 flex items-center gap-2 text-sm font-semibold text-red-ea">
+              <span class="inline-block h-2 w-2 rounded-full bg-red-ea" aria-hidden="true"></span>
+              Aluna English Academy
             </p>
           </div>
+        </div>
+      </div>
+
+      <!-- Faixa de prova social -->
+      <div class="reveal mt-20 grid grid-cols-2 gap-6 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm sm:grid-cols-4">
+        <div>
+          <p class="font-display text-3xl font-extrabold text-white sm:text-4xl">+7 mil</p>
+          <p class="mt-1 text-sm text-navy-100">alunos rumo à fluência</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl font-extrabold text-white sm:text-4xl">8</p>
+          <p class="mt-1 text-sm text-navy-100">unidades no PA, MA e online</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl font-extrabold text-white sm:text-4xl">+40</p>
+          <p class="mt-1 text-sm text-navy-100">países usam o Método Callan</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl font-extrabold text-white sm:text-4xl">+12</p>
+          <p class="mt-1 text-sm text-navy-100">anos de resultados comprovados</p>
         </div>
       </div>
     </div>

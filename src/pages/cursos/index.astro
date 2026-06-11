@@ -59,12 +59,12 @@ import { defaultWhatsappLink } from '../../data/units';
               <p class="mt-4 text-lg leading-relaxed text-gray-600">{segment.description}</p>
             </div>
             {segment.logos && (
-              <div class="flex shrink-0 items-center gap-6">
+              <div class="flex shrink-0 flex-col items-center gap-5">
                 {segment.logos.map((logo) => (
                   <img
                     src={logo.src}
                     alt={logo.alt}
-                    class="h-28 w-auto sm:h-36"
+                    class:list={['w-auto', logo.heightClass ?? 'h-28 sm:h-36']}
                     loading="lazy"
                     decoding="async"
                     onerror="this.style.display='none'"

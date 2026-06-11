@@ -14,7 +14,7 @@ export interface CourseSegment {
   description: string;
   audience: string;
   /** Logomarcas oficiais do segmento (arquivos em /public). */
-  logos?: { src: string; alt: string }[];
+  logos?: { src: string; alt: string; heightClass?: string }[];
   groups: { label: string; classes: CourseClass[] }[];
 }
 
@@ -96,7 +96,7 @@ export const segments: CourseSegment[] = [
     audience: 'A partir de 4 anos',
     logos: [
       { src: '/logo-kids.png', alt: 'Kids Academy' },
-      { src: '/logo-callanforkids.png', alt: 'Callan for Kids' },
+      { src: '/logo-callanforkids.png', alt: 'Callan for Kids', heightClass: 'h-12 sm:h-14' },
     ],
     groups: [
       {

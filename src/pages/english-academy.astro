@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTABand from '../components/CTABand.astro';
+
+const vantagens = [
+  {
+    title: 'Método Callan',
+    text: 'Método consagrado mundialmente: eficaz, rápido e consistente no ensino de idiomas.',
+  },
+  {
+    title: 'Instrutores Qualificados',
+    text: 'Time de professores muito experiente com o Callan, treinados pela Callan Organisation — alguns nativos e vários com vivência no exterior.',
+  },
+  {
+    title: 'Economize Conosco',
+    text: 'Menor custo pela maior carga horária — e preço fixo do início ao fim do contrato.',
+  },
+  {
+    title: 'Aulas Todos os Dias',
+    text: 'Estudar inglês todos os dias faz toda a diferença no aprendizado.',
+  },
+  {
+    title: 'English Passport',
+    text: 'Estude até o dobro de carga horária pagando apenas o valor contratado.',
+  },
+  {
+    title: 'Turmas Reduzidas',
+    text: 'Mais atenção: estude com menos alunos que as escolas tradicionais.',
+  },
+];
+
+const valores = [
+  {
+    name: 'Keep Rising',
+    title: 'Desenvolvimento Contínuo',
+    text: 'Ninguém chega ao topo, porque o topo está sempre subindo. Cada aula dada, cada erro corrigido, cada feedback recebido é combustível para a próxima versão de nós mesmos. Todo dia escolhemos aprender, evoluir e subir mais um degrau.',
+  },
+  {
+    name: 'Always Do My Best!',
+    title: 'Excelência em Tudo que Fazemos',
+    text: 'Bom não basta. Aceitável não basta. Nosso padrão é dar o melhor sempre, em tudo, sem exceção — da forma como cumprimentamos um aluno até a preparação de cada aula. Excelência não é um momento de inspiração: é um hábito diário.',
+  },
+  {
+    name: 'Rise Up!',
+    title: 'Resultados Excepcionais',
+    text: 'Trabalhamos por resultados que importam — para o aluno, para a equipe e para a escola. Não nos contentamos com o suficiente: queremos metas superadas e crescimento que se sustenta no tempo.',
+  },
+  {
+    name: 'Unleash the Amazing',
+    title: 'Experiência Incrível',
+    text: 'Cada pessoa que cruza o caminho da English Academy merece sair transformada. Nosso trabalho não é apenas ensinar inglês: é criar momentos inesquecíveis em cada interação, em cada detalhe, em cada conversa.',
+  },
+  {
+    name: 'Together We Rise',
+    title: 'Equipe Unida e Engajada',
+    text: 'Ninguém constrói algo grande sozinho. Celebramos vitórias juntos, enfrentamos desafios juntos e crescemos juntos. Quando um sobe, todos sobem.',
+  },
+];
+---
+
+<BaseLayout
+  title="A English Academy — Nossa História, DNA e Valores | English Academy"
+  description="Fundada em 2013, a English Academy é a maior rede de escolas de inglês da região Norte: 8 unidades, 120 colaboradores e milhares de alunos rumo à fluência com o Método Callan."
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-navy-800 py-20 lg:py-24">
+    <div class="absolute inset-0 opacity-10" aria-hidden="true">
+      <div class="absolute -top-20 right-10 h-80 w-80 rounded-full bg-gold-400 blur-3xl"></div>
+    </div>
+    <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Student Experience</p>
+      <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+        Viva a melhor <span class="text-gold-400">experiência</span> que uma escola de inglês pode oferecer
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
+        Inglês de verdade é na English Academy — uma combinação de método, gente e cuidado com cada detalhe
+        que você só encontra aqui.
+      </p>
+    </div>
+  </section>
+
+  <!-- História -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div class="reveal">
+          <p class="text-sm font-bold tracking-widest text-red-ea uppercase">Nossa História</p>
+          <h2 class="mt-2 text-3xl font-bold text-navy-700 sm:text-4xl">De Dublin para o Norte do Brasil</h2>
+          <div class="mt-6 space-y-4 text-lg leading-relaxed text-gray-600">
+            <p>
+              Fundada em <strong class="text-navy-700">2013 por Ismael Alvim</strong>, a English Academy nasceu de uma
+              experiência transformadora em <strong class="text-navy-700">Dublin, Irlanda</strong>, onde nosso fundador
+              conheceu o consagrado Método Callan.
+            </p>
+            <p>
+              Reconhecendo o potencial desta metodologia para transformar o ensino de inglês, ele trouxe o método
+              para o Norte do país, estabelecendo a primeira escola em <strong class="text-navy-700">Parauapebas</strong>.
+            </p>
+            <p>
+              Hoje somos a maior rede de escolas de inglês da região Norte — uma <strong class="text-navy-700">Accredited
+              School</strong> da Callan Method Organisation desde 2013, ensinando inglês e espanhol de forma exclusiva
+              nas cidades onde atuamos.
+            </p>
+          </div>
+        </div>
+        <div class="reveal grid grid-cols-2 gap-5">
+          <div class="rounded-2xl bg-navy-700 p-7 text-center">
+            <p class="font-display text-5xl font-extrabold text-gold-400">08</p>
+            <p class="mt-2 font-semibold text-white">unidades estrategicamente localizadas</p>
+          </div>
+          <div class="rounded-2xl bg-gold-400 p-7 text-center">
+            <p class="font-display text-5xl font-extrabold text-navy-900">120</p>
+            <p class="mt-2 font-semibold text-navy-900">colaboradores dedicados</p>
+          </div>
+          <div class="col-span-2 rounded-2xl border-2 border-navy-100 bg-navy-50 p-7 text-center">
+            <p class="font-display text-5xl font-extrabold text-navy-700">+7 mil</p>
+            <p class="mt-2 font-semibold text-navy-700">alunos em sua jornada rumo à fluência</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vantagens -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Inglês de verdade é aqui"
+        title="Uma combinação de vantagens que você só encontra aqui"
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          vantagens.map((item) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gold-100 text-gold-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7" />
+                </svg>
+              </span>
+              <h3 class="mt-4 font-display text-lg font-bold text-navy-700">{item.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- DNA -->
+  <section class="bg-navy-800 py-20">
+    <div class="mx-auto max-w-5xl px-4 lg:px-8">
+      <SectionHeading eyebrow="Nosso DNA" title="Por que existimos" light />
+      <div class="mt-12 grid gap-8 md:grid-cols-2">
+        <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-8">
+          <h3 class="font-display text-xl font-bold text-gold-300">Intenção Aspiracional</h3>
+          <p class="mt-3 leading-relaxed text-navy-100">
+            Levar aprendizado de verdade ao maior número possível de pessoas — porque uma língua nova nunca é
+            só um idioma. É uma porta que se abre, uma oportunidade que se cria, um futuro que se transforma.
+            Queremos ser parte da história de quem decide ir mais longe, em qualquer fase da vida.
+          </p>
+        </div>
+        <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-8">
+          <h3 class="font-display text-xl font-bold text-gold-300">Nosso Compromisso</h3>
+          <p class="mt-3 leading-relaxed text-navy-100">
+            Entregar o melhor ensino de inglês e espanhol do mercado — com fluência rápida, metodologia que
+            funciona de verdade e uma experiência tão marcante que faz o aluno voltar, indicar e contar para
+            todo mundo. Fazer cada aluno chegar mais longe, mais rápido e com mais prazer no caminho.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Valores -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Valores Fundamentais"
+        title="A forma como pensamos, agimos e construímos todos os dias"
+        subtitle="Nossos valores não são frases em uma parede — eles guiam cada decisão, cada aula, cada interação."
+      />
+      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          valores.map((valor, index) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <p class="font-display text-sm font-extrabold tracking-wider text-red-ea uppercase">
+                {String(index + 1).padStart(2, '0')} · {valor.name}
+              </p>
+              <h3 class="mt-2 font-display text-lg font-bold text-navy-700">{valor.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{valor.text}</p>
+            </div>
+          ))
+        }
+        <div class="reveal flex flex-col justify-center rounded-2xl bg-navy-900 p-7">
+          <p class="font-display text-sm font-extrabold tracking-wider text-gold-400 uppercase">06 · Don't Be Boring</p>
+          <h3 class="mt-2 font-display text-lg font-bold text-white">O segredo que a gente não imprime em quadro</h3>
+          <p class="mt-2 leading-relaxed text-navy-100">
+            É o tempero que faz uma aula virar lembrança e uma rotina virar experiência. Pode fazer tudo certo —
+            mas se for chato, não é English Academy. <span class="text-gold-300 italic">Quem entende, entende.</span> 😉
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Venha viver essa experiência de perto"
+    subtitle="Conheça nossa escola, converse com nossos professores e veja o Método Callan em ação — na aula experimental gratuita."
+  />
+</BaseLayout>

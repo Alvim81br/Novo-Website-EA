@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { testimonials } from '../data/testimonials';
+import TestimonialCard from '../components/TestimonialCard.astro';
+---
+
+<BaseLayout
+  title="Aula Experimental Grátis — Agende Agora | English Academy"
+  description="Agende sua aula experimental gratuita de 45 minutos e conheça o Método Callan na prática — sem nenhuma obrigação de matrícula. Veja por que ensinamos inglês 4x mais rápido."
+>
+  <section class="relative overflow-hidden bg-navy-800 py-16 lg:py-20">
+    <div class="absolute inset-0 opacity-10" aria-hidden="true">
+      <div class="absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-gold-400 blur-3xl"></div>
+      <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="grid items-start gap-12 lg:grid-cols-2">
+        <div class="lg:sticky lg:top-28">
+          <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">The Best English Experience</p>
+          <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+            Conheça nosso método em uma <span class="text-gold-400">aula gratuita</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-navy-100">
+            Conheça o Método Callan na prática e veja por que ele é considerado uma das melhores metodologias
+            de ensino de inglês e espanhol do mundo.
+          </p>
+          <ul class="mt-8 space-y-4">
+            <li class="flex items-center gap-3 text-white">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400 font-bold text-navy-900">✓</span>
+              <span><strong>45 minutos</strong> de aula completa com nossos professores</span>
+            </li>
+            <li class="flex items-center gap-3 text-white">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400 font-bold text-navy-900">✓</span>
+              <span><strong>Totalmente gratuita</strong> — investimento zero para conhecer o método</span>
+            </li>
+            <li class="flex items-center gap-3 text-white">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400 font-bold text-navy-900">✓</span>
+              <span><strong>Sem compromisso</strong> — nenhuma obrigação de se matricular</span>
+            </li>
+            <li class="flex items-center gap-3 text-white">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400 font-bold text-navy-900">✓</span>
+              <span><strong>Presencial ou online</strong> — você escolhe a unidade</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="reveal rounded-3xl bg-white p-8 shadow-2xl lg:p-10">
+          <h2 class="font-display text-2xl font-bold text-navy-700">Agende sua aula experimental</h2>
+          <p class="mt-2 text-sm text-gray-600">
+            Preencha seus dados e nossa equipe entrará em contato pelo WhatsApp para confirmar o melhor dia e horário.
+          </p>
+          <div class="mt-6">
+            <LeadForm />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <h2 class="reveal text-center text-3xl font-bold text-navy-700">Quem fez, recomenda</h2>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {testimonials.slice(0, 3).map((testimonial) => <TestimonialCard testimonial={testimonial} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

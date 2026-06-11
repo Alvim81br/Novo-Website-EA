@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTABand from '../components/CTABand.astro';
+import UnitCard from '../components/UnitCard.astro';
+import { units } from '../data/units';
+import { site } from '../data/site';
+
+const unitsSchema = units
+  .filter((unit) => !unit.online)
+  .map((unit) => ({
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: `English Academy — ${unit.name}`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: unit.address,
+      addressLocality: unit.city,
+      addressRegion: unit.state,
+      addressCountry: 'BR',
+    },
+    telephone: unit.whatsapp[0],
+    parentOrganization: { '@type': 'EducationalOrganization', name: site.name, url: site.url },
+  }));
+---
+
+<BaseLayout
+  title="Unidades — Parauapebas, Marabá, Canaã, Belém, Imperatriz e Online | English Academy"
+  description="Encontre a unidade da English Academy mais próxima de você no Pará e Maranhão — Parauapebas, Marabá, Canaã dos Carajás, Belém e Imperatriz — ou estude online ao vivo de qualquer lugar do Brasil."
+  schema={unitsSchema}
+>
+  <section class="relative overflow-hidden bg-navy-800 py-20 lg:py-24">
+    <div class="absolute inset-0 opacity-10" aria-hidden="true">
+      <div class="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400 blur-3xl"></div>
+    </div>
+    <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Pará · Maranhão · Online</p>
+      <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+        Conheça nossas <span class="text-gold-400">unidades</span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
+        A maior rede de escolas de inglês da região Norte — encontre a unidade mais próxima de você
+        ou estude online ao vivo de qualquer lugar do Brasil.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {units.map((unit) => <UnitCard unit={unit} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-5xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Não mora perto de uma unidade?"
+        title="Estude online e ao vivo com a English Academy Live"
+        subtitle="A mesma metodologia, os mesmos professores treinados pela Callan Organisation — de qualquer lugar do Brasil."
+      />
+      <div class="reveal mt-10 text-center">
+        <a
+          href={site.livePlatform}
+          target="_blank"
+          rel="noopener"
+          class="inline-block rounded-full bg-navy-700 px-8 py-4 font-bold text-white transition hover:bg-navy-600"
+        >
+          Conhecer a English Academy Live →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand />
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Página não encontrada | English Academy" description="A página que você procura não existe.">
+  <section class="flex min-h-[60vh] items-center bg-navy-800">
+    <div class="mx-auto max-w-2xl px-4 py-20 text-center">
+      <p class="font-display text-8xl font-extrabold text-gold-400">404</p>
+      <h1 class="mt-4 text-3xl font-bold text-white">Oops! Page not found.</h1>
+      <p class="mt-4 text-lg text-navy-100">
+        A página que você procura não existe — mas a fluência que você procura está logo ali. 😉
+      </p>
+      <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+        <a
+          href="/"
+          class="rounded-full bg-gold-400 px-8 py-3.5 font-bold text-navy-900 transition hover:bg-gold-300"
+        >
+          Voltar para a Home
+        </a>
+        <a
+          href="/aula-experimental/"
+          class="rounded-full border-2 border-white/30 px-8 py-3.5 font-bold text-white transition hover:bg-white/10"
+        >
+          Agendar Aula Grátis
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

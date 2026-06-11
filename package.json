@@ -1,0 +1,20 @@
+{
+  "name": "english-academy-website",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Website oficial da English Academy — Curso de Inglês 4x Mais Rápido com o Método Callan",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.4.1",
+    "@fontsource/lato": "^5.2.5",
+    "@fontsource/montserrat": "^5.2.5",
+    "@tailwindcss/vite": "^4.1.10",
+    "astro": "^5.10.0",
+    "tailwindcss": "^4.1.10"
+  }
+}

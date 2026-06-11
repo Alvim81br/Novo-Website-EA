@@ -98,15 +98,31 @@ const faqSchema = {
   schema={faqSchema}
 >
   <!-- ===== HERO ===== -->
-  <section class="relative overflow-hidden bg-navy-800">
+  <section class="hero-gradient relative overflow-hidden">
     <div class="absolute inset-0" aria-hidden="true">
-      <div class="absolute -top-32 right-0 h-[28rem] w-[28rem] rounded-full bg-navy-600/40 blur-3xl"></div>
+      <!-- Brilhos de profundidade -->
+      <div class="absolute -top-32 right-0 h-[30rem] w-[30rem] rounded-full bg-red-ea/30 blur-3xl"></div>
       <div class="absolute bottom-0 -left-32 h-[24rem] w-[24rem] rounded-full bg-gold-400/15 blur-3xl"></div>
+      <!-- Losangos geométricos (lado direito) -->
+      <div class="absolute top-1/2 right-[-6rem] hidden h-[26rem] w-[26rem] -translate-y-1/2 rotate-45 rounded-3xl border-2 border-white/15 lg:block"></div>
+      <div class="absolute top-1/2 right-[-2rem] hidden h-[19rem] w-[19rem] -translate-y-1/2 rotate-45 rounded-3xl border-2 border-white/10 lg:block"></div>
+      <div class="absolute top-[12%] right-[34%] hidden h-24 w-24 rotate-45 rounded-xl border-2 border-gold-400/30 lg:block"></div>
+      <!-- Estrelas/brilhos -->
+      <span class="absolute top-[18%] left-[55%] hidden text-2xl text-gold-300/60 lg:block">✦</span>
+      <span class="absolute top-[70%] left-[48%] hidden text-base text-white/40 lg:block">✦</span>
+      <span class="absolute top-[26%] right-[8%] hidden text-xl text-white/50 lg:block">✦</span>
+      <span class="absolute bottom-[22%] right-[30%] hidden text-sm text-gold-300/50 lg:block">✦</span>
+      <!-- Textura pontilhada -->
       <div
-        class="absolute inset-0 opacity-[0.04]"
+        class="absolute inset-0 opacity-[0.05]"
         style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 28px 28px;"
       >
       </div>
+      <!-- Nuvens decorativas na base (transição para a seção branca) -->
+      <div class="absolute -bottom-24 -right-16 h-48 w-48 rounded-full bg-white/95"></div>
+      <div class="absolute -bottom-32 right-16 h-52 w-52 rounded-full bg-white/90"></div>
+      <div class="absolute -bottom-28 right-44 h-40 w-40 rounded-full bg-white/80"></div>
+      <div class="absolute -bottom-36 right-72 h-44 w-44 rounded-full bg-white/60"></div>
     </div>
 
     <div class="relative mx-auto max-w-7xl px-4 py-20 lg:px-8 lg:py-28">
@@ -126,7 +142,7 @@ const faqSchema = {
           <div class="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
               href="/aula-experimental/"
-              class="rounded-full bg-gold-400 px-8 py-4 text-center text-base font-bold text-navy-900 shadow-lg transition hover:bg-gold-300 hover:shadow-2xl"
+              class="rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:bg-red-ea-dark hover:shadow-2xl"
             >
               Agendar Aula Experimental Grátis
             </a>

@@ -36,6 +36,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Hero da home: gradiente diagonal navy → vermelho EA (identidade visual) */
+.hero-gradient {
+  background: linear-gradient(
+    112deg,
+    var(--color-navy-950) 0%,
+    var(--color-navy-800) 42%,
+    var(--color-navy-700) 58%,
+    #7c1a32 78%,
+    var(--color-red-ea) 100%
+  );
+}
+
 body {
   font-family: var(--font-body);
   color: #1f2937;

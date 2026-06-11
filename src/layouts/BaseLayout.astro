@@ -88,6 +88,35 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
         { threshold: 0.12 }
       );
       document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+      // Anima números [data-counter] contando de 0 até o valor final ao entrar na tela
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            counterObserver.unobserve(entry.target);
+            const el = entry.target as HTMLElement;
+            const original = (el.textContent ?? '').trim();
+            const match = original.match(/^([^\d]*)(\d+)(.*)$/);
+            if (!match || reduceMotion) continue;
+            const [, prefix, numStr, suffix] = match;
+            const target = parseInt(numStr, 10);
+            const duration = 1400;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const t = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - t, 3);
+              el.textContent = prefix + Math.round(target * eased) + suffix;
+              if (t < 1) requestAnimationFrame(tick);
+              else el.textContent = original;
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.6 }
+      );
+      document.querySelectorAll('[data-counter]').forEach((el) => counterObserver.observe(el));
     </script>
   </body>
 </html>

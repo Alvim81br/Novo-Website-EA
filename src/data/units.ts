@@ -40,6 +40,16 @@ export const units: Unit[] = [
     instagram: 'english_academy_br',
   },
   {
+    id: 'parauapebas-carajas',
+    city: 'Parauapebas',
+    name: 'Parauapebas — Carajás',
+    state: 'PA',
+    address: 'R. Guamá, 25 — CEP 68515-000',
+    whatsapp: ['(94) 98111-7246'],
+    whatsappLink: wa('94981117246'),
+    instagram: 'english_academy_br',
+  },
+  {
     id: 'belem-nazare',
     city: 'Belém',
     name: 'Belém — Nazaré',

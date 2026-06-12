@@ -29,9 +29,19 @@ const unitsSchema = units
   description="Encontre a unidade da English Academy mais próxima de você no Pará e Maranhão — Parauapebas, Marabá, Canaã dos Carajás, Belém e Imperatriz — ou estude online ao vivo de qualquer lugar do Brasil."
   schema={unitsSchema}
 >
-  <section class="relative overflow-hidden bg-navy-800 py-20 lg:py-24">
-    <div class="absolute inset-0 opacity-10" aria-hidden="true">
-      <div class="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400 blur-3xl"></div>
+  <section class="hero-grad-unidades relative overflow-hidden py-20 lg:py-24">
+    <div class="absolute inset-0" aria-hidden="true">
+      <!-- Rota pontilhada conectando as unidades -->
+      <svg class="absolute inset-x-0 top-1/2 h-40 w-full -translate-y-1/2 opacity-30" viewBox="0 0 1440 160" fill="none" preserveAspectRatio="none">
+        <path d="M-20 120 C 240 30, 480 150, 720 70 S 1200 20, 1460 90" stroke="#CFA13F" stroke-width="2.5" stroke-dasharray="2 12" stroke-linecap="round"/>
+      </svg>
+      <!-- Pinos de mapa estilizados -->
+      <div class="animate-float absolute top-[24%] left-[12%] h-4 w-4 rounded-full bg-gold-400/80 ring-4 ring-gold-400/25"></div>
+      <div class="animate-float absolute top-[58%] left-[34%] h-3 w-3 rounded-full bg-white/70 ring-4 ring-white/20" style="animation-delay: 1.2s"></div>
+      <div class="animate-float absolute top-[30%] right-[20%] h-4 w-4 rounded-full bg-red-ea/80 ring-4 ring-red-ea/25" style="animation-delay: 0.6s"></div>
+      <div class="animate-float absolute bottom-[20%] right-[36%] h-3 w-3 rounded-full bg-gold-400/70 ring-4 ring-gold-400/20" style="animation-delay: 1.8s"></div>
+      <!-- Brilho -->
+      <div class="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
     </div>
     <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Pará · Maranhão · Online</p>

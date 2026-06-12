@@ -110,10 +110,18 @@ const courseSchema = {
   schema={courseSchema}
 >
   <!-- Hero -->
-  <section class="relative overflow-hidden bg-navy-800 py-20 lg:py-24">
-    <div class="absolute inset-0 opacity-10" aria-hidden="true">
-      <div class="absolute -bottom-20 left-10 h-80 w-80 rounded-full bg-red-ea blur-3xl"></div>
-      <div class="absolute -top-20 right-10 h-80 w-80 rounded-full bg-gold-400 blur-3xl"></div>
+  <section class="hero-grad-callan relative overflow-hidden py-20 lg:py-24">
+    <div class="absolute inset-0" aria-hidden="true">
+      <!-- Linhas diagonais de velocidade -->
+      <div class="absolute top-[-10%] left-[6%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
+      <div class="absolute top-[-10%] left-[13%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-gold-400/25 to-transparent"></div>
+      <div class="absolute top-[-10%] right-[10%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
+      <div class="absolute top-[-10%] right-[17%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-red-ea/30 to-transparent"></div>
+      <!-- Brilhos -->
+      <div class="absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-red-ea/25 blur-3xl"></div>
+      <div class="absolute -top-24 right-10 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <span class="animate-twinkle absolute top-[24%] left-[20%] text-xl text-gold-300/60">✦</span>
+      <span class="animate-twinkle-slow absolute right-[22%] bottom-[20%] text-base text-white/40">✦</span>
     </div>
     <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Desde 1960 · +40 países</p>
@@ -124,22 +132,10 @@ const courseSchema = {
         Criado na Inglaterra por Robin Callan, o Método Callan é consagrado mundialmente por ensinar inglês e
         espanhol de forma rápida e efetiva. A English Academy é Accredited School da Callan Organisation desde 2013.
       </p>
-      <div class="mt-8 flex justify-center">
-        <span class="inline-block rounded-2xl bg-white p-3 shadow-lg">
-          <img
-            src="/logo-callan.png"
-            alt="Callan Accredited School — selo oficial da Callan Organisation"
-            class="h-20 w-auto sm:h-24"
-            loading="eager"
-            decoding="async"
-            onerror="this.parentElement.style.display='none'"
-          />
-        </span>
-      </div>
       <div class="mt-8">
         <a
           href="/aula-experimental/"
-          class="inline-block rounded-full bg-gold-400 px-8 py-4 font-bold text-navy-900 shadow-lg transition hover:bg-gold-300"
+          class="btn-shine inline-block rounded-full bg-gold-400 px-8 py-4 font-bold text-navy-900 shadow-lg transition hover:bg-gold-300"
         >
           Ver o Método em Ação — Aula Grátis
         </a>

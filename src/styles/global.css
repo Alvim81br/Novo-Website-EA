@@ -48,6 +48,57 @@ html {
   );
 }
 
+/* ===== Gradientes exclusivos por página (cores da marca) ===== */
+/* English Academy: azul profundo aquecendo para o dourado */
+.hero-grad-academy {
+  background: linear-gradient(
+    120deg,
+    var(--color-navy-950) 0%,
+    var(--color-navy-800) 45%,
+    var(--color-navy-600) 75%,
+    var(--color-gold-600) 135%
+  );
+}
+/* Método Callan: mergulho vertical do azul ao vermelho profundo */
+.hero-grad-callan {
+  background: linear-gradient(
+    168deg,
+    var(--color-navy-900) 0%,
+    var(--color-navy-700) 52%,
+    #7c1a32 90%,
+    var(--color-red-ea) 118%
+  );
+}
+/* Cursos: vermelho entrando pela esquerda */
+.hero-grad-cursos {
+  background: linear-gradient(
+    100deg,
+    #7c1a32 -12%,
+    var(--color-navy-800) 38%,
+    var(--color-navy-700) 62%,
+    var(--color-navy-950) 105%
+  );
+}
+/* Unidades: azuis em movimento (mapa/céu) */
+.hero-grad-unidades {
+  background: linear-gradient(
+    135deg,
+    var(--color-navy-700) 0%,
+    var(--color-navy-500) 48%,
+    var(--color-navy-900) 100%
+  );
+}
+/* Aula Experimental: energia máxima — vermelho e dourado sobre navy */
+.hero-grad-aula {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(207, 161, 63, 0.35), transparent 42%),
+    linear-gradient(115deg, var(--color-navy-900) 0%, var(--color-navy-700) 45%, var(--color-red-ea) 135%);
+}
+/* Blog: editorial, vertical e sóbrio */
+.hero-grad-blog {
+  background: linear-gradient(180deg, var(--color-navy-700) 0%, var(--color-navy-900) 70%, var(--color-navy-950) 100%);
+}
+
 body {
   font-family: var(--font-body);
   color: #1f2937;

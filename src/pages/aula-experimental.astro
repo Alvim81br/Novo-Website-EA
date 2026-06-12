@@ -9,10 +9,17 @@ import TestimonialCard from '../components/TestimonialCard.astro';
   title="Aula Experimental Grátis — Agende Agora | English Academy"
   description="Agende sua aula experimental gratuita de 45 minutos e conheça o Método Callan na prática — sem nenhuma obrigação de matrícula. Veja por que ensinamos inglês 4x mais rápido."
 >
-  <section class="relative overflow-hidden bg-navy-800 py-16 lg:py-20">
-    <div class="absolute inset-0 opacity-10" aria-hidden="true">
-      <div class="absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-gold-400 blur-3xl"></div>
-      <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea blur-3xl"></div>
+  <section class="hero-grad-aula relative overflow-hidden py-16 lg:py-20">
+    <div class="absolute inset-0" aria-hidden="true">
+      <!-- Aro de destaque e energia -->
+      <div class="animate-float-diamond absolute top-[14%] left-[42%] hidden h-16 w-16 rounded-xl border-2 border-gold-400/35 lg:block"></div>
+      <div class="absolute -bottom-10 left-[8%] h-40 w-40 rounded-full border-2 border-white/10"></div>
+      <div class="absolute top-[20%] left-[4%] h-24 w-24 rounded-full border-2 border-gold-400/20"></div>
+      <span class="animate-twinkle absolute top-[18%] left-[30%] text-2xl text-gold-300/70">✦</span>
+      <span class="animate-twinkle-slow absolute bottom-[26%] left-[44%] text-base text-white/40">✦</span>
+      <span class="animate-twinkle absolute top-[48%] left-[8%] text-sm text-gold-300/50" style="animation-delay: 0.8s">✦</span>
+      <!-- Brilhos -->
+      <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/25 blur-3xl"></div>
     </div>
 
     <div class="relative mx-auto max-w-7xl px-4 lg:px-8">

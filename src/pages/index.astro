@@ -172,17 +172,36 @@ const faqSchema = {
           <!-- Brilho e palco atrás da aluna -->
           <div class="animate-float absolute inset-x-8 top-10 bottom-0 rounded-full bg-gradient-to-b from-gold-400/30 via-red-ea/20 to-transparent blur-2xl" aria-hidden="true"></div>
           <div class="absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2.5rem] border-2 border-white/15 sm:h-80 sm:w-80" aria-hidden="true"></div>
-          <img
-            src="/aluna-yasmin.webp"
-            alt="Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan"
-            class="relative z-10 w-full drop-shadow-[0_24px_36px_rgba(0,10,40,0.55)]"
-            width="900"
-            height="1350"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            onerror="document.getElementById('hero-aluna').style.display='none'"
-          />
+          <!-- Carrossel de fotos da aluna (crossfade automático) -->
+          <div
+            class="hero-aluna-stack relative z-10 aspect-[2/3] w-full"
+            data-aluna-carousel
+            data-interval="3500"
+          >
+            {
+              [
+                '/aluna-yasmin.webp',
+                '/aluna-yasmin-2.webp',
+                '/aluna-yasmin-3.webp',
+                '/aluna-yasmin-4.webp',
+                '/aluna-yasmin-5.webp',
+              ].map((src, i) => (
+                <img
+                  src={src}
+                  alt={i === 0 ? 'Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan' : ''}
+                  class="absolute inset-0 h-full w-full object-contain object-bottom drop-shadow-[0_24px_36px_rgba(0,10,40,0.55)] transition-opacity duration-[1200ms] ease-in-out"
+                  style={`opacity: ${i === 0 ? 1 : 0}`}
+                  data-slide={i}
+                  width="900"
+                  height="1350"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  onerror="this.dataset.failed = '1'; this.remove();"
+                />
+              ))
+            }
+          </div>
           <!-- Sombra de apoio -->
           <div class="absolute bottom-1 left-1/2 z-0 h-6 w-3/4 -translate-x-1/2 rounded-full bg-navy-950/50 blur-md" aria-hidden="true"></div>
           <!-- Cartão de identificação (cobre o recorte das pernas) -->
@@ -470,4 +489,32 @@ const faqSchema = {
   </section>
 
   <CTABand />
+
+  <script>
+    // Carrossel de fotos da aluna no hero: crossfade entre as imagens disponíveis.
+    const carousel = document.querySelector<HTMLElement>('[data-aluna-carousel]');
+    if (carousel) {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const getSlides = () =>
+        Array.from(carousel.querySelectorAll<HTMLImageElement>('img[data-slide]')).filter(
+          (img) => img.dataset.failed !== '1'
+        );
+      const interval = Number(carousel.dataset.interval) || 3500;
+
+      // Aguarda um instante para imagens quebradas se removerem antes de decidir
+      setTimeout(() => {
+        const slides = getSlides();
+        if (reduceMotion || slides.length < 2) return;
+        let current = 0;
+        slides.forEach((s, i) => (s.style.opacity = i === 0 ? '1' : '0'));
+        setInterval(() => {
+          const list = getSlides();
+          if (list.length < 2) return;
+          const next = (current + 1) % list.length;
+          list.forEach((s, i) => (s.style.opacity = i === next ? '1' : '0'));
+          current = next;
+        }, interval);
+      }, 400);
+    }
+  </script>
 </BaseLayout>

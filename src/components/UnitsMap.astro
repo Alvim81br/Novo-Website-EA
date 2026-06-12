@@ -19,15 +19,15 @@ interface Pin {
   label: 'bottom' | 'left' | 'right';
 }
 
-// Um pin por unidade física — mostra o tamanho da rede.
+// Um pin por unidade física — gêmeas da mesma cidade ficam próximas.
 const pins: Pin[] = [
-  { unitId: 'belem-nazare', text: 'Belém — Nazaré', x: 57.2, y: 33.5, tip: 'bottom', label: 'right' },
-  { unitId: 'maraba-cidade-nova', text: 'Marabá — Cidade Nova', x: 53.8, y: 57.0, tip: 'top', label: 'left' },
-  { unitId: 'maraba-nova-maraba', text: 'Marabá — Nova Marabá', x: 57.6, y: 62.5, tip: 'bottom', label: 'right' },
-  { unitId: 'imperatriz', text: 'Imperatriz — Centro', x: 61.1, y: 56.5, tip: 'top', label: 'right' },
-  { unitId: 'parauapebas-cidade-nova', text: 'Parauapebas — Cidade Nova', x: 50.3, y: 63.5, tip: 'top', label: 'left' },
-  { unitId: 'parauapebas-cidade-jardim', text: 'Parauapebas — Cidade Jardim', x: 52.6, y: 67.5, tip: 'top', label: 'left' },
-  { unitId: 'canaa-dos-carajas', text: 'Canaã dos Carajás', x: 51.8, y: 73.0, tip: 'bottom', label: 'bottom' },
+  { unitId: 'belem-nazare', text: 'Unidade Belém', x: 57.2, y: 33.5, tip: 'bottom', label: 'right' },
+  { unitId: 'maraba-cidade-nova', text: 'Unidade Novo Horizonte', x: 54.2, y: 58.8, tip: 'top', label: 'left' },
+  { unitId: 'maraba-nova-maraba', text: 'Unidade Nova Marabá', x: 56.4, y: 61.8, tip: 'bottom', label: 'right' },
+  { unitId: 'imperatriz', text: 'Imperatriz', x: 61.1, y: 56.5, tip: 'top', label: 'right' },
+  { unitId: 'parauapebas-cidade-nova', text: 'Unidade Cidade Nova', x: 50.6, y: 64.3, tip: 'top', label: 'left' },
+  { unitId: 'parauapebas-cidade-jardim', text: 'Unidade Cidade Jardim', x: 52.7, y: 66.9, tip: 'top', label: 'left' },
+  { unitId: 'canaa-dos-carajas', text: 'Unidade Canaã dos Carajás', x: 51.8, y: 73.0, tip: 'bottom', label: 'bottom' },
 ];
 
 const unitById = (id: string) => units.find((u) => u.id === id);

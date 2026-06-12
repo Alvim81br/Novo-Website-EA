@@ -1,65 +1,79 @@
 ---
-// Mapa estilizado das unidades: fundo branco, linhas azuis, pins dourados.
+// Mapa estilizado das unidades: contornos reais de Pará e Maranhão em linhas
+// azuis sobre fundo branco, pins dourados nas cidades com escola física.
 // Hover/foco no pin revela os dados da escola + botão para a página Unidades.
 import { units } from '../data/units';
+import { stateOutlines } from '../data/mapShapes';
 
 interface Pin {
   city: string;
-  state: string;
-  /** posição percentual no mapa (aprox. geográfica, norte para cima) */
+  /** posição percentual no mapa (projeção real lat/lon) */
   x: number;
   y: number;
   /** lado preferido do tooltip para não vazar do mapa */
   tip: 'top' | 'bottom';
-  online?: boolean;
+  /** posição do rótulo da cidade */
+  label?: 'bottom' | 'left' | 'right';
 }
 
+// Posições projetadas (mesma transformação dos contornos).
+// Parauapebas/Canaã são vizinhas — rótulos afastados para legibilidade.
 const pins: Pin[] = [
-  { city: 'Belém', state: 'PA', x: 38, y: 14, tip: 'bottom' },
-  { city: 'Marabá', state: 'PA', x: 48, y: 48, tip: 'top' },
-  { city: 'Imperatriz', state: 'MA', x: 72, y: 54, tip: 'top' },
-  { city: 'Parauapebas', state: 'PA', x: 38, y: 68, tip: 'top' },
-  { city: 'Canaã dos Carajás', state: 'PA', x: 50, y: 86, tip: 'top' },
-  { city: 'Online', state: 'Brasil todo', x: 86, y: 18, tip: 'bottom', online: true },
+  { city: 'Belém', x: 57.2, y: 33.5, tip: 'bottom', label: 'right' },
+  { city: 'Marabá', x: 54.7, y: 60.7, tip: 'top', label: 'right' },
+  { city: 'Imperatriz', x: 61.1, y: 61.7, tip: 'bottom', label: 'right' },
+  { city: 'Parauapebas', x: 51.7, y: 65.5, tip: 'top', label: 'left' },
+  { city: 'Canaã dos Carajás', x: 51.8, y: 71.5, tip: 'bottom', label: 'left' },
 ];
 
 const unitsByCity = (city: string) => units.filter((u) => u.city === city);
 ---
 
 <div class="reveal relative overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-navy-100">
-  <!-- Linhas do mapa (contornos e rotas) -->
+  <!-- Mapa: contornos reais PA + MA -->
   <svg
     class="block h-[30rem] w-full sm:h-[34rem]"
     viewBox="0 0 1000 560"
     fill="none"
-    preserveAspectRatio="none"
+    preserveAspectRatio="xMidYMid meet"
     aria-hidden="true"
   >
-    <!-- contornos suaves (rios/relevo) -->
-    <path d="M-20 120 C 180 60, 320 180, 520 110 S 880 60, 1020 130" stroke="#d8e3f5" stroke-width="2"/>
-    <path d="M-20 260 C 200 200, 360 330, 560 250 S 900 200, 1020 280" stroke="#d8e3f5" stroke-width="2"/>
-    <path d="M-20 420 C 220 360, 400 480, 620 400 S 900 360, 1020 440" stroke="#d8e3f5" stroke-width="2"/>
-    <path d="M120 -20 C 80 160, 180 320, 120 580" stroke="#eef3fb" stroke-width="2"/>
-    <path d="M860 -20 C 900 180, 820 380, 880 580" stroke="#eef3fb" stroke-width="2"/>
-    <!-- grade pontilhada -->
-    <g stroke="#b0c6ea" stroke-width="1" opacity="0.35">
-      <path d="M250 0 V560" stroke-dasharray="2 10"/>
-      <path d="M500 0 V560" stroke-dasharray="2 10"/>
-      <path d="M750 0 V560" stroke-dasharray="2 10"/>
+    <!-- grade pontilhada de fundo -->
+    <g stroke="#b0c6ea" stroke-width="1" opacity="0.3">
+      <path d="M200 0 V560" stroke-dasharray="2 10"/>
+      <path d="M400 0 V560" stroke-dasharray="2 10"/>
+      <path d="M600 0 V560" stroke-dasharray="2 10"/>
+      <path d="M800 0 V560" stroke-dasharray="2 10"/>
       <path d="M0 140 H1000" stroke-dasharray="2 10"/>
       <path d="M0 280 H1000" stroke-dasharray="2 10"/>
       <path d="M0 420 H1000" stroke-dasharray="2 10"/>
     </g>
-    <!-- rotas conectando as cidades -->
-    <g stroke="#7fa1db" stroke-width="2.5" stroke-dasharray="1 10" stroke-linecap="round">
-      <path d="M380 78 C 400 180, 440 220, 480 269"/>
-      <path d="M480 269 C 400 300, 390 330, 380 381"/>
-      <path d="M380 381 C 430 420, 470 440, 500 482"/>
-      <path d="M480 269 C 560 290, 640 290, 720 302"/>
-      <path d="M380 78 C 540 90, 720 70, 860 100"/>
+
+    <!-- Estados -->
+    {
+      stateOutlines.map((state) => (
+        <g>
+          {state.paths.map((d) => (
+            <path d={d} fill="#eef3fb" stroke="#7fa1db" stroke-width="2" stroke-linejoin="round" />
+          ))}
+        </g>
+      ))
+    }
+
+    <!-- Nomes dos estados -->
+    <text x="330" y="280" fill="#7fa1db" font-size="30" font-weight="700" letter-spacing="10" opacity="0.55">PARÁ</text>
+    <text x="660" y="250" fill="#7fa1db" font-size="24" font-weight="700" letter-spacing="7" opacity="0.5">MARANHÃO</text>
+
+    <!-- rotas pontilhadas conectando as cidades -->
+    <g stroke="#cfa13f" stroke-width="2.5" stroke-dasharray="1 9" stroke-linecap="round" opacity="0.8">
+      <path d="M572 188 C 560 250, 555 300, 547 340"/>
+      <path d="M547 340 C 535 350, 525 358, 517 367"/>
+      <path d="M517 367 C 516 374, 517 378, 518 384"/>
+      <path d="M547 340 C 570 344, 590 344, 611 346"/>
     </g>
+
     <!-- bússola decorativa -->
-    <g transform="translate(60 470)" stroke="#b0c6ea" stroke-width="2">
+    <g transform="translate(70 480)" stroke="#b0c6ea" stroke-width="2">
       <circle r="26" fill="none"/>
       <path d="M0 -18 L6 6 L0 0 L-6 6 Z" fill="#cfa13f" stroke="none"/>
       <text x="0" y="-34" text-anchor="middle" fill="#7fa1db" font-size="14" font-weight="700" stroke="none">N</text>
@@ -82,19 +96,19 @@ const unitsByCity = (city: string) => units.filter((u) => u.city === city);
             aria-label={`Unidade ${pin.city} — ver detalhes`}
           >
             <span class="pin-pulse absolute bottom-0.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-gold-400/40" aria-hidden="true" />
-            {pin.online ? (
-              <svg class="h-9 w-9 drop-shadow-md transition group-hover:scale-110" viewBox="0 0 24 24" fill="#cfa13f" aria-hidden="true">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>
-                <path d="M8.6 9.4a4.8 4.8 0 0 1 6.8 0l-1.1 1.1a3.2 3.2 0 0 0-4.6 0zm1.7 1.9a2.4 2.4 0 0 1 3.4 0l-1.7 1.8z" fill="#fff"/>
-              </svg>
-            ) : (
-              <svg class="h-9 w-9 drop-shadow-md transition group-hover:scale-110" viewBox="0 0 24 24" fill="#cfa13f" aria-hidden="true">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>
-                <circle cx="12" cy="9" r="2.6" fill="#fff"/>
-              </svg>
-            )}
+            <svg class="h-9 w-9 drop-shadow-md transition group-hover:scale-110" viewBox="0 0 24 24" fill="#cfa13f" aria-hidden="true">
+              <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>
+              <circle cx="12" cy="9" r="2.6" fill="#fff"/>
+            </svg>
           </button>
-          <p class="pointer-events-none absolute top-full left-1/2 mt-0.5 -translate-x-1/2 text-center text-xs font-bold whitespace-nowrap text-navy-700">
+          <p
+            class:list={[
+              'pointer-events-none absolute text-xs font-bold whitespace-nowrap text-navy-700',
+              pin.label === 'left' && 'top-1/3 right-full mr-1',
+              pin.label === 'right' && 'top-1/3 left-full ml-1',
+              (!pin.label || pin.label === 'bottom') && 'top-full left-1/2 mt-0.5 -translate-x-1/2 text-center',
+            ]}
+          >
             {pin.city}
           </p>
 

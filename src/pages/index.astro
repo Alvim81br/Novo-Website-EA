@@ -113,12 +113,12 @@ const faqSchema = {
       <!-- Losangos geométricos (lado direito) -->
       <div class="absolute top-1/2 right-[-6rem] hidden h-[26rem] w-[26rem] -translate-y-1/2 rotate-45 rounded-3xl border-2 border-white/15 lg:block"></div>
       <div class="absolute top-1/2 right-[-2rem] hidden h-[19rem] w-[19rem] -translate-y-1/2 rotate-45 rounded-3xl border-2 border-white/10 lg:block"></div>
-      <div class="absolute top-[12%] right-[34%] hidden h-24 w-24 rotate-45 rounded-xl border-2 border-gold-400/30 lg:block"></div>
+      <div class="animate-float-diamond absolute top-[12%] right-[34%] hidden h-24 w-24 rotate-45 rounded-xl border-2 border-gold-400/30 lg:block"></div>
       <!-- Estrelas/brilhos -->
-      <span class="absolute top-[18%] left-[55%] hidden text-2xl text-gold-300/60 lg:block">✦</span>
-      <span class="absolute top-[70%] left-[48%] hidden text-base text-white/40 lg:block">✦</span>
-      <span class="absolute top-[26%] right-[8%] hidden text-xl text-white/50 lg:block">✦</span>
-      <span class="absolute bottom-[22%] right-[30%] hidden text-sm text-gold-300/50 lg:block">✦</span>
+      <span class="animate-twinkle absolute top-[18%] left-[55%] hidden text-2xl text-gold-300/60 lg:block">✦</span>
+      <span class="animate-twinkle-slow absolute top-[70%] left-[48%] hidden text-base text-white/40 lg:block">✦</span>
+      <span class="animate-twinkle-slow absolute top-[26%] right-[8%] hidden text-xl text-white/50 lg:block">✦</span>
+      <span class="animate-twinkle absolute right-[30%] bottom-[22%] hidden text-sm text-gold-300/50 lg:block">✦</span>
       <!-- Textura pontilhada -->
       <div
         class="absolute inset-0 opacity-[0.05]"
@@ -149,7 +149,7 @@ const faqSchema = {
           <div class="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
               href="/aula-experimental/"
-              class="rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:bg-red-ea-dark hover:shadow-2xl"
+              class="btn-shine rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:scale-[1.02] hover:bg-red-ea-dark hover:shadow-2xl"
             >
               Agendar Aula Experimental Grátis
             </a>
@@ -170,7 +170,7 @@ const faqSchema = {
         <!-- Aluna em destaque (recorte sem fundo) -->
         <div class="reveal relative mx-auto w-full max-w-sm sm:max-w-md lg:max-w-lg" id="hero-aluna">
           <!-- Brilho e palco atrás da aluna -->
-          <div class="absolute inset-x-8 top-10 bottom-0 rounded-full bg-gradient-to-b from-gold-400/30 via-red-ea/20 to-transparent blur-2xl" aria-hidden="true"></div>
+          <div class="animate-float absolute inset-x-8 top-10 bottom-0 rounded-full bg-gradient-to-b from-gold-400/30 via-red-ea/20 to-transparent blur-2xl" aria-hidden="true"></div>
           <div class="absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2.5rem] border-2 border-white/15 sm:h-80 sm:w-80" aria-hidden="true"></div>
           <img
             src="/aluna-yasmin.webp"
@@ -207,7 +207,7 @@ const faqSchema = {
   <!-- ===== NÚMEROS EM DESTAQUE ===== -->
   <section class="relative z-20 bg-white">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <div class="-mt-16 grid grid-cols-2 gap-y-8 rounded-3xl bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 p-8 shadow-2xl ring-1 ring-navy-900/10 sm:grid-cols-4 sm:divide-x sm:divide-navy-900/15 lg:-mt-32 lg:p-10">
+      <div class="band-shine -mt-16 grid grid-cols-2 gap-y-8 rounded-3xl bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 p-8 shadow-2xl ring-1 ring-navy-900/10 sm:grid-cols-4 sm:divide-x sm:divide-navy-900/15 lg:-mt-32 lg:p-10">
         <div class="text-center">
           <p class="font-display text-3xl font-extrabold text-navy-800 sm:text-4xl" data-counter>+7 mil</p>
           <p class="mt-1.5 text-sm font-semibold text-navy-700">alunos rumo à fluência</p>

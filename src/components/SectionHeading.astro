@@ -25,6 +25,14 @@ const { eyebrow, title, subtitle, light = false, align = 'center' } = Astro.prop
   >
     {title}
   </h2>
+  <div
+    class:list={[
+      'mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-navy-500 via-red-ea to-gold-400',
+      align === 'center' ? 'mx-auto' : '',
+    ]}
+    aria-hidden="true"
+  >
+  </div>
   {
     subtitle && (
       <p class:list={['mt-4 text-lg leading-relaxed', light ? 'text-navy-100' : 'text-gray-600']}>{subtitle}</p>

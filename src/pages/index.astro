@@ -6,6 +6,7 @@ import StatCounter from '../components/StatCounter.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
 import UnitCard from '../components/UnitCard.astro';
+import UnitsMap from '../components/UnitsMap.astro';
 import { testimonials } from '../data/testimonials';
 import { faq } from '../data/faq';
 import { units, defaultWhatsappLink } from '../data/units';
@@ -460,8 +461,8 @@ const faqSchema = {
         title="Encontre a unidade mais próxima de você"
         subtitle="Presentes no Pará e no Maranhão — e online ao vivo para todo o Brasil."
       />
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {units.slice(0, 4).map((unit) => <UnitCard unit={unit} />)}
+      <div class="mt-12">
+        <UnitsMap />
       </div>
       <div class="reveal mt-10 text-center">
         <a

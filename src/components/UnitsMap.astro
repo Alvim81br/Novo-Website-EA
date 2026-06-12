@@ -1,0 +1,147 @@
+---
+// Mapa estilizado das unidades: fundo branco, linhas azuis, pins dourados.
+// Hover/foco no pin revela os dados da escola + botão para a página Unidades.
+import { units } from '../data/units';
+
+interface Pin {
+  city: string;
+  state: string;
+  /** posição percentual no mapa (aprox. geográfica, norte para cima) */
+  x: number;
+  y: number;
+  /** lado preferido do tooltip para não vazar do mapa */
+  tip: 'top' | 'bottom';
+  online?: boolean;
+}
+
+const pins: Pin[] = [
+  { city: 'Belém', state: 'PA', x: 38, y: 14, tip: 'bottom' },
+  { city: 'Marabá', state: 'PA', x: 48, y: 48, tip: 'top' },
+  { city: 'Imperatriz', state: 'MA', x: 72, y: 54, tip: 'top' },
+  { city: 'Parauapebas', state: 'PA', x: 38, y: 68, tip: 'top' },
+  { city: 'Canaã dos Carajás', state: 'PA', x: 50, y: 86, tip: 'top' },
+  { city: 'Online', state: 'Brasil todo', x: 86, y: 18, tip: 'bottom', online: true },
+];
+
+const unitsByCity = (city: string) => units.filter((u) => u.city === city);
+---
+
+<div class="reveal relative overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-navy-100">
+  <!-- Linhas do mapa (contornos e rotas) -->
+  <svg
+    class="block h-[30rem] w-full sm:h-[34rem]"
+    viewBox="0 0 1000 560"
+    fill="none"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <!-- contornos suaves (rios/relevo) -->
+    <path d="M-20 120 C 180 60, 320 180, 520 110 S 880 60, 1020 130" stroke="#d8e3f5" stroke-width="2"/>
+    <path d="M-20 260 C 200 200, 360 330, 560 250 S 900 200, 1020 280" stroke="#d8e3f5" stroke-width="2"/>
+    <path d="M-20 420 C 220 360, 400 480, 620 400 S 900 360, 1020 440" stroke="#d8e3f5" stroke-width="2"/>
+    <path d="M120 -20 C 80 160, 180 320, 120 580" stroke="#eef3fb" stroke-width="2"/>
+    <path d="M860 -20 C 900 180, 820 380, 880 580" stroke="#eef3fb" stroke-width="2"/>
+    <!-- grade pontilhada -->
+    <g stroke="#b0c6ea" stroke-width="1" opacity="0.35">
+      <path d="M250 0 V560" stroke-dasharray="2 10"/>
+      <path d="M500 0 V560" stroke-dasharray="2 10"/>
+      <path d="M750 0 V560" stroke-dasharray="2 10"/>
+      <path d="M0 140 H1000" stroke-dasharray="2 10"/>
+      <path d="M0 280 H1000" stroke-dasharray="2 10"/>
+      <path d="M0 420 H1000" stroke-dasharray="2 10"/>
+    </g>
+    <!-- rotas conectando as cidades -->
+    <g stroke="#7fa1db" stroke-width="2.5" stroke-dasharray="1 10" stroke-linecap="round">
+      <path d="M380 78 C 400 180, 440 220, 480 269"/>
+      <path d="M480 269 C 400 300, 390 330, 380 381"/>
+      <path d="M380 381 C 430 420, 470 440, 500 482"/>
+      <path d="M480 269 C 560 290, 640 290, 720 302"/>
+      <path d="M380 78 C 540 90, 720 70, 860 100"/>
+    </g>
+    <!-- bússola decorativa -->
+    <g transform="translate(60 470)" stroke="#b0c6ea" stroke-width="2">
+      <circle r="26" fill="none"/>
+      <path d="M0 -18 L6 6 L0 0 L-6 6 Z" fill="#cfa13f" stroke="none"/>
+      <text x="0" y="-34" text-anchor="middle" fill="#7fa1db" font-size="14" font-weight="700" stroke="none">N</text>
+    </g>
+  </svg>
+
+  <!-- Pins -->
+  {
+    pins.map((pin) => {
+      const cityUnits = unitsByCity(pin.city);
+      if (cityUnits.length === 0) return null;
+      return (
+        <div
+          class="group absolute z-10 -translate-x-1/2 -translate-y-full"
+          style={`left: ${pin.x}%; top: ${pin.y}%;`}
+        >
+          <button
+            type="button"
+            class="relative block cursor-pointer focus:outline-none"
+            aria-label={`Unidade ${pin.city} — ver detalhes`}
+          >
+            <span class="pin-pulse absolute bottom-0.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-gold-400/40" aria-hidden="true" />
+            {pin.online ? (
+              <svg class="h-9 w-9 drop-shadow-md transition group-hover:scale-110" viewBox="0 0 24 24" fill="#cfa13f" aria-hidden="true">
+                <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>
+                <path d="M8.6 9.4a4.8 4.8 0 0 1 6.8 0l-1.1 1.1a3.2 3.2 0 0 0-4.6 0zm1.7 1.9a2.4 2.4 0 0 1 3.4 0l-1.7 1.8z" fill="#fff"/>
+              </svg>
+            ) : (
+              <svg class="h-9 w-9 drop-shadow-md transition group-hover:scale-110" viewBox="0 0 24 24" fill="#cfa13f" aria-hidden="true">
+                <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>
+                <circle cx="12" cy="9" r="2.6" fill="#fff"/>
+              </svg>
+            )}
+          </button>
+          <p class="pointer-events-none absolute top-full left-1/2 mt-0.5 -translate-x-1/2 text-center text-xs font-bold whitespace-nowrap text-navy-700">
+            {pin.city}
+          </p>
+
+          <!-- Tooltip -->
+          <div
+            class:list={[
+              'invisible absolute left-1/2 z-20 w-72 -translate-x-1/2 opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100',
+              pin.tip === 'top' ? 'bottom-full mb-2' : 'top-full mt-6',
+            ]}
+          >
+            <div class="overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-navy-100">
+              <div class="h-1 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400" aria-hidden="true" />
+              <div class="space-y-3 p-4 text-left">
+                {cityUnits.map((unit) => (
+                  <div>
+                    <p class="font-display text-sm font-bold text-navy-700">{unit.name}</p>
+                    <p class="mt-0.5 text-xs leading-snug text-gray-600">{unit.address}</p>
+                    <p class="mt-0.5 text-xs font-semibold text-gray-700">{unit.whatsapp.join(' · ')}</p>
+                  </div>
+                ))}
+                <a
+                  href="/unidades/"
+                  class="block rounded-full bg-navy-700 px-4 py-2 text-center text-xs font-bold text-white transition hover:bg-navy-600"
+                >
+                  Conhecer as unidades →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    })
+  }
+</div>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .pin-pulse {
+      animation: pin-pulse 2.4s ease-out infinite;
+    }
+    @keyframes pin-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(207, 161, 63, 0.45);
+      }
+      100% {
+        box-shadow: 0 0 0 14px rgba(207, 161, 63, 0);
+      }
+    }
+  }
+</style>

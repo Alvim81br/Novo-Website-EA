@@ -3,7 +3,7 @@
 // azuis sobre fundo branco, pins dourados nas cidades com escola física.
 // Hover/foco no pin revela os dados da escola + botão para a página Unidades.
 import { units } from '../data/units';
-import { stateOutlines } from '../data/mapShapes';
+import { stateOutlines, neighborOutlines } from '../data/mapShapes';
 
 interface Pin {
   city: string;
@@ -49,7 +49,18 @@ const unitsByCity = (city: string) => units.filter((u) => u.city === city);
       <path d="M0 420 H1000" stroke-dasharray="2 10"/>
     </g>
 
-    <!-- Estados -->
+    <!-- Estados vizinhos (contexto, mais claros) -->
+    {
+      neighborOutlines.map((state) => (
+        <g>
+          {state.paths.map((d) => (
+            <path d={d} fill="#f7fafd" stroke="#d8e3f5" stroke-width="1.5" stroke-linejoin="round" />
+          ))}
+        </g>
+      ))
+    }
+
+    <!-- Estados em destaque (PA + MA) -->
     {
       stateOutlines.map((state) => (
         <g>

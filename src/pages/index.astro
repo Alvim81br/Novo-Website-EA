@@ -80,13 +80,15 @@ const exclusivos = [
   },
 ];
 
+// Comparativo: cada linha indica se Callan / Intercâmbio / Gramática / Apps
+// entregam o benefício (true = ✓ verde, false = ✗ vermelho).
 const comparativo = [
-  'Carga Horária Extensa',
-  'Aulas Dinâmicas e Focadas',
-  'Alcance Rápido da Fluência',
-  'Rodízio de Professores',
-  'Valor Acessível',
-  'Foco em Conversação',
+  { beneficio: 'Carga Horária Extensa', callan: true, intercambio: true, gramatica: false, apps: false },
+  { beneficio: 'Aulas Dinâmicas e Focadas', callan: true, intercambio: false, gramatica: false, apps: true },
+  { beneficio: 'Alcance Rápido da Fluência', callan: true, intercambio: true, gramatica: false, apps: false },
+  { beneficio: 'Rodízio de Professores', callan: true, intercambio: false, gramatica: false, apps: false },
+  { beneficio: 'Valor Acessível', callan: true, intercambio: false, gramatica: false, apps: true },
+  { beneficio: 'Foco em Conversação', callan: true, intercambio: true, gramatica: false, apps: false },
 ];
 
 const faqSchema = {
@@ -423,13 +425,21 @@ const faqSchema = {
           </thead>
           <tbody class="divide-y divide-gray-100">
             {
-              comparativo.map((beneficio) => (
+              comparativo.map((linha) => (
                 <tr class="transition hover:bg-navy-50/50">
-                  <td class="px-5 py-4 font-semibold text-gray-700">{beneficio}</td>
-                  <td class="bg-gold-50/60 px-4 py-4 text-center text-xl text-green-600">✔</td>
-                  <td class="hidden px-4 py-4 text-center text-xl text-gray-300 sm:table-cell">—</td>
-                  <td class="hidden px-4 py-4 text-center text-xl text-gray-300 sm:table-cell">—</td>
-                  <td class="hidden px-4 py-4 text-center text-xl text-gray-300 sm:table-cell">—</td>
+                  <td class="px-5 py-4 font-semibold text-gray-700">{linha.beneficio}</td>
+                  <td class="bg-gold-50/60 px-4 py-4 text-center text-xl">
+                    <span class={linha.callan ? 'text-green-600' : 'text-red-ea'}>{linha.callan ? '✔' : '✘'}</span>
+                  </td>
+                  <td class="hidden px-4 py-4 text-center text-xl sm:table-cell">
+                    <span class={linha.intercambio ? 'text-green-600' : 'text-red-ea'}>{linha.intercambio ? '✔' : '✘'}</span>
+                  </td>
+                  <td class="hidden px-4 py-4 text-center text-xl sm:table-cell">
+                    <span class={linha.gramatica ? 'text-green-600' : 'text-red-ea'}>{linha.gramatica ? '✔' : '✘'}</span>
+                  </td>
+                  <td class="hidden px-4 py-4 text-center text-xl sm:table-cell">
+                    <span class={linha.apps ? 'text-green-600' : 'text-red-ea'}>{linha.apps ? '✔' : '✘'}</span>
+                  </td>
                 </tr>
               ))
             }

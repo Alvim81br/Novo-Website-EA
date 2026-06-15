@@ -438,14 +438,38 @@ const faqSchema = {
           segments.map((segment) => (
             <a
               href={`/cursos/#${segment.id}`}
-              class="reveal group flex flex-col rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-navy-200 hover:shadow-xl"
+              class="reveal group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1.5 hover:border-navy-200 hover:shadow-xl"
             >
-              <p class="text-xs font-bold tracking-widest text-red-ea uppercase">{segment.audience}</p>
-              <h3 class="mt-2 font-display text-xl font-bold text-navy-700">{segment.title}</h3>
-              <p class="mt-3 flex-1 text-sm leading-relaxed text-gray-600">{segment.subtitle}</p>
-              <p class="mt-4 text-sm font-bold text-navy-700 transition group-hover:translate-x-1">
-                Ver turmas →
-              </p>
+              <div class="relative flex h-32 items-center justify-center overflow-hidden bg-gradient-to-br from-navy-50 to-navy-100/70">
+                <div
+                  class="absolute inset-0 opacity-[0.05]"
+                  style="background-image: radial-gradient(circle at 1px 1px, #00327d 1px, transparent 0); background-size: 22px 22px;"
+                  aria-hidden="true"
+                />
+                <div class="absolute -right-6 -top-6 h-20 w-20 rotate-45 rounded-2xl border border-navy-200/50" aria-hidden="true" />
+                {segment.cardLogo && (
+                  <img
+                    src={segment.cardLogo}
+                    alt={segment.title}
+                    class="relative h-16 w-auto object-contain drop-shadow-sm transition duration-300 group-hover:scale-110"
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.style.display='none'"
+                  />
+                )}
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <p class="text-xs font-bold tracking-widest text-red-ea uppercase">{segment.audience}</p>
+                <h3 class="mt-2 font-display text-xl font-bold text-navy-700">{segment.title}</h3>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{segment.subtitle}</p>
+                <p class="mt-4 inline-flex items-center gap-1 text-sm font-bold text-navy-700 transition group-hover:gap-2">
+                  Ver turmas <span aria-hidden="true">→</span>
+                </p>
+              </div>
+              <div
+                class="h-1 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400 opacity-0 transition group-hover:opacity-100"
+                aria-hidden="true"
+              />
             </a>
           ))
         }

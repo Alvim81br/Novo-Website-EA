@@ -132,7 +132,7 @@ export const segments: CourseSegment[] = [
     description:
       'Para jovens e adultos a partir dos 14 anos que querem estudar com flexibilidade e conforto, com o Método Callan ministrado ao vivo por professores experientes na plataforma English Academy Live. A mesma metodologia, a mesma energia — de qualquer lugar do Brasil.',
     audience: 'A partir de 14 anos · 100% online ao vivo',
-    cardLogo: '/logo-live.png',
+    cardLogo: '/logo_live_ofc.png',
     groups: [],
   },
 ];

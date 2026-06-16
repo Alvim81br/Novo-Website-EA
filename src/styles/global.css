@@ -30,6 +30,8 @@
   --font-body: 'Lato', ui-sans-serif, system-ui, sans-serif;
   /* Tipografia do wordmark da logo (serifada clássica, estilo Trajan) */
   --font-brand: 'Cinzel', 'Times New Roman', serif;
+  /* Serifa elegante para títulos de destaque (hero) */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
 }
 
 html {

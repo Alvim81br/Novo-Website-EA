@@ -101,19 +101,22 @@ html {
   background: linear-gradient(180deg, var(--color-navy-700) 0%, var(--color-navy-900) 70%, var(--color-navy-950) 100%);
 }
 
-body {
-  font-family: var(--font-body);
-  color: #1f2937;
-  background-color: #ffffff;
-  -webkit-font-smoothing: antialiased;
-}
+/* Estilos base na camada `base` para que utilitários (ex.: font-serif) vençam */
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: #1f2937;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-family: var(--font-display);
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+  }
 }
 
 /* ===== Animações de entrada no scroll ===== */

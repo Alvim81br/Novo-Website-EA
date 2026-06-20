@@ -4,6 +4,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import UnitCard from '../components/UnitCard.astro';
 import UnitsMap from '../components/UnitsMap.astro';
+import VideoDepoimentos from '../components/VideoDepoimentos.astro';
 import { testimonials } from '../data/testimonials';
 import { units, defaultWhatsappLink } from '../data/units';
 import { segments } from '../data/courses';
@@ -359,6 +360,9 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
       </div>
     </div>
   </section>
+
+  <!-- ===== DEPOIMENTOS EM VÍDEO ===== -->
+  <VideoDepoimentos />
 
   <!-- ===== CURSOS ===== -->
   <section class="bg-white py-20">

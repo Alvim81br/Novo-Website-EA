@@ -6,8 +6,15 @@ import { units } from '../data/units';
 const year = new Date().getFullYear();
 ---
 
-<footer class="bg-navy-900 text-white">
-  <div class="mx-auto max-w-7xl px-4 py-14 lg:px-8">
+<footer class="relative overflow-hidden bg-gradient-to-br from-navy-700 via-navy-800 to-navy-900 text-white">
+  <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-gold-400/15 blur-3xl"></div>
+    <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/20 blur-3xl"></div>
+    <span class="animate-twinkle absolute top-[16%] left-[10%] text-xl text-gold-300/50">✦</span>
+    <span class="animate-twinkle-slow absolute right-[14%] top-[30%] text-base text-white/40">✦</span>
+    <span class="animate-twinkle absolute right-[34%] bottom-[18%] text-sm text-gold-300/40">✦</span>
+  </div>
+  <div class="relative mx-auto max-w-7xl px-4 py-14 lg:px-8">
     <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
       <div>
         <Logo class="h-12 w-auto" />

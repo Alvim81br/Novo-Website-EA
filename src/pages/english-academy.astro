@@ -2,6 +2,18 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import { faq } from '../data/faq';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
 
 const vantagens = [
   {
@@ -35,6 +47,7 @@ const vantagens = [
 <BaseLayout
   title="A English Academy — Nossa História, DNA e Valores | English Academy"
   description="Fundada em 2013, a English Academy é a maior rede de escolas de inglês da região Norte: 9 unidades, 120 colaboradores e milhares de alunos rumo à fluência com o Método Callan."
+  schema={faqSchema}
 >
   <!-- Hero -->
   <section class="hero-grad-academy relative flex min-h-[22.25rem] items-center overflow-hidden py-10">
@@ -149,6 +162,20 @@ const vantagens = [
             todo mundo. Fazer cada aluno chegar mais longe, mais rápido e com mais prazer no caminho.
           </p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Dúvidas frequentes"
+        title="Perguntas e respostas"
+        subtitle="Tudo o que você precisa saber antes de começar sua jornada rumo à fluência."
+      />
+      <div class="mt-12">
+        <FAQAccordion items={faq} />
       </div>
     </div>
   </section>

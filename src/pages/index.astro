@@ -2,11 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
-import FAQAccordion from '../components/FAQAccordion.astro';
 import UnitCard from '../components/UnitCard.astro';
 import UnitsMap from '../components/UnitsMap.astro';
 import { testimonials } from '../data/testimonials';
-import { faq } from '../data/faq';
 import { units, defaultWhatsappLink } from '../data/units';
 import { segments } from '../data/courses';
 
@@ -113,21 +111,11 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
   },
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faq.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: { '@type': 'Answer', text: item.answer },
-  })),
-};
 ---
 
 <BaseLayout
   title="English Academy — Curso de Inglês 4x Mais Rápido | Método Callan"
   description="Fale inglês fluente 4x mais rápido com o Método Callan. Aulas diárias, 100% conversação e turmas reduzidas em Parauapebas, Marabá, Canaã, Belém, Imperatriz e online. Agende sua aula experimental grátis!"
-  schema={faqSchema}
 >
   <!-- ===== HERO ===== -->
   <section class="hero-gradient relative overflow-hidden">
@@ -593,19 +581,6 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- ===== FAQ ===== -->
-  <section class="bg-white py-20">
-    <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <SectionHeading
-        eyebrow="Dúvidas frequentes"
-        title="Perguntas e respostas"
-        subtitle="Tudo o que você precisa saber antes de começar sua jornada rumo à fluência."
-      />
-      <div class="mt-12">
-        <FAQAccordion items={faq} />
-      </div>
-    </div>
-  </section>
 
   <script>
     // Carrossel de fotos da aluna no hero: crossfade entre as imagens disponíveis.

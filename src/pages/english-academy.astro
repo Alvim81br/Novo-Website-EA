@@ -156,31 +156,6 @@ const vantagens = [
     </div>
   </section>
 
-  <!-- Vantagens -->
-  <section class="bg-gray-50 py-20">
-    <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <SectionHeading
-        eyebrow="Inglês de verdade é aqui"
-        title="Uma combinação de vantagens que você só encontra aqui"
-      />
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          vantagens.map((item) => (
-            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gold-100 text-gold-600">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7" />
-                </svg>
-              </span>
-              <h3 class="mt-4 font-display text-lg font-bold text-navy-700">{item.title}</h3>
-              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
   <!-- DNA -->
   <section class="bg-navy-800 py-20">
     <div class="mx-auto max-w-5xl px-4 lg:px-8">
@@ -207,7 +182,7 @@ const vantagens = [
   </section>
 
   <!-- Diferenciais -->
-  <section class="bg-gray-50 py-20">
+  <section class="bg-white py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <SectionHeading
         eyebrow="Por que a English Academy?"
@@ -235,6 +210,31 @@ const vantagens = [
                 class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400 opacity-0 transition group-hover:opacity-100"
                 aria-hidden="true"
               />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Vantagens -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Inglês de verdade é aqui"
+        title="Uma combinação de vantagens que você só encontra aqui"
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          vantagens.map((item) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gold-100 text-gold-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7" />
+                </svg>
+              </span>
+              <h3 class="mt-4 font-display text-lg font-bold text-navy-700">{item.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
             </div>
           ))
         }

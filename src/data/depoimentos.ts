@@ -19,5 +19,4 @@ export const depoimentos: VideoDepoimento[] = [
   { gradient: 'from-navy-600 via-navy-700 to-[#7c1a32]' },
   { gradient: 'from-[#7c1a32] via-red-ea to-navy-800' },
   { gradient: 'from-gold-500 via-gold-600 to-navy-800' },
-  { gradient: 'from-navy-800 via-navy-700 to-red-ea' },
 ];

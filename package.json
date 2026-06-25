@@ -15,6 +15,7 @@
     "@fontsource/lato": "^5.2.5",
     "@fontsource/montserrat": "^5.2.5",
     "@fontsource/playfair-display": "^5.2.8",
+    "@fontsource/poppins": "^5.2.7",
     "@tailwindcss/vite": "^4.1.10",
     "astro": "^5.10.0",
     "tailwindcss": "^4.1.10"

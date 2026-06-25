@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+// Fontes exclusivas da Home (Poppins no lugar de Montserrat). Helvetica é fonte de sistema.
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
+import '@fontsource/poppins/800.css';
 import SectionHeading from '../components/SectionHeading.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import UnitCard from '../components/UnitCard.astro';
@@ -537,4 +542,13 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
       }, 400);
     }
   </script>
+
+  <!-- Fontes só da Home (exclui Header/Footer, que estão fora do <main>) -->
+  <style is:global>
+    main {
+      --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-display: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      font-family: var(--font-body);
+    }
+  </style>
 </BaseLayout>

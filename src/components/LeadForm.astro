@@ -50,9 +50,17 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
         required
         autocomplete="tel"
         placeholder="(94) 9 9999-9999"
+        pattern={'[0-9 \\(\\)\\+\\.\\-]{10,20}'}
+        title="Digite um WhatsApp válido com DDD, ex.: (94) 99999-9999"
         class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
       />
     </div>
+  </div>
+
+  <!-- Honeypot anti-spam: campo invisível que humanos não preenchem -->
+  <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+    <label for="lead-website">Não preencha este campo</label>
+    <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" />
   </div>
 
   <div class="grid gap-5 sm:grid-cols-2">
@@ -129,6 +137,13 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
     const { supabaseUrl, supabaseKey } = form.dataset;
     const data = Object.fromEntries(new FormData(form).entries());
     const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+
+    // Honeypot: bots preenchem o campo oculto — finge sucesso e descarta.
+    if (data.website) {
+      form.reset();
+      showFeedback('Recebemos seu pedido! 🎉 Nossa equipe vai te chamar no WhatsApp em breve.', true);
+      return;
+    }
 
     if (!supabaseUrl || !supabaseKey) {
       // Supabase ainda não configurado: encaminha o lead para o WhatsApp.

@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+import '@fontsource/montserrat/500.css';
+import '@fontsource/montserrat/600.css';
+import '@fontsource/montserrat/700.css';
+import '@fontsource/montserrat/800.css';
+import '@fontsource/lato/400.css';
+import '@fontsource/lato/400-italic.css';
+import '@fontsource/lato/700.css';
+import '@fontsource/cinzel/700.css';
+import '@fontsource/playfair-display/700.css';
+import '@fontsource/playfair-display/800.css';
+// Preload dos woff2 críticos (títulos serifados above-the-fold)
+import playfair700Url from '@fontsource/playfair-display/files/playfair-display-latin-700-normal.woff2?url';
+import playfair800Url from '@fontsource/playfair-display/files/playfair-display-latin-800-normal.woff2?url';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Imagem de compartilhamento (og:image), caminho em /public. */
+  ogImage?: string;
+  /** JSON-LD adicional da página (schema.org). */
+  schema?: object | object[];
+}
+
+const { title, description = site.description, ogImage = '/og-image.jpg', schema } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+
+const baseSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  name: site.name,
+  url: site.url,
+  slogan: site.tagline,
+  email: site.email,
+  logo: new URL('/logo-ea.webp', Astro.site).href,
+  image: ogImageUrl.href,
+  // Apenas perfis sociais reais/canônicos (o Instagram é o único confirmado).
+  sameAs: [site.social.instagram],
+};
+
+const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Fontes críticas (títulos above-the-fold) -->
+    <link rel="preload" as="font" type="font/woff2" href={playfair700Url} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={playfair800Url} crossorigin />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.tagline} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppButton />
+
+    <script>
+      // Revela elementos .reveal conforme entram na viewport
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+      // Anima números [data-counter] contando de 0 até o valor final ao entrar na tela
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            counterObserver.unobserve(entry.target);
+            const el = entry.target as HTMLElement;
+            const original = (el.textContent ?? '').trim();
+            const match = original.match(/^([^\d]*)(\d+)(.*)$/);
+            if (!match || reduceMotion) continue;
+            const [, prefix, numStr, suffix] = match;
+            const target = parseInt(numStr, 10);
+            const duration = 1400;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const t = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - t, 3);
+              el.textContent = prefix + Math.round(target * eased) + suffix;
+              if (t < 1) requestAnimationFrame(tick);
+              else el.textContent = original;
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.6 }
+      );
+      document.querySelectorAll('[data-counter]').forEach((el) => counterObserver.observe(el));
+    </script>
+  </body>
+</html>

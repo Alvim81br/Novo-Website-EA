@@ -1,0 +1,145 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { depoimentos } from '../data/depoimentos';
+---
+
+<section class="bg-gray-50 py-20">
+  <div class="mx-auto max-w-7xl px-4 lg:px-8">
+    <SectionHeading
+      eyebrow="Aprenda Inglês de Forma Fácil e Definitiva"
+      title="Nossos alunos são nossos maiores exemplos de Sucesso!"
+      subtitle="Falar inglês fluente transforma a vida das pessoas de forma extraordinária! Não só o que você coloca no currículo, mas o que você sente quando fala, pensa e se apresenta ao mundo. Assista abaixo a experiência de quem já fala inglês fluente!"
+    />
+
+    <!-- Carrossel de vídeos verticais (rola na horizontal no mobile, grade no desktop) -->
+    <div
+      class="reveal mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:grid lg:grid-cols-5 lg:gap-5 lg:overflow-visible lg:pb-0"
+    >
+      {
+        depoimentos.map((dep) => (
+          <button
+            type="button"
+            class="group relative aspect-[9/16] w-[58vw] max-w-[230px] shrink-0 snap-center overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-ea lg:w-auto lg:max-w-none"
+            data-video={dep.youtube ?? ''}
+            aria-label={`Assistir depoimento${dep.name ? ' de ' + dep.name : ' de aluno'}`}
+          >
+            {dep.thumb || dep.youtube ? (
+              <img
+                src={dep.thumb ?? `https://i.ytimg.com/vi/${dep.youtube}/hqdefault.jpg`}
+                alt=""
+                class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div
+                class:list={['absolute inset-0 bg-gradient-to-br', dep.gradient ?? 'from-navy-700 to-navy-900']}
+                aria-hidden="true"
+              />
+            )}
+
+            {/* textura pontilhada sutil sobre os placeholders */}
+            {!dep.thumb && !dep.youtube && (
+              <div
+                class="absolute inset-0 opacity-[0.07]"
+                style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 22px 22px;"
+                aria-hidden="true"
+              />
+            )}
+
+            {/* overlay para legibilidade */}
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-navy-950/70 via-navy-950/10 to-transparent"
+              aria-hidden="true"
+            />
+
+            {/* selo da marca */}
+            <span class="absolute top-2.5 left-2.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white backdrop-blur-sm">
+              English Academy
+            </span>
+
+            {/* botão play */}
+            <span
+              class="absolute top-1/2 left-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-red-ea shadow-lg transition group-hover:scale-110 group-hover:bg-white"
+              aria-hidden="true"
+            >
+              <svg class="ml-1 h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </span>
+
+            {(dep.name || dep.caption) && (
+              <div class="absolute inset-x-0 bottom-0 p-3 text-left">
+                {dep.name && <p class="text-sm font-bold text-white drop-shadow">{dep.name}</p>}
+                {dep.caption && <p class="text-xs text-navy-100 drop-shadow">{dep.caption}</p>}
+              </div>
+            )}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Lightbox do vídeo -->
+  <div
+    id="video-modal"
+    class="fixed inset-0 z-[60] hidden items-center justify-center bg-navy-950/90 p-4 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Depoimento em vídeo"
+  >
+    <button
+      id="video-close"
+      class="absolute top-5 right-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+      aria-label="Fechar vídeo"
+    >
+      ✕
+    </button>
+    <div class="relative aspect-[9/16] w-full max-w-sm overflow-hidden rounded-2xl bg-black shadow-2xl">
+      <iframe
+        id="video-frame"
+        class="h-full w-full"
+        src=""
+        title="Depoimento em vídeo"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</section>
+
+<script>
+  const modal = document.getElementById('video-modal');
+  const frame = document.getElementById('video-frame') as HTMLIFrameElement | null;
+  const closeBtn = document.getElementById('video-close');
+
+  const open = (id: string) => {
+    if (!modal || !frame) return;
+    frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
+  const close = () => {
+    if (!modal || !frame) return;
+    frame.src = '';
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-video]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.video;
+      if (id) open(id);
+    });
+  });
+
+  closeBtn?.addEventListener('click', close);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) close();
+  });
+</script>

@@ -1,0 +1,334 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTABand from '../components/CTABand.astro';
+
+const pilares = [
+  {
+    icon: '🗣️',
+    title: '100% Conversação',
+    text: 'Aprenda inglês falando. Você aprende primeiro a entender e falar, para depois ler e escrever — exatamente como aprendeu o português.',
+  },
+  {
+    icon: '⚡',
+    title: 'Inglês em 1/4 do Tempo',
+    text: 'Em cursos tradicionais o aluno estuda cerca de 6 anos. Com o Callan, esse tempo cai para 1/4 — fluência a partir de 18 meses nas turmas diárias.',
+  },
+  {
+    icon: '🏋️',
+    title: 'Mais que Estudar: Treinar!',
+    text: 'O segredo da fluência é o treino constante até a língua se tornar natural. Estudar gramática não leva à fluência — treinar conversação, sim.',
+  },
+  {
+    icon: '🧭',
+    title: 'Metodologia Estruturada',
+    text: 'Ordem estruturada de aprendizado que leva à fluência: dos tempos verbais e vocabulários essenciais aos mais avançados.',
+  },
+  {
+    icon: '🔄',
+    title: 'Rodízio de Professores',
+    text: 'Vários professores com diferentes origens e experiências se revezam — você se acostuma a entender qualquer sotaque.',
+  },
+  {
+    icon: '📱',
+    title: 'App Exclusivo',
+    text: 'Pratique em todo lugar: estude de forma fluida e natural o que aprendeu em sala, de qualquer lugar, pelo celular.',
+  },
+];
+
+const extraClubs = [
+  {
+    title: 'Conversation Clubs',
+    text: 'Conversação sobre temas atuais em ambiente descontraído — de cultura pop a tecnologia e inovação.',
+  },
+  {
+    title: 'Games & Activities',
+    text: 'De jogos de tabuleiro a desafios de vocabulário: aprendizado gamificado, competitivo e eficaz.',
+  },
+  {
+    title: 'Presentation Fridays',
+    text: 'Desenvolva suas habilidades de apresentação em inglês em um ambiente de apoio, sem medo de errar.',
+  },
+  {
+    title: 'Movie & Series Nights',
+    text: 'Filmes e séries em inglês com legendas em inglês, seguidos de discussões sobre temas e expressões idiomáticas.',
+  },
+  {
+    title: 'Music & Culture Sessions',
+    text: 'Explore a música anglófona, analise letras e descubra como o inglês vive e respira através das artes.',
+  },
+  {
+    title: 'Cultural Exchange',
+    text: 'Conecte-se com falantes nativos e estudantes de outros países em sessões de intercâmbio cultural virtual.',
+  },
+];
+
+const appFeatures = [
+  {
+    title: 'Conversação com IA',
+    text: 'Pratique com nossa assistente virtual que responde de forma natural e corrige seus erros em tempo real.',
+  },
+  {
+    title: 'Feedback Instantâneo',
+    text: 'Correções imediatas de pronúncia, gramática e vocabulário enquanto você pratica.',
+  },
+  {
+    title: 'Pronúncia Perfeita',
+    text: 'Reconhecimento de voz avançado que analisa sua pronúncia e dá dicas específicas para melhorar.',
+  },
+  {
+    title: 'Cenários Realistas',
+    text: 'Simule situações reais: entrevistas de emprego, viagens internacionais, reuniões de negócios.',
+  },
+  {
+    title: 'Vocabulário Expandido',
+    text: 'Jogos interativos e flashcards inteligentes que se adaptam ao que você precisa aprender.',
+  },
+  {
+    title: 'Progresso Integrado',
+    text: 'Seu desempenho no app é integrado às aulas — seus professores sabem exatamente onde apoiar você.',
+  },
+];
+
+const courseSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: 'Curso de Inglês com o Método Callan',
+  description:
+    'Curso de inglês 4x mais rápido com o Método Callan: 100% conversação, aulas diárias e turmas reduzidas. Fluência a partir de 18 meses.',
+  provider: {
+    '@type': 'EducationalOrganization',
+    name: 'English Academy',
+    sameAs: 'https://www.englishacademy.net.br',
+  },
+};
+---
+
+<BaseLayout
+  title="Método Callan — Aprenda Inglês 4x Mais Rápido | English Academy"
+  description="O Método Callan é usado em mais de 40 países e ensina inglês 4x mais rápido: 100% conversação, repetição sistemática e correção imediata. Conheça a metodologia, a Garantia de Fluência, o Programa Passaporte e os Extra Clubs."
+  schema={courseSchema}
+>
+  <!-- Hero -->
+  <section class="hero-grad-callan relative flex min-h-[22.25rem] items-center overflow-hidden py-5">
+    <div class="absolute inset-0" aria-hidden="true">
+      <!-- Linhas diagonais de velocidade -->
+      <div class="absolute top-[-10%] left-[6%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
+      <div class="absolute top-[-10%] left-[13%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-gold-400/25 to-transparent"></div>
+      <div class="absolute top-[-10%] right-[10%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
+      <div class="absolute top-[-10%] right-[17%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-red-ea/30 to-transparent"></div>
+      <!-- Brilhos -->
+      <div class="absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-red-ea/25 blur-3xl"></div>
+      <div class="absolute -top-24 right-10 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <span class="animate-twinkle absolute top-[24%] left-[20%] text-xl text-gold-300/60">✦</span>
+      <span class="animate-twinkle-slow absolute right-[22%] bottom-[20%] text-base text-white/40">✦</span>
+    </div>
+    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Desde 1960 · +40 países</p>
+      <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+        O método mais <span class="text-gold-400">rápido do mundo</span> para aprender inglês
+      </h1>
+      <p class="mx-auto mt-4 max-w-3xl text-lg text-navy-100">
+        Criado na Inglaterra por Robin Callan, o Método Callan é consagrado mundialmente por ensinar inglês e
+        espanhol de forma rápida e efetiva. A English Academy é Accredited School da Callan Organisation desde 2013.
+      </p>
+      <div class="mt-5">
+        <a
+          href="/aula-experimental/"
+          class="btn-shine inline-block rounded-full bg-gold-400 px-8 py-4 font-bold text-navy-900 shadow-lg transition hover:bg-gold-300"
+        >
+          Ver o Método em Ação — Aula Grátis
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- O que é -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div class="reveal">
+          <p class="text-sm font-bold tracking-widest text-red-ea uppercase">O que é o Método Callan?</p>
+          <h2 class="mt-2 text-4xl font-bold text-navy-700 sm:text-5xl">
+            Uma revolução comprovada no aprendizado de inglês
+          </h2>
+          <div class="mt-6 space-y-4 text-lg leading-relaxed text-gray-600">
+            <p>
+              Em <strong class="text-navy-700">1960, Robin Callan</strong> criou seu método de ensino de inglês que,
+              ao longo das décadas, provou-se uma das metodologias mais efetivas e rápidas do mundo para
+              ensinar um idioma.
+            </p>
+            <p>
+              Diferente dos métodos tradicionais baseados em gramática, o Callan transforma a maneira como você
+              aprende: <strong class="text-navy-700">conversação intensiva desde o primeiro dia</strong>, repetição
+              sistemática e correção imediata. Você é treinado a <strong class="text-navy-700">pensar em inglês</strong>
+              desde a primeira aula.
+            </p>
+            <p>Você não apenas aprende inglês — você vive o inglês em cada aula.</p>
+          </div>
+        </div>
+        <div class="reveal grid grid-cols-3 gap-4 text-center">
+          <div class="rounded-2xl bg-navy-700 p-6">
+            <p class="font-display text-4xl font-extrabold text-gold-400" data-counter>4x</p>
+            <p class="mt-2 text-sm font-semibold text-white">mais rápido que métodos tradicionais</p>
+          </div>
+          <div class="rounded-2xl bg-gold-400 p-6">
+            <p class="font-display text-4xl font-extrabold text-navy-900" data-counter>40+</p>
+            <p class="mt-2 text-sm font-semibold text-navy-900">países aplicam a metodologia</p>
+          </div>
+          <div class="rounded-2xl bg-red-ea p-6">
+            <p class="font-display text-4xl font-extrabold text-white" data-counter>60+</p>
+            <p class="mt-2 text-sm font-semibold text-white">anos de resultados comprovados</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading eyebrow="Como funciona" title="Os pilares da metodologia" />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          pilares.map((item) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <span class="text-4xl" aria-hidden="true">
+                {item.icon}
+              </span>
+              <h3 class="mt-4 font-display text-xl font-bold text-navy-700">{item.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Garantia -->
+  <section id="garantia" class="scroll-mt-24 bg-navy-800 py-20">
+    <div class="mx-auto max-w-5xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Compromisso irrevogável"
+        title="Garantia de Fluência"
+        subtitle="Acreditamos tanto na nossa metodologia que assumimos todo o risco — você só tem a ganhar."
+        light
+      />
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        <div class="reveal rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center">
+          <p class="text-4xl" aria-hidden="true">🤝</p>
+          <h3 class="mt-3 font-display text-lg font-bold text-gold-300">Compromisso Total</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy-100">
+            Se você seguir nossa metodologia e não atingir a fluência até o final do curso, continua estudando
+            conosco completamente grátis até alcançar seu objetivo.
+          </p>
+        </div>
+        <div class="reveal rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center">
+          <p class="text-4xl" aria-hidden="true">🛡️</p>
+          <h3 class="mt-3 font-display text-lg font-bold text-gold-300">Zero Riscos</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy-100">
+            Seu investimento está 100% protegido — sem armadilhas, sem letras miúdas. Apenas nosso compromisso
+            genuíno com seu sucesso.
+          </p>
+        </div>
+        <div class="reveal rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center">
+          <p class="text-4xl" aria-hidden="true">🎯</p>
+          <h3 class="mt-3 font-display text-lg font-bold text-gold-300">Resultados Garantidos</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy-100">
+            Não é truque de marketing: é o reflexo da nossa confiança no poder transformador do Método Callan
+            e da nossa estrutura de suporte.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Passaporte -->
+  <section id="passaporte" class="scroll-mt-24 bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div class="reveal">
+          <p class="text-sm font-bold tracking-widest text-red-ea uppercase">Exclusivo</p>
+          <h2 class="mt-2 text-4xl font-bold text-navy-700 sm:text-5xl">
+            Programa Passaporte: dobre seu aprendizado gratuitamente
+          </h2>
+          <p class="mt-6 text-lg leading-relaxed text-gray-600">
+            Além da sua turma regular, você pode participar de outras turmas do mesmo nível sempre que quiser.
+            Teve uma semana mais livre? Faça 3, 4 ou até 5 aulas em vez de uma — <strong class="text-navy-700">
+            100% grátis</strong>. A ciência é clara: quanto mais tempo de prática, mais rápida a fluência.
+          </p>
+          <ul class="mt-6 space-y-3 text-gray-700">
+            <li class="flex gap-3"><span class="font-bold text-gold-500">1.</span> Matricule-se na turma que encaixa na sua rotina principal;</li>
+            <li class="flex gap-3"><span class="font-bold text-gold-500">2.</span> Use seu Passaporte para participar de qualquer outra turma do seu nível;</li>
+            <li class="flex gap-3"><span class="font-bold text-gold-500">3.</span> Quanto mais você participa, mais rápido aprende — sem pagar nada a mais;</li>
+            <li class="flex gap-3"><span class="font-bold text-gold-500">4.</span> Flexibilidade total para se adaptar à sua agenda.</li>
+          </ul>
+        </div>
+        <div class="reveal grid gap-5">
+          <div class="rounded-2xl bg-gold-400 p-8 text-center">
+            <p class="font-display text-5xl font-extrabold text-navy-900">100%</p>
+            <p class="mt-2 font-bold text-navy-900">grátis — sem custos adicionais</p>
+          </div>
+          <div class="rounded-2xl bg-navy-700 p-8 text-center">
+            <p class="font-display text-5xl font-extrabold text-gold-400">2x</p>
+            <p class="mt-2 font-bold text-white">mais prática e tempo de exposição ao inglês</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Extra Clubs -->
+  <section id="extra-clubs" class="scroll-mt-24 bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Toda sexta-feira"
+        title="Extra Clubs: imersão além da sala de aula"
+        subtitle="A escola se transforma em um centro vibrante de atividades em inglês — contextos reais, divertidos e memoráveis."
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          extraClubs.map((club) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <h3 class="font-display text-lg font-bold text-navy-700">{club.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{club.text}</p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="reveal mx-auto mt-10 max-w-3xl text-center text-gray-600">
+        Os Extra Clubs são parte essencial da nossa filosofia de imersão total: você constrói confiança, faz
+        amizades e transforma o inglês em parte natural da sua vida social.
+      </p>
+    </div>
+  </section>
+
+  <!-- App -->
+  <section id="app" class="scroll-mt-24 bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Tecnologia exclusiva"
+        title="Seu professor de inglês no bolso, 24/7"
+        subtitle="Nosso aplicativo coloca o poder da Inteligência Artificial ao seu serviço — o casamento perfeito entre tecnologia de ponta e metodologia comprovada."
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          appFeatures.map((feature) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <h3 class="font-display text-lg font-bold text-navy-700">{feature.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{feature.text}</p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="reveal mt-10 text-center text-sm text-gray-500">
+        Disponível na Apple Store e no Google Play para todos os alunos.
+      </p>
+    </div>
+  </section>
+
+  <CTABand
+    title="Veja por que ele é considerado um dos melhores métodos do mundo"
+    subtitle="Aula experimental gratuita de 45 minutos — conheça o Método Callan na prática, sem nenhuma obrigação de matrícula."
+  />
+</BaseLayout>

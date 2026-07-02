@@ -1,0 +1,46 @@
+# Configuração de build para Netlify (deploy via integração Git)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Redireciona o domínio raiz para www (canônico)
+[[redirects]]
+  from = "https://englishacademy.net.br/*"
+  to = "https://www.englishacademy.net.br/:splat"
+  status = 301
+  force = true
+
+# Headers de segurança para todo o site
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Cache longo para assets com hash no nome (imutáveis por build)
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache moderado para imagens/logos (podem ser substituídas)
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

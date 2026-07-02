@@ -1,0 +1,41 @@
+---
+import { defaultWhatsappLink } from '../data/units';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+const {
+  title = 'Conheça o Método Callan na prática',
+  subtitle = 'Agende sua aula experimental: 45 minutos, totalmente gratuita e sem nenhum compromisso de matrícula.',
+} = Astro.props;
+---
+
+<section class="band-shine relative my-8 overflow-hidden bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 lg:my-12">
+  <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-white/20 blur-3xl"></div>
+    <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/15 blur-3xl"></div>
+    <span class="animate-twinkle absolute top-[20%] left-[12%] text-xl text-navy-700/30">✦</span>
+    <span class="animate-twinkle-slow absolute right-[14%] bottom-[24%] text-base text-navy-900/25">✦</span>
+  </div>
+  <div class="relative mx-auto max-w-4xl px-4 py-16 text-center lg:px-8">
+    <h2 class="reveal text-4xl font-bold text-navy-800 sm:text-5xl">{title}</h2>
+    <p class="reveal mt-4 text-lg font-medium text-navy-700">{subtitle}</p>
+    <div class="reveal mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <a
+        href="/aula-experimental/"
+        class="btn-shine w-full rounded-full bg-red-ea px-8 py-4 text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:bg-red-ea-dark hover:shadow-xl sm:w-auto"
+      >
+        Agendar Aula Experimental Grátis
+      </a>
+      <a
+        href={defaultWhatsappLink}
+        target="_blank"
+        rel="noopener"
+        class="w-full rounded-full border-2 border-navy-700/60 px-8 py-4 text-base font-bold text-navy-800 transition hover:border-navy-800 hover:bg-navy-900/10 sm:w-auto"
+      >
+        Falar no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>

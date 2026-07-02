@@ -1,0 +1,198 @@
+---
+import { units, defaultWhatsappLink } from '../data/units';
+
+// Credenciais públicas do Supabase (anon key + RLS de INSERT apenas).
+// Configure em .env — veja .env.example e supabase/schema.sql.
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+
+// Número do WhatsApp da matriz (fonte única: units.ts), usado no fallback sem Supabase.
+const waNumber = defaultWhatsappLink.match(/wa\.me\/(\d+)/)?.[1] ?? '';
+
+const courses = [
+  'Inglês para Adultos',
+  'Inglês para Adolescentes (Teens)',
+  'Inglês para Crianças (Kids)',
+  'Online e ao Vivo (EA Live)',
+  'Espanhol',
+];
+
+const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
+---
+
+<form
+  id="lead-form"
+  class="space-y-5"
+  data-supabase-url={supabaseUrl}
+  data-supabase-key={supabaseAnonKey}
+  data-wa-number={waNumber}
+  novalidate
+>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="lead-name" class="mb-1.5 block text-sm font-bold text-navy-800">Nome completo *</label>
+      <input
+        type="text"
+        id="lead-name"
+        name="name"
+        required
+        autocomplete="name"
+        placeholder="Seu nome"
+        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
+      />
+    </div>
+    <div>
+      <label for="lead-phone" class="mb-1.5 block text-sm font-bold text-navy-800">WhatsApp *</label>
+      <input
+        type="tel"
+        id="lead-phone"
+        name="phone"
+        required
+        autocomplete="tel"
+        placeholder="(94) 9 9999-9999"
+        pattern={'[0-9 \\(\\)\\+\\.\\-]{10,20}'}
+        title="Digite um WhatsApp válido com DDD, ex.: (94) 99999-9999"
+        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
+      />
+    </div>
+  </div>
+
+  <!-- Honeypot anti-spam: campo invisível que humanos não preenchem -->
+  <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+    <label for="lead-website">Não preencha este campo</label>
+    <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="lead-unit" class="mb-1.5 block text-sm font-bold text-navy-800">Unidade mais próxima *</label>
+      <select
+        id="lead-unit"
+        name="unit"
+        required
+        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
+      >
+        <option value="" disabled selected>Selecione a unidade</option>
+        {units.map((unit) => <option value={unit.name}>{unit.name}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="lead-course" class="mb-1.5 block text-sm font-bold text-navy-800">Curso de interesse *</label>
+      <select
+        id="lead-course"
+        name="course"
+        required
+        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
+      >
+        <option value="" disabled selected>Selecione o curso</option>
+        {courses.map((course) => <option value={course}>{course}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label for="lead-schedule" class="mb-1.5 block text-sm font-bold text-navy-800">Melhor horário para estudar</label>
+    <select
+      id="lead-schedule"
+      name="schedule"
+      class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
+    >
+      <option value="" selected>Sem preferência</option>
+      {schedules.map((s) => <option value={s}>{s}</option>)}
+    </select>
+  </div>
+
+  <button
+    type="submit"
+    class="w-full rounded-full bg-red-ea px-8 py-4 text-base font-bold text-white shadow-lg transition hover:bg-red-ea-dark hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    Quero Minha Aula Experimental Grátis
+  </button>
+
+  <p id="lead-feedback" class="hidden rounded-xl px-4 py-3 text-sm font-semibold" role="status"></p>
+
+  <p class="text-center text-xs text-gray-500">
+    Seus dados são usados apenas para agendar sua aula experimental. Prefere falar direto?
+    <a href={defaultWhatsappLink} target="_blank" rel="noopener" class="font-bold text-navy-700 underline">
+      Chame no WhatsApp
+    </a>.
+  </p>
+</form>
+
+<script>
+  const form = document.getElementById('lead-form') as HTMLFormElement | null;
+  const feedback = document.getElementById('lead-feedback');
+
+  function showFeedback(message: string, ok: boolean) {
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.classList.remove('hidden', 'bg-green-50', 'text-green-800', 'bg-red-50', 'text-red-800');
+    feedback.classList.add(ok ? 'bg-green-50' : 'bg-red-50', ok ? 'text-green-800' : 'text-red-800');
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const { supabaseUrl, supabaseKey } = form.dataset;
+    const data = Object.fromEntries(new FormData(form).entries());
+    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+
+    // Honeypot: bots preenchem o campo oculto — finge sucesso e descarta.
+    if (data.website) {
+      form.reset();
+      showFeedback('Recebemos seu pedido! 🎉 Nossa equipe vai te chamar no WhatsApp em breve.', true);
+      return;
+    }
+
+    if (!supabaseUrl || !supabaseKey) {
+      // Supabase ainda não configurado: encaminha o lead para o WhatsApp.
+      const text = encodeURIComponent(
+        `Olá! Quero agendar uma aula experimental gratuita.\n\nNome: ${data.name}\nWhatsApp: ${data.phone}\nUnidade: ${data.unit}\nCurso: ${data.course}\nHorário: ${data.schedule || 'Sem preferência'}`
+      );
+      window.open(`https://wa.me/${form.dataset.waNumber}?text=${text}`, '_blank');
+      showFeedback('Estamos te redirecionando para o WhatsApp para concluir o agendamento. 😊', true);
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Enviando...';
+
+    try {
+      const response = await fetch(`${supabaseUrl}/rest/v1/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          phone: data.phone,
+          unit: data.unit,
+          course: data.course,
+          schedule: data.schedule || null,
+          source: window.location.pathname,
+        }),
+      });
+
+      if (!response.ok) throw new Error(`Supabase respondeu ${response.status}`);
+
+      form.reset();
+      showFeedback(
+        'Recebemos seu pedido! 🎉 Nossa equipe vai te chamar no WhatsApp em breve para confirmar sua aula experimental gratuita.',
+        true
+      );
+    } catch (error) {
+      console.error(error);
+      showFeedback(
+        'Não foi possível enviar agora. Tente novamente ou chame a gente direto no WhatsApp pelo botão verde.',
+        false
+      );
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Quero Minha Aula Experimental Grátis';
+    }
+  });
+</script>

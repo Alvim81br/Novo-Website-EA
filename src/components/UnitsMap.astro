@@ -1,0 +1,175 @@
+---
+// Mapa estilizado das unidades: contornos reais de Pará e Maranhão em linhas
+// azuis sobre fundo branco, pins dourados nas cidades com escola física.
+// Hover/foco no pin revela os dados da escola + botão para a página Unidades.
+import { units } from '../data/units';
+import { stateOutlines, neighborOutlines } from '../data/mapShapes';
+
+interface Pin {
+  /** id da unidade em src/data/units.ts */
+  unitId: string;
+  /** rótulo curto exibido junto ao pin */
+  text: string;
+  /** posição percentual no mapa (projeção real lat/lon, gêmeas levemente afastadas) */
+  x: number;
+  y: number;
+  /** lado preferido do tooltip para não vazar do mapa */
+  tip: 'top' | 'bottom';
+  /** posição do rótulo */
+  label: 'bottom' | 'left' | 'right';
+}
+
+// Um pin por unidade física — gêmeas da mesma cidade ficam próximas.
+const pins: Pin[] = [
+  { unitId: 'belem-nazare', text: 'Unidade Belém', x: 57.2, y: 33.5, tip: 'bottom', label: 'right' },
+  { unitId: 'maraba-cidade-nova', text: 'Unidade Novo Horizonte', x: 54.2, y: 58.8, tip: 'top', label: 'left' },
+  { unitId: 'maraba-nova-maraba', text: 'Unidade Nova Marabá', x: 55.0, y: 62.2, tip: 'bottom', label: 'right' },
+  { unitId: 'imperatriz', text: 'Imperatriz', x: 61.1, y: 56.5, tip: 'top', label: 'right' },
+  { unitId: 'parauapebas-cidade-nova', text: 'Unidade Cidade Nova', x: 50.6, y: 64.3, tip: 'top', label: 'left' },
+  { unitId: 'parauapebas-cidade-jardim', text: 'Unidade Cidade Jardim', x: 52.7, y: 66.9, tip: 'top', label: 'left' },
+  { unitId: 'parauapebas-carajas', text: 'Unidade Carajás', x: 48.3, y: 70.4, tip: 'bottom', label: 'left' },
+  { unitId: 'canaa-dos-carajas', text: 'Unidade Canaã dos Carajás', x: 51.8, y: 73.0, tip: 'bottom', label: 'bottom' },
+];
+
+const unitById = (id: string) => units.find((u) => u.id === id);
+---
+
+<div class="reveal relative overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-navy-100">
+  <!-- Mapa: contornos reais PA + MA -->
+  <svg
+    class="block h-[30rem] w-full sm:h-[34rem]"
+    viewBox="0 0 1000 560"
+    fill="none"
+    preserveAspectRatio="xMidYMid meet"
+    aria-hidden="true"
+  >
+    <!-- grade pontilhada de fundo -->
+    <g stroke="#b0c6ea" stroke-width="1" opacity="0.3">
+      <path d="M200 0 V560" stroke-dasharray="2 10"/>
+      <path d="M400 0 V560" stroke-dasharray="2 10"/>
+      <path d="M600 0 V560" stroke-dasharray="2 10"/>
+      <path d="M800 0 V560" stroke-dasharray="2 10"/>
+      <path d="M0 140 H1000" stroke-dasharray="2 10"/>
+      <path d="M0 280 H1000" stroke-dasharray="2 10"/>
+      <path d="M0 420 H1000" stroke-dasharray="2 10"/>
+    </g>
+
+    <!-- Estados vizinhos (contexto, mais claros) -->
+    {
+      neighborOutlines.map((state) => (
+        <g>
+          {state.paths.map((d) => (
+            <path d={d} fill="#f7fafd" stroke="#d8e3f5" stroke-width="1.5" stroke-linejoin="round" />
+          ))}
+        </g>
+      ))
+    }
+
+    <!-- Estados em destaque (PA + MA) -->
+    {
+      stateOutlines.map((state) => (
+        <g>
+          {state.paths.map((d) => (
+            <path d={d} fill="#eef3fb" stroke="#7fa1db" stroke-width="2" stroke-linejoin="round" />
+          ))}
+        </g>
+      ))
+    }
+
+    <!-- Nomes dos estados -->
+    <text x="330" y="280" fill="#7fa1db" font-size="30" font-weight="700" letter-spacing="10" opacity="0.55">PARÁ</text>
+    <text x="660" y="250" fill="#7fa1db" font-size="24" font-weight="700" letter-spacing="7" opacity="0.5">MARANHÃO</text>
+
+    <!-- rotas pontilhadas conectando as cidades -->
+    <g stroke="#cfa13f" stroke-width="2.5" stroke-dasharray="1 9" stroke-linecap="round" opacity="0.8">
+      <path d="M572 188 C 560 250, 555 300, 547 340"/>
+      <path d="M547 340 C 535 350, 525 358, 517 367"/>
+      <path d="M517 367 C 516 374, 517 378, 518 384"/>
+      <path d="M547 340 C 570 344, 590 344, 611 346"/>
+    </g>
+
+    <!-- bússola decorativa -->
+    <g transform="translate(70 480)" stroke="#b0c6ea" stroke-width="2">
+      <circle r="26" fill="none"/>
+      <path d="M0 -18 L6 6 L0 0 L-6 6 Z" fill="#cfa13f" stroke="none"/>
+      <text x="0" y="-34" text-anchor="middle" fill="#7fa1db" font-size="14" font-weight="700" stroke="none">N</text>
+    </g>
+  </svg>
+
+  <!-- Pins -->
+  {
+    pins.map((pin) => {
+      const unit = unitById(pin.unitId);
+      if (!unit) return null;
+      return (
+        <div
+          class="group absolute z-10 -translate-x-1/2 -translate-y-full"
+          style={`left: ${pin.x}%; top: ${pin.y}%;`}
+        >
+          <button
+            type="button"
+            class="relative block cursor-pointer focus:outline-none"
+            aria-label={`Unidade ${pin.text} — ver detalhes`}
+          >
+            <span class="pin-pulse absolute bottom-0.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-gold-400/40" aria-hidden="true" />
+            <svg class="h-9 w-9 drop-shadow-md transition group-hover:scale-110" viewBox="0 0 24 24" fill="#cfa13f" aria-hidden="true">
+              <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>
+              <circle cx="12" cy="9" r="2.6" fill="#fff"/>
+            </svg>
+          </button>
+          <p
+            class:list={[
+              'pointer-events-none absolute text-xs font-bold whitespace-nowrap text-navy-700',
+              pin.label === 'left' && 'top-1/3 right-full mr-1',
+              pin.label === 'right' && 'top-1/3 left-full ml-1',
+              (!pin.label || pin.label === 'bottom') && 'top-full left-1/2 mt-0.5 -translate-x-1/2 text-center',
+            ]}
+          >
+            {pin.text}
+          </p>
+
+          <!-- Tooltip -->
+          <div
+            class:list={[
+              'invisible absolute left-1/2 z-20 w-72 -translate-x-1/2 opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100',
+              pin.tip === 'top' ? 'bottom-full mb-2' : 'top-full mt-6',
+            ]}
+          >
+            <div class="overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-navy-100">
+              <div class="h-1 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400" aria-hidden="true" />
+              <div class="space-y-3 p-4 text-left">
+                <div>
+                  <p class="font-display text-sm font-bold text-navy-700">{unit.name}</p>
+                  <p class="mt-0.5 text-xs leading-snug text-gray-600">{unit.address}</p>
+                  <p class="mt-0.5 text-xs font-semibold text-gray-700">{unit.whatsapp.join(' · ')}</p>
+                </div>
+                <a
+                  href="/unidades/"
+                  class="block rounded-full bg-navy-700 px-4 py-2 text-center text-xs font-bold text-white transition hover:bg-navy-600"
+                >
+                  Conhecer as unidades →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    })
+  }
+</div>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .pin-pulse {
+      animation: pin-pulse 2.4s ease-out infinite;
+    }
+    @keyframes pin-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(207, 161, 63, 0.45);
+      }
+      100% {
+        box-shadow: 0 0 0 14px rgba(207, 161, 63, 0);
+      }
+    }
+  }
+</style>

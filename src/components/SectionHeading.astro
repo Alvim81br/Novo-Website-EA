@@ -1,0 +1,41 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  light?: boolean;
+  align?: 'center' | 'left';
+}
+const { eyebrow, title, subtitle, light = false, align = 'center' } = Astro.props;
+---
+
+<div class:list={['reveal max-w-3xl', align === 'center' ? 'mx-auto text-center' : '']}>
+  {
+    eyebrow && (
+      <p class:list={['text-sm font-bold tracking-widest uppercase', light ? 'text-gold-300' : 'text-red-ea']}>
+        {eyebrow}
+      </p>
+    )
+  }
+  <h2
+    class:list={[
+      'mt-2 text-4xl font-bold sm:text-5xl',
+      light ? 'text-white' : 'text-navy-700',
+    ]}
+  >
+    {title}
+  </h2>
+  <div
+    class:list={[
+      'mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-navy-500 via-red-ea to-gold-400',
+      align === 'center' ? 'mx-auto' : '',
+    ]}
+    aria-hidden="true"
+  >
+  </div>
+  {
+    subtitle && (
+      <p class:list={['mt-4 text-lg leading-relaxed', light ? 'text-navy-100' : 'text-gray-600']}>{subtitle}</p>
+    )
+  }
+</div>

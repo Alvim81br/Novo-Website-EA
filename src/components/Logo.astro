@@ -1,0 +1,26 @@
+---
+// Logomarca oficial da English Academy: escudo (WebP otimizado em /public/logo-ea.webp)
+// com wordmark na tipografia da marca — "ENGLISH" em Cinzel (serifada clássica,
+// branca) e "ACADEMY" em Montserrat espaçada (dourada), como na arte oficial.
+interface Props {
+  class?: string;
+}
+const { class: className = 'h-10' } = Astro.props;
+---
+
+<span class={`flex items-center gap-3 ${className}`}>
+  <img
+    src="/logo-ea.webp"
+    alt="English Academy"
+    class="h-full w-auto drop-shadow-sm"
+    width="288"
+    height="320"
+    loading="eager"
+    decoding="async"
+    onerror="this.style.display='none'"
+  />
+  <span class="flex flex-col justify-center leading-none" aria-hidden="true">
+    <span class="font-brand text-[1.2em] font-bold tracking-wide text-white">ENGLISH</span>
+    <span class="font-display mt-1 text-[0.72em] font-medium tracking-[0.42em] text-[#CFA13F]">ACADEMY</span>
+  </span>
+</span>

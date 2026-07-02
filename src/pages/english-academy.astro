@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTABand from '../components/CTABand.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import { faq } from '../data/faq';
+
+// Ícones próprios em SVG (traço elegante, sem emojis)
+const diferenciais = [
+  {
+    num: '01',
+    title: 'Aulas Diárias',
+    text: 'Estudar inglês todos os dias faz toda a diferença. Somos a única escola da região com aulas diárias.',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg>`,
+  },
+  {
+    num: '02',
+    title: '100% Conversação',
+    text: 'Você aprende inglês falando, do primeiro ao último minuto de cada aula.',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h7A2.5 2.5 0 0 1 16 6.5v3a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3A2.5 2.5 0 0 1 4 9.5z"/><path d="M19.5 9.5a2.5 2.5 0 0 1 .5 1.5v3a2.5 2.5 0 0 1-2.5 2.5H16l-2 2v-2"/></svg>`,
+  },
+  {
+    num: '03',
+    title: 'Método Consagrado',
+    text: 'O Método Callan é eficaz, rápido e consistente — usado em mais de 40 países.',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a1.5 1.5 0 0 0 0 3H7M17 6h2.5a1.5 1.5 0 0 1 0 3H17"/></svg>`,
+  },
+  {
+    num: '04',
+    title: 'Turmas Reduzidas',
+    text: 'Em média 12 alunos por turma: mais atenção do professor para você.',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M16 14.6c2.6.3 4.5 2 4.5 4.4"/></svg>`,
+  },
+  {
+    num: '05',
+    title: '4x Mais Rápido',
+    text: 'Aprenda a partir de 18 meses o que em outras escolas você estudaria por 6 anos.',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><path d="M13 3 5 13.5h6L11 21l8-10.5h-6z"/></svg>`,
+  },
+  {
+    num: '06',
+    title: 'App Exclusivo com IA',
+    text: 'Pratique conversação com IA, receba correções em tempo real e estude de onde quiser.',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18.5h2"/><path d="m16.5 8.5.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" fill="currentColor" stroke="none"/></svg>`,
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
+
+const vantagens = [
+  {
+    title: 'Método Callan',
+    text: 'Método consagrado mundialmente: eficaz, rápido e consistente no ensino de idiomas.',
+  },
+  {
+    title: 'Instrutores Qualificados',
+    text: 'Time de professores muito experiente com o Callan, treinados pela Callan Organisation — alguns nativos e vários com vivência no exterior.',
+  },
+  {
+    title: 'Economize Conosco',
+    text: 'Menor custo pela maior carga horária — e preço fixo do início ao fim do contrato.',
+  },
+  {
+    title: 'Aulas Todos os Dias',
+    text: 'Estudar inglês todos os dias faz toda a diferença no aprendizado.',
+  },
+  {
+    title: 'English Passport',
+    text: 'Estude até o dobro de carga horária pagando apenas o valor contratado.',
+  },
+  {
+    title: 'Turmas Reduzidas',
+    text: 'Mais atenção: estude com menos alunos que as escolas tradicionais.',
+  },
+];
+
+---
+
+<BaseLayout
+  title="A English Academy — Nossa História e DNA | English Academy"
+  description="Fundada em 2013, a English Academy é a maior rede de escolas de inglês da região Norte: 9 unidades, 120 colaboradores e milhares de alunos rumo à fluência com o Método Callan."
+  schema={faqSchema}
+>
+  <!-- Hero -->
+  <section class="hero-grad-academy relative flex min-h-[22.25rem] items-center overflow-hidden py-10">
+    <div class="absolute inset-0" aria-hidden="true">
+      <!-- Anéis concêntricos (tradição/excelência) -->
+      <div class="absolute top-1/2 right-[-8rem] h-[24rem] w-[24rem] -translate-y-1/2 rounded-full border-2 border-gold-400/25"></div>
+      <div class="absolute top-1/2 right-[-5rem] h-[17rem] w-[17rem] -translate-y-1/2 rounded-full border-2 border-white/15"></div>
+      <div class="absolute top-1/2 right-[-2.5rem] h-[10rem] w-[10rem] -translate-y-1/2 rounded-full border-2 border-gold-400/35"></div>
+      <div class="absolute bottom-[-6rem] left-[-4rem] h-[18rem] w-[18rem] rounded-full border-2 border-white/10"></div>
+      <!-- Brilho dourado -->
+      <div class="absolute -top-20 right-10 h-80 w-80 rounded-full bg-gold-400/20 blur-3xl"></div>
+      <span class="animate-twinkle absolute top-[26%] left-[16%] text-xl text-gold-300/60">✦</span>
+      <span class="animate-twinkle-slow absolute bottom-[26%] left-[40%] text-sm text-white/40">✦</span>
+    </div>
+    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Student Experience</p>
+      <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+        Viva a melhor <span class="text-gold-400">experiência</span> que uma escola de inglês pode oferecer
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
+        Inglês de verdade é na English Academy — uma combinação de método, gente e cuidado com cada detalhe
+        que você só encontra aqui.
+      </p>
+    </div>
+  </section>
+
+  <!-- História -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div class="reveal">
+          <p class="text-sm font-bold tracking-widest text-red-ea uppercase">Nossa História</p>
+          <h2 class="mt-2 text-4xl font-bold text-navy-700 sm:text-5xl">De Dublin para o Norte do Brasil</h2>
+          <div class="mt-6 space-y-4 text-lg leading-relaxed text-gray-600">
+            <p>
+              Fundada em <strong class="text-navy-700">2013 por Ismael Alvim</strong>, a English Academy nasceu de uma
+              experiência transformadora em <strong class="text-navy-700">Dublin, Irlanda</strong>, onde nosso fundador
+              conheceu o consagrado Método Callan.
+            </p>
+            <p>
+              Reconhecendo o potencial desta metodologia para transformar o ensino de inglês, ele trouxe o método
+              para o Norte do país, estabelecendo a primeira escola em <strong class="text-navy-700">Parauapebas</strong>.
+            </p>
+            <p>
+              Hoje somos a maior rede de escolas de inglês da região Norte — uma <strong class="text-navy-700">Accredited
+              School</strong> da Callan Method Organisation desde 2013, ensinando inglês e espanhol de forma exclusiva
+              nas cidades onde atuamos.
+            </p>
+          </div>
+        </div>
+        <div class="reveal grid grid-cols-2 gap-5">
+          <div class="rounded-2xl bg-navy-700 p-7 text-center">
+            <p class="font-display text-5xl font-extrabold text-gold-400">09</p>
+            <p class="mt-2 font-semibold text-white">unidades estrategicamente localizadas</p>
+          </div>
+          <div class="rounded-2xl bg-gold-400 p-7 text-center">
+            <p class="font-display text-5xl font-extrabold text-navy-900">120</p>
+            <p class="mt-2 font-semibold text-navy-900">colaboradores dedicados</p>
+          </div>
+          <div class="col-span-2 rounded-2xl border-2 border-navy-100 bg-navy-50 p-7 text-center">
+            <p class="font-display text-5xl font-extrabold text-navy-700">+7 mil</p>
+            <p class="mt-2 font-semibold text-navy-700">alunos em sua jornada rumo à fluência</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DNA -->
+  <section class="bg-navy-800 py-20">
+    <div class="mx-auto max-w-5xl px-4 lg:px-8">
+      <SectionHeading eyebrow="Nosso DNA" title="Por que existimos" light />
+      <div class="mt-12 grid gap-8 md:grid-cols-2">
+        <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-8">
+          <h3 class="font-display text-xl font-bold text-gold-300">Intenção Aspiracional</h3>
+          <p class="mt-3 leading-relaxed text-navy-100">
+            Levar aprendizado de verdade ao maior número possível de pessoas — porque uma língua nova nunca é
+            só um idioma. É uma porta que se abre, uma oportunidade que se cria, um futuro que se transforma.
+            Queremos ser parte da história de quem decide ir mais longe, em qualquer fase da vida.
+          </p>
+        </div>
+        <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-8">
+          <h3 class="font-display text-xl font-bold text-gold-300">Nosso Compromisso</h3>
+          <p class="mt-3 leading-relaxed text-navy-100">
+            Entregar o melhor ensino de inglês e espanhol do mercado — com fluência rápida, metodologia que
+            funciona de verdade e uma experiência tão marcante que faz o aluno voltar, indicar e contar para
+            todo mundo. Fazer cada aluno chegar mais longe, mais rápido e com mais prazer no caminho.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diferenciais -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Por que a English Academy?"
+        title="São muitos os motivos para aprender inglês aqui"
+        subtitle="Uma combinação de vantagens que você só encontra na English Academy."
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          diferenciais.map((item) => (
+            <div class="reveal group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <span
+                class="font-display absolute -top-2 right-4 text-6xl font-extrabold text-navy-700/5 transition-colors group-hover:text-gold-400/25"
+                aria-hidden="true"
+              >
+                {item.num}
+              </span>
+              <div
+                class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-navy-600 to-navy-900 text-gold-400 shadow-md transition group-hover:scale-105"
+                aria-hidden="true"
+                set:html={item.icon}
+              />
+              <h3 class="mt-5 font-display text-xl font-bold text-navy-700">{item.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
+              <div
+                class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400 opacity-0 transition group-hover:opacity-100"
+                aria-hidden="true"
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Vantagens -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Inglês de verdade é aqui"
+        title="Uma combinação de vantagens que você só encontra aqui"
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          vantagens.map((item) => (
+            <div class="reveal rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gold-100 text-gold-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7" />
+                </svg>
+              </span>
+              <h3 class="mt-4 font-display text-lg font-bold text-navy-700">{item.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Dúvidas frequentes"
+        title="Perguntas e respostas"
+        subtitle="Tudo o que você precisa saber antes de começar sua jornada rumo à fluência."
+      />
+      <div class="mt-12">
+        <FAQAccordion items={faq} />
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Venha viver essa experiência de perto"
+    subtitle="Conheça nossa escola, converse com nossos professores e veja o Método Callan em ação — na aula experimental gratuita."
+  />
+</BaseLayout>

@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import CTABand from '../../components/CTABand.astro';
+import { segments } from '../../data/courses';
+import { site } from '../../data/site';
+import { defaultWhatsappLink } from '../../data/units';
+---
+
+<BaseLayout
+  title="Cursos de Inglês — Adultos, Adolescentes, Crianças e Online | English Academy"
+  description="Encontre sua turma: inglês para adultos, adolescentes (Teens), crianças (Kids) e online ao vivo. Aulas diárias, turmas reduzidas e fluência 4x mais rápida com o Método Callan."
+>
+  <!-- Hero -->
+  <section class="hero-grad-cursos relative flex min-h-[22.25rem] items-center overflow-hidden py-10">
+    <div class="absolute inset-0" aria-hidden="true">
+      <!-- Quadrados arredondados flutuando (blocos de turmas) -->
+      <div class="animate-float absolute top-[18%] right-[10%] h-20 w-20 rotate-12 rounded-2xl border-2 border-gold-400/30"></div>
+      <div class="animate-float-diamond absolute top-[55%] right-[22%] h-12 w-12 rounded-xl border-2 border-white/20"></div>
+      <div class="absolute bottom-[-2rem] right-[38%] h-24 w-24 -rotate-6 rounded-2xl border-2 border-white/10"></div>
+      <div class="absolute top-[-2rem] left-[16%] h-16 w-16 rotate-45 rounded-xl border-2 border-red-ea/30"></div>
+      <!-- Brilhos -->
+      <div class="absolute -top-20 left-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <div class="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-red-ea/20 blur-3xl"></div>
+      <span class="animate-twinkle absolute top-[30%] right-[30%] text-lg text-gold-300/60">✦</span>
+      <span class="animate-twinkle-slow absolute bottom-[24%] left-[28%] text-sm text-white/40">✦</span>
+    </div>
+    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Encontre aqui a sua turma</p>
+      <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+        Cursos para cada <span class="text-gold-400">fase da vida</span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
+        Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças — presenciais ou online
+        ao vivo, sempre com o Método Callan.
+      </p>
+    </div>
+  </section>
+
+  <!-- Navegação rápida -->
+  <nav class="sticky top-[68px] z-40 border-b border-gray-100 bg-white/95 backdrop-blur-sm" aria-label="Seções de cursos">
+    <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-3 lg:px-8">
+      {
+        segments.map((segment) => (
+          <a
+            href={`#${segment.id}`}
+            class="shrink-0 rounded-full border border-navy-100 px-4 py-2 text-sm font-semibold text-navy-700 transition hover:bg-navy-50"
+          >
+            {segment.title}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+
+  {
+    segments.map((segment, index) => (
+      <section
+        id={segment.id}
+        class:list={['scroll-mt-32 py-20', index % 2 === 0 ? 'bg-white' : 'bg-gray-50']}
+      >
+        <div class="mx-auto max-w-7xl px-4 lg:px-8">
+          <div class="reveal flex max-w-4xl flex-col-reverse items-start gap-8 sm:flex-row sm:items-center">
+            <div class="max-w-3xl">
+              <p class="text-sm font-bold tracking-widest text-red-ea uppercase">{segment.audience}</p>
+              <h2 class="mt-2 text-4xl font-bold text-navy-700 sm:text-5xl">{segment.title}</h2>
+              <p class="mt-3 font-display text-xl font-semibold text-gold-600">{segment.subtitle}</p>
+              <p class="mt-4 text-lg leading-relaxed text-gray-600">{segment.description}</p>
+            </div>
+            {segment.logos && (
+              <div class="flex shrink-0 flex-col items-center gap-5">
+                {segment.logos.map((logo) => (
+                  <img
+                    src={logo.src}
+                    alt={logo.alt}
+                    class:list={['w-auto', logo.heightClass ?? 'h-28 sm:h-36']}
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.style.display='none'"
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {segment.groups.length > 0 && (
+            <div class="mt-10 grid gap-8 lg:grid-cols-2">
+              {segment.groups.map((group) => (
+                <div class="reveal">
+                  <h3 class="font-display text-lg font-bold text-navy-700">{group.label}</h3>
+                  <div class="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                    <table class="w-full text-left text-sm">
+                      <thead>
+                        <tr class="bg-navy-700 text-white">
+                          <th scope="col" class="px-4 py-3 font-display">Turma</th>
+                          <th scope="col" class="px-4 py-3 font-display">Duração</th>
+                          <th scope="col" class="px-4 py-3 font-display">Carga Horária</th>
+                          <th scope="col" class="px-4 py-3 font-display">Frequência</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-100">
+                        {group.classes.map((turma) => (
+                          <tr class:list={['transition hover:bg-navy-50/50', turma.highlight ? 'bg-gold-50' : '']}>
+                            <td class="px-4 py-3.5">
+                              <span class="font-display font-bold text-navy-700">{turma.name}</span>
+                              {turma.highlight && (
+                                <span class="ml-2 rounded-full bg-gold-400 px-2 py-0.5 text-xs font-bold text-navy-900">
+                                  Mais rápida
+                                </span>
+                              )}
+                              {turma.age && <p class="text-xs text-gray-500">{turma.age}</p>}
+                            </td>
+                            <td class="px-4 py-3.5 text-gray-600">{turma.duration}</td>
+                            <td class="px-4 py-3.5 text-gray-600">{turma.hours}</td>
+                            <td class="px-4 py-3.5 text-gray-600">{turma.frequency}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {segment.id === 'online' && (
+            <div class="reveal mt-10 rounded-2xl border border-navy-100 bg-navy-50 p-8 text-center">
+              <p class="font-display text-xl font-bold text-navy-700">English Academy Live</p>
+              <p class="mx-auto mt-2 max-w-xl text-gray-600">
+                Aulas ao vivo com o Método Callan, de qualquer lugar do Brasil, na nossa plataforma exclusiva.
+              </p>
+              <a
+                href={site.livePlatform}
+                target="_blank"
+                rel="noopener"
+                class="mt-5 inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white transition hover:bg-navy-600"
+              >
+                Conhecer a plataforma →
+              </a>
+            </div>
+          )}
+
+          <div class="reveal mt-10 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="/aula-experimental/"
+              class="rounded-full bg-red-ea px-8 py-3.5 text-center font-bold text-white transition hover:bg-red-ea-dark"
+            >
+              Agendar Aula Experimental Grátis
+            </a>
+            <a
+              href={defaultWhatsappLink}
+              target="_blank"
+              rel="noopener"
+              class="rounded-full border-2 border-navy-200 px-8 py-3.5 text-center font-bold text-navy-700 transition hover:border-navy-700 hover:bg-navy-50"
+            >
+              Consultar valores no WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- Por que mais carga horária -->
+  <section class="bg-navy-800 py-20">
+    <div class="mx-auto max-w-5xl px-4 text-center lg:px-8">
+      <SectionHeading
+        eyebrow="Economize conosco"
+        title="Menor custo pela maior carga horária"
+        subtitle="Enquanto escolas tradicionais oferecem cerca de 8 horas mensais, nossas turmas chegam a 20 horas por mês — quase o triplo. E o preço é fixo do início ao fim do contrato, sem aumentos a cada nível."
+        light
+      />
+      <div class="reveal mt-10 grid gap-6 sm:grid-cols-3">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-7">
+          <p class="font-display text-4xl font-extrabold text-gold-400">até 20h</p>
+          <p class="mt-2 text-sm text-navy-100">de aulas mensais nas turmas diárias</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-7">
+          <p class="font-display text-4xl font-extrabold text-gold-400">Preço fixo</p>
+          <p class="mt-2 text-sm text-navy-100">do início ao fim do contrato, sem reajustes por nível</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-7">
+          <p class="font-display text-4xl font-extrabold text-gold-400">Material acessível</p>
+          <p class="mt-2 text-sm text-navy-100">livros importados da Inglaterra pelo menor preço do mercado</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand />
+</BaseLayout>

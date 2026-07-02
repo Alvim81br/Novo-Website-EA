@@ -6,7 +6,7 @@ export const site = {
   experience: 'The best English experience',
   description:
     'Curso de inglês 4x mais rápido com o Método Callan. Aulas diárias, 100% conversação e turmas reduzidas. Accredited School desde 2013. Unidades em Parauapebas, Marabá, Canaã dos Carajás, Belém, Imperatriz e online ao vivo.',
-  url: 'https://www.englishacademybr.com',
+  url: 'https://www.englishacademy.net.br',
   email: 'contato@englishacademy.live',
   social: {
     instagram: 'https://instagram.com/english_academy_br',

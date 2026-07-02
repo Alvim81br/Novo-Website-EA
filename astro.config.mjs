@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://www.englishacademybr.com',
+  site: 'https://www.englishacademy.net.br',
   output: 'static',
   integrations: [sitemap()],
   vite: {

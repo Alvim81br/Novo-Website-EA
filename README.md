@@ -55,7 +55,7 @@ O site é estático — funciona em Netlify, Vercel ou qualquer hospedagem:
 
 - **Build command:** `npm run build` · **Output:** `dist/`
 - Configure as variáveis `PUBLIC_SUPABASE_URL` e `PUBLIC_SUPABASE_ANON_KEY` no painel da hospedagem
-- Aponte o domínio `www.englishacademybr.com` para a hospedagem escolhida
+- Domínio oficial: `www.englishacademy.net.br` (DNS na Hostinger → Netlify)
 
 ## 🎨 Identidade
 

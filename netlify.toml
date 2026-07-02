@@ -8,8 +8,8 @@
 
 # Redireciona o domínio raiz para www (canônico)
 [[redirects]]
-  from = "https://englishacademybr.com/*"
-  to = "https://www.englishacademybr.com/:splat"
+  from = "https://englishacademy.net.br/*"
+  to = "https://www.englishacademy.net.br/:splat"
   status = 301
   force = true
 

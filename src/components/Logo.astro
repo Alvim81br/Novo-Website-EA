@@ -1,5 +1,5 @@
 ---
-// Logomarca oficial da English Academy: escudo (PNG em /public/logo-ea.png)
+// Logomarca oficial da English Academy: escudo (WebP otimizado em /public/logo-ea.webp)
 // com wordmark na tipografia da marca — "ENGLISH" em Cinzel (serifada clássica,
 // branca) e "ACADEMY" em Montserrat espaçada (dourada), como na arte oficial.
 interface Props {
@@ -10,11 +10,11 @@ const { class: className = 'h-10' } = Astro.props;
 
 <span class={`flex items-center gap-3 ${className}`}>
   <img
-    src="/logo-ea.png"
+    src="/logo-ea.webp"
     alt="English Academy"
     class="h-full w-auto drop-shadow-sm"
-    width="262"
-    height="288"
+    width="288"
+    height="320"
     loading="eager"
     decoding="async"
     onerror="this.style.display='none'"

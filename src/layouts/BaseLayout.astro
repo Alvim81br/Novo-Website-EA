@@ -22,12 +22,15 @@ import { site } from '../data/site';
 interface Props {
   title: string;
   description?: string;
+  /** Imagem de compartilhamento (og:image), caminho em /public. */
+  ogImage?: string;
   /** JSON-LD adicional da página (schema.org). */
   schema?: object | object[];
 }
 
-const { title, description = site.description, schema } = Astro.props;
+const { title, description = site.description, ogImage = '/og-image.jpg', schema } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
 
 const baseSchema = {
   '@context': 'https://schema.org',
@@ -36,7 +39,10 @@ const baseSchema = {
   url: site.url,
   slogan: site.tagline,
   email: site.email,
-  sameAs: [site.social.instagram, site.social.youtube, site.social.tiktok],
+  logo: new URL('/logo-ea.webp', Astro.site).href,
+  image: ogImageUrl.href,
+  // Apenas perfis sociais reais/canônicos (o Instagram é o único confirmado).
+  sameAs: [site.social.instagram],
 };
 
 const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];
@@ -67,11 +73,16 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.tagline} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>

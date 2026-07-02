@@ -2,11 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
-import UnitCard from '../components/UnitCard.astro';
 import UnitsMap from '../components/UnitsMap.astro';
 import VideoDepoimentos from '../components/VideoDepoimentos.astro';
 import { testimonials } from '../data/testimonials';
-import { units, defaultWhatsappLink } from '../data/units';
+import { defaultWhatsappLink } from '../data/units';
 import { segments } from '../data/courses';
 
 const exclusivos = [
@@ -370,7 +369,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
       <SectionHeading
         eyebrow="Encontre sua turma"
         title="Cursos para cada fase da vida"
-        subtitle="Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças."
+        subtitle="Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças — presenciais ou online ao vivo."
       />
       <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {
@@ -403,6 +402,8 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                     src={segment.cardLogo}
                     alt={segment.title}
                     class="relative h-20 w-auto object-contain drop-shadow-lg transition duration-300 group-hover:scale-110"
+                    width="90"
+                    height="80"
                     loading="lazy"
                     decoding="async"
                     onerror="this.style.display='none'"

@@ -24,7 +24,7 @@ export const segments: CourseSegment[] = [
   {
     id: 'adultos',
     title: 'Inglês para Adultos',
-    subtitle: 'Eleve sua carreira dominando o inglês em 18 meses.',
+    subtitle: 'Eleve sua carreira dominando o inglês a partir de 18 meses.',
     description:
       'Para jovens e adultos (a partir de 14 anos), em aulas dinâmicas e diretas, focadas no aprendizado rápido e permanente. Turmas para um público exigente, que não tem tempo a perder. Com carga horária robusta — até 3 vezes maior que escolas tradicionais — o aluno iniciante chega à fluência 4 vezes mais rápido.',
     audience: 'A partir de 14 anos',

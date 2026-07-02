@@ -31,7 +31,7 @@ const { unit } = Astro.props;
   </p>
 
   <div class="mt-4 space-y-1 text-sm text-gray-600">
-    {unit.whatsapp.map((number) => <p>📱 {number}</p>)}
+    {unit.whatsapp.map((number) => <p><span aria-hidden="true">📱</span> {number}</p>)}
     <p>
       <a
         href={`https://instagram.com/${unit.instagram}`}

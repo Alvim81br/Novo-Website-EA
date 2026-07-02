@@ -6,6 +6,9 @@ import { units, defaultWhatsappLink } from '../data/units';
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
+// Número do WhatsApp da matriz (fonte única: units.ts), usado no fallback sem Supabase.
+const waNumber = defaultWhatsappLink.match(/wa\.me\/(\d+)/)?.[1] ?? '';
+
 const courses = [
   'Inglês para Adultos',
   'Inglês para Adolescentes (Teens)',
@@ -22,6 +25,7 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
   class="space-y-5"
   data-supabase-url={supabaseUrl}
   data-supabase-key={supabaseAnonKey}
+  data-wa-number={waNumber}
   novalidate
 >
   <div class="grid gap-5 sm:grid-cols-2">
@@ -131,7 +135,7 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
       const text = encodeURIComponent(
         `Olá! Quero agendar uma aula experimental gratuita.\n\nNome: ${data.name}\nWhatsApp: ${data.phone}\nUnidade: ${data.unit}\nCurso: ${data.course}\nHorário: ${data.schedule || 'Sem preferência'}`
       );
-      window.open(`https://wa.me/5594981329429?text=${text}`, '_blank');
+      window.open(`https://wa.me/${form.dataset.waNumber}?text=${text}`, '_blank');
       showFeedback('Estamos te redirecionando para o WhatsApp para concluir o agendamento. 😊', true);
       return;
     }

@@ -34,7 +34,7 @@ Longos intervalos entre as aulas fazem você esquecer parte do que aprendeu — 
 
 ## 7. Leva à fluência muito mais rápido
 
-A matemática é simples: mais horas de contato com o idioma = fluência em menos tempo. É por isso que nossos alunos aprendem em 18 meses o que em outras escolas levaria 6 anos.
+A matemática é simples: mais horas de contato com o idioma = fluência em menos tempo. É por isso que nossos alunos aprendem a partir de 18 meses o que em outras escolas levaria 6 anos.
 
 ## Estude todos os dias na English Academy
 

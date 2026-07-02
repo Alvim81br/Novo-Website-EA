@@ -10,9 +10,9 @@ export const faq: FaqItem[] = [
       'A idade mínima para começar a aprender inglês é de 4 anos — uma fase importantíssima para a absorção de uma segunda língua. O investimento feito no seu filho(a) hoje renderá muitos frutos no futuro.',
   },
   {
-    question: 'Eu vou realmente falar inglês em 18 meses com o Método Callan?',
+    question: 'Eu vou realmente falar inglês a partir de 18 meses com o Método Callan?',
     answer:
-      'Sim. Nas turmas com aulas diárias, você aprende em 18 meses o que levaria cerca de 6 anos em escolas tradicionais. O Método Callan é focado 100% em conversação, com repetição sistemática e correção imediata — e acreditamos tanto nisso que oferecemos a Garantia de Fluência: se você seguir a metodologia e não atingir a fluência ao final do curso, continua estudando conosco gratuitamente até alcançar seu objetivo.',
+      'Sim. Nas turmas com aulas diárias, você aprende a partir de 18 meses o que levaria cerca de 6 anos em escolas tradicionais. O Método Callan é focado 100% em conversação, com repetição sistemática e correção imediata — e acreditamos tanto nisso que oferecemos a Garantia de Fluência: se você seguir a metodologia e não atingir a fluência ao final do curso, continua estudando conosco gratuitamente até alcançar seu objetivo.',
   },
   {
     question: 'Quais idiomas são ensinados na English Academy?',

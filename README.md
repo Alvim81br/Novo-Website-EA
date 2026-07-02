@@ -22,7 +22,7 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 | `/metodo-callan/`     | Método Callan, Garantia de Fluência, Passaporte, Extra Clubs, App|
 | `/cursos/`            | Turmas: Adultos, Teens, Kids e Online ao Vivo                    |
 | `/blog/`              | Blog "Dicas Para Aprender Inglês Mais Rápido"                    |
-| `/unidades/`          | As 8 unidades (PA/MA) + English Academy Live                     |
+| `/unidades/`          | As 9 unidades (PA/MA) + English Academy Live                     |
 | `/aula-experimental/` | Página de conversão com formulário de leads                     |
 
 ## 🗂️ Onde editar o conteúdo
@@ -34,7 +34,7 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 - **Navegação, redes sociais, textos globais** → `src/data/site.ts`
 - **Artigos do blog** → adicione arquivos `.md` em `src/content/blog/`
 - **Cores e fontes da marca** → `src/styles/global.css` (tokens `@theme`)
-- **Logo** → `src/components/Logo.astro` e `public/favicon.svg` (SVG criado a partir do brand book; substitua pelo arquivo oficial quando desejar)
+- **Logo** → `src/components/Logo.astro` usa a arte oficial `public/logo-ea.png`; favicons em `public/favicon-16x16.png`, `favicon-32x32.png` e `apple-touch-icon.png` (gerados do escudo oficial)
 
 ## 📥 Formulário de leads (Supabase)
 

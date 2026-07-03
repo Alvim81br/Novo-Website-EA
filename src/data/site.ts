@@ -16,8 +16,8 @@ export const site = {
   livePlatform: 'https://www.englishacademy.live',
 };
 
+// Sem "Home": o logotipo no cabeçalho já leva à página inicial.
 export const nav = [
-  { label: 'Home', href: '/' },
   { label: 'English Academy', href: '/english-academy/' },
   { label: 'Método Callan', href: '/metodo-callan/' },
   { label: 'Cursos', href: '/cursos/' },

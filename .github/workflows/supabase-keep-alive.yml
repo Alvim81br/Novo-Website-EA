@@ -1,0 +1,29 @@
+name: Supabase keep-alive
+
+# O plano gratuito do Supabase pausa o projeto após ~7 dias sem atividade.
+# Este job faz uma requisição leve à API REST a cada 3 dias para manter o
+# banco ativo, garantindo que o formulário de leads continue gravando.
+# A anon key é pública por design (RLS permite apenas INSERT), então pode
+# ficar no arquivo sem risco de segurança.
+
+on:
+  schedule:
+    - cron: '17 6 */3 * *' # às 06:17 UTC, a cada 3 dias
+  workflow_dispatch: # permite disparar manualmente pela aba Actions
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          status=$(curl -sS -o /dev/null -w "%{http_code}" \
+            "https://kitekwfjytbewwqatmit.supabase.co/rest/v1/leads?select=id&limit=1" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdGVrd2ZqeXRiZXd3cWF0bWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDEzMjgsImV4cCI6MjA5Njc3NzMyOH0.Lr7hjFTOBYaB5ArYLx9lMm9z3xCUgPjCZE6DdDbIUBg" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdGVrd2ZqeXRiZXd3cWF0bWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDEzMjgsImV4cCI6MjA5Njc3NzMyOH0.Lr7hjFTOBYaB5ArYLx9lMm9z3xCUgPjCZE6DdDbIUBg")
+          echo "Supabase respondeu HTTP $status"
+          # 2xx = ok. Falha só se a API estiver inacessível.
+          if [ "$status" -ge 500 ] || [ "$status" -eq 000 ]; then
+            echo "::error::Supabase inacessível (HTTP $status)"
+            exit 1
+          fi

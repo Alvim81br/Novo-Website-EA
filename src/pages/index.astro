@@ -11,12 +11,15 @@ import { segments } from '../data/courses';
 // Alunos em destaque no Hero (carrossel com crossfade). O banner (nome + idade +
 // rótulo) muda em sincronia com a foto. Para adicionar um aluno, coloque o recorte
 // da foto (sem fundo, ~900x1350, .webp) em /public e adicione um objeto abaixo.
+// `scale` define a altura relativa de cada aluno no hero (base alinhada no chão):
+// Victor é o mais alto, depois Yasmin, Ivana, Manuela e Kaio (o mais baixo).
 const heroStudents = [
   {
     src: '/aluna-yasmin.webp',
     name: 'Yasmin Victória',
     age: '15 anos',
     label: 'Aluna English Academy',
+    scale: 0.93,
     alt: 'Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan',
   },
   {
@@ -24,6 +27,7 @@ const heroStudents = [
     name: 'Victor Hugo',
     age: '19 anos',
     label: 'Aluno English Academy',
+    scale: 1,
     alt: 'Victor Hugo, aluno da English Academy, vestindo a jaqueta do Método Callan',
   },
   {
@@ -31,6 +35,7 @@ const heroStudents = [
     name: 'Ivana Cantanhede',
     age: '27 anos',
     label: 'Aluna English Academy',
+    scale: 0.86,
     alt: 'Ivana Cantanhede, aluna da English Academy, sorrindo com a camiseta do Método Callan',
   },
   {
@@ -38,6 +43,7 @@ const heroStudents = [
     name: 'Kaio',
     age: '6 anos',
     label: 'Aluno English Academy',
+    scale: 0.66,
     alt: 'Kaio, aluno da English Academy, vestindo a jaqueta do Método Callan',
   },
   {
@@ -45,6 +51,7 @@ const heroStudents = [
     name: 'Manuela',
     age: '11 anos',
     label: 'Aluna English Academy',
+    scale: 0.77,
     alt: 'Manuela, aluna da English Academy, comemorando com a camiseta do Método Callan',
   },
 ];
@@ -198,7 +205,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                   src={student.src}
                   alt={i === 0 ? student.alt : ''}
                   class="absolute inset-0 h-full w-full object-contain object-bottom drop-shadow-[0_24px_36px_rgba(0,10,40,0.55)] transition-opacity duration-[1200ms] ease-in-out"
-                  style={`opacity: ${i === 0 ? 1 : 0}`}
+                  style={`opacity: ${i === 0 ? 1 : 0}; transform: scale(${student.scale}); transform-origin: bottom center;`}
                   data-slide={i}
                   data-name={student.name}
                   data-age={student.age}

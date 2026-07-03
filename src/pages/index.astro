@@ -8,6 +8,27 @@ import { testimonials } from '../data/testimonials';
 import { defaultWhatsappLink } from '../data/units';
 import { segments } from '../data/courses';
 
+// Alunos em destaque no Hero (carrossel com crossfade). O banner (nome + idade +
+// rótulo) muda em sincronia com a foto. Para adicionar um aluno, coloque o recorte
+// da foto (sem fundo, ~900x1350, .webp) em /public e adicione um objeto abaixo.
+const heroStudents = [
+  {
+    src: '/aluna-yasmin.webp',
+    name: 'Yasmin Victória',
+    age: '15 anos',
+    label: 'Aluna English Academy',
+    alt: 'Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan',
+  },
+  // Exemplo — ao receber a foto do próximo aluno, adicione um objeto assim:
+  // {
+  //   src: '/aluno-exemplo.webp',
+  //   name: 'Nome do Aluno',
+  //   age: '17 anos',
+  //   label: 'Aluno English Academy',
+  //   alt: 'Nome do Aluno, aluno da English Academy',
+  // },
+];
+
 const exclusivos = [
   {
     title: 'Método Callan',
@@ -145,26 +166,23 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           <!-- Brilho e palco atrás da aluna -->
           <div class="animate-float absolute inset-x-8 top-10 bottom-0 rounded-full bg-gradient-to-b from-gold-400/30 via-red-ea/20 to-transparent blur-2xl" aria-hidden="true"></div>
           <div class="absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2.5rem] border-2 border-white/15 sm:h-80 sm:w-80" aria-hidden="true"></div>
-          <!-- Carrossel de fotos da aluna (crossfade automático) -->
+          <!-- Carrossel de alunos (crossfade automático): foto + banner sincronizados -->
           <div
             class="hero-aluna-stack relative z-10 aspect-[2/3] w-full"
             data-aluna-carousel
-            data-interval="3500"
+            data-interval="4000"
           >
             {
-              [
-                '/aluna-yasmin.webp',
-                '/aluna-yasmin-2.webp',
-                '/aluna-yasmin-3.webp',
-                '/aluna-yasmin-4.webp',
-                '/aluna-yasmin-5.webp',
-              ].map((src, i) => (
+              heroStudents.map((student, i) => (
                 <img
-                  src={src}
-                  alt={i === 0 ? 'Yasmin Victória, aluna da English Academy, sorrindo e vestindo a camiseta do Método Callan' : ''}
+                  src={student.src}
+                  alt={i === 0 ? student.alt : ''}
                   class="absolute inset-0 h-full w-full object-contain object-bottom drop-shadow-[0_24px_36px_rgba(0,10,40,0.55)] transition-opacity duration-[1200ms] ease-in-out"
                   style={`opacity: ${i === 0 ? 1 : 0}`}
                   data-slide={i}
+                  data-name={student.name}
+                  data-age={student.age}
+                  data-label={student.label}
                   width="900"
                   height="1350"
                   loading={i === 0 ? 'eager' : 'lazy'}
@@ -177,16 +195,21 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           </div>
           <!-- Sombra de apoio -->
           <div class="absolute bottom-1 left-1/2 z-0 h-6 w-3/4 -translate-x-1/2 rounded-full bg-navy-950/50 blur-md" aria-hidden="true"></div>
-          <!-- Cartão de identificação (cobre o recorte das pernas) -->
-          <div class="absolute right-0 bottom-12 z-20 w-max max-w-full overflow-hidden rounded-2xl bg-white shadow-2xl sm:-right-6">
+          <!-- Cartão de identificação (nome + idade do aluno; muda junto com a foto) -->
+          <div
+            id="hero-aluna-card"
+            class="absolute right-0 bottom-12 z-20 w-max max-w-full overflow-hidden rounded-2xl bg-white shadow-2xl transition-opacity duration-500 sm:-right-6"
+          >
             <div class="h-1.5 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400" aria-hidden="true"></div>
             <div class="flex items-center gap-3.5 p-4">
               <img src="/logo-ea.webp" alt="" class="h-11 w-auto shrink-0" loading="lazy" decoding="async" />
               <div class="min-w-0">
-                <p class="font-display text-lg leading-tight font-extrabold text-navy-700">Yasmin Victória, 15 anos</p>
+                <p id="hero-aluna-nome" class="font-display text-lg leading-tight font-extrabold text-navy-700">
+                  {heroStudents[0].name}, {heroStudents[0].age}
+                </p>
                 <p class="mt-1 flex items-center gap-2 text-sm font-semibold text-red-ea">
                   <span class="inline-block h-2 w-2 shrink-0 rounded-full bg-red-ea" aria-hidden="true"></span>
-                  Aluna English Academy
+                  <span id="hero-aluna-label">{heroStudents[0].label}</span>
                 </p>
               </div>
             </div>
@@ -512,19 +535,32 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
 
 
   <script>
-    // Carrossel de fotos da aluna no hero: crossfade entre as imagens disponíveis.
+    // Carrossel de alunos no hero: crossfade entre as fotos + banner (nome/idade)
+    // sincronizado com a foto ativa.
     const carousel = document.querySelector<HTMLElement>('[data-aluna-carousel]');
     if (carousel) {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const card = document.getElementById('hero-aluna-card');
+      const nameEl = document.getElementById('hero-aluna-nome');
+      const labelEl = document.getElementById('hero-aluna-label');
       const getSlides = () =>
         Array.from(carousel.querySelectorAll<HTMLImageElement>('img[data-slide]')).filter(
           (img) => img.dataset.failed !== '1'
         );
-      const interval = Number(carousel.dataset.interval) || 3500;
+      const interval = Number(carousel.dataset.interval) || 4000;
+
+      const applyCard = (img: HTMLImageElement | undefined) => {
+        if (!img) return;
+        const name = img.dataset.name ?? '';
+        const age = img.dataset.age ?? '';
+        if (nameEl && name) nameEl.textContent = age ? `${name}, ${age}` : name;
+        if (labelEl && img.dataset.label) labelEl.textContent = img.dataset.label;
+      };
 
       // Aguarda um instante para imagens quebradas se removerem antes de decidir
       setTimeout(() => {
         const slides = getSlides();
+        applyCard(slides[0]);
         if (reduceMotion || slides.length < 2) return;
         let current = 0;
         slides.forEach((s, i) => (s.style.opacity = i === 0 ? '1' : '0'));
@@ -533,6 +569,16 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           if (list.length < 2) return;
           const next = (current + 1) % list.length;
           list.forEach((s, i) => (s.style.opacity = i === next ? '1' : '0'));
+          // Cartão some, troca o texto e reaparece — em sincronia com o crossfade.
+          if (card) {
+            card.style.opacity = '0';
+            setTimeout(() => {
+              applyCard(list[next]);
+              card.style.opacity = '1';
+            }, 300);
+          } else {
+            applyCard(list[next]);
+          }
           current = next;
         }, interval);
       }, 400);

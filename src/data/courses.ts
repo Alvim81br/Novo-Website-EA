@@ -85,7 +85,7 @@ export const segments: CourseSegment[] = [
             duration: '3 anos',
             hours: '1h30/aula',
             frequency: '2x por semana',
-            age: 'a partir de 13 anos',
+            age: 'a partir de 12 anos',
           },
         ],
       },

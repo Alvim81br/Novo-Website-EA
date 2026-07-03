@@ -2,17 +2,14 @@
 import { units, defaultWhatsappLink } from '../data/units';
 
 // Credenciais PÚBLICAS do Supabase (anon key + RLS de INSERT apenas — seguras no
-// cliente; ver supabase/schema.sql). Valores padrão do projeto english-academy-leads.
-// Env vars (PUBLIC_SUPABASE_URL/ANON_KEY) podem sobrescrever, mas só são usadas se
-// tiverem formato válido — configs trocadas/erradas no painel caem no padrão.
-const DEFAULT_SUPABASE_URL = 'https://kitekwfjytbewwqatmit.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY =
+// cliente; ver supabase/schema.sql). Projeto english-academy-leads.
+// Fixas de propósito: valores colados no painel do Vercel podem carregar espaços/
+// quebras de linha invisíveis que corrompem o header Authorization e fazem o envio
+// falhar antes de chegar ao Supabase. Como a anon key é pública por design, mantê-la
+// aqui é seguro e elimina essa classe de erro.
+const supabaseUrl = 'https://kitekwfjytbewwqatmit.supabase.co';
+const supabaseAnonKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdGVrd2ZqeXRiZXd3cWF0bWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDEzMjgsImV4cCI6MjA5Njc3NzMyOH0.Lr7hjFTOBYaB5ArYLx9lMm9z3xCUgPjCZE6DdDbIUBg';
-
-const envUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').trim();
-const envKey = (import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '').trim();
-const supabaseUrl = /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(envUrl) ? envUrl : DEFAULT_SUPABASE_URL;
-const supabaseAnonKey = /^(eyJ|sb_)/.test(envKey) ? envKey : DEFAULT_SUPABASE_ANON_KEY;
 
 // Número do WhatsApp da matriz (fonte única: units.ts), usado no fallback sem Supabase.
 const waNumber = defaultWhatsappLink.match(/wa\.me\/(\d+)/)?.[1] ?? '';
@@ -185,7 +182,10 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
         }),
       });
 
-      if (!response.ok) throw new Error(`Supabase respondeu ${response.status}`);
+      if (!response.ok) {
+        const detail = await response.text().catch(() => '');
+        throw new Error(`Supabase respondeu ${response.status} ${detail}`);
+      }
 
       form.reset();
       showFeedback(
@@ -193,10 +193,16 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
         true
       );
     } catch (error) {
+      // Se o salvamento falhar por qualquer motivo (rede, bloqueio, etc.), não
+      // perdemos o lead: encaminhamos os dados para o WhatsApp da unidade.
       console.error(error);
+      const text = encodeURIComponent(
+        `Olá! Quero agendar uma aula experimental gratuita.\n\nNome: ${data.name}\nWhatsApp: ${data.phone}\nUnidade: ${data.unit}\nCurso: ${data.course}\nHorário: ${data.schedule || 'Sem preferência'}`
+      );
+      window.open(`https://wa.me/${form.dataset.waNumber}?text=${text}`, '_blank');
       showFeedback(
-        'Não foi possível enviar agora. Tente novamente ou chame a gente direto no WhatsApp pelo botão verde.',
-        false
+        'Estamos te levando ao WhatsApp para concluir seu agendamento agora mesmo. 😊',
+        true
       );
     } finally {
       button.disabled = false;

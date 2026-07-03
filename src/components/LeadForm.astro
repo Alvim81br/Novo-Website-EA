@@ -1,10 +1,18 @@
 ---
 import { units, defaultWhatsappLink } from '../data/units';
 
-// Credenciais públicas do Supabase (anon key + RLS de INSERT apenas).
-// Configure em .env — veja .env.example e supabase/schema.sql.
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+// Credenciais PÚBLICAS do Supabase (anon key + RLS de INSERT apenas — seguras no
+// cliente; ver supabase/schema.sql). Valores padrão do projeto english-academy-leads.
+// Env vars (PUBLIC_SUPABASE_URL/ANON_KEY) podem sobrescrever, mas só são usadas se
+// tiverem formato válido — configs trocadas/erradas no painel caem no padrão.
+const DEFAULT_SUPABASE_URL = 'https://kitekwfjytbewwqatmit.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdGVrd2ZqeXRiZXd3cWF0bWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDEzMjgsImV4cCI6MjA5Njc3NzMyOH0.Lr7hjFTOBYaB5ArYLx9lMm9z3xCUgPjCZE6DdDbIUBg';
+
+const envUrl = (import.meta.env.PUBLIC_SUPABASE_URL ?? '').trim();
+const envKey = (import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '').trim();
+const supabaseUrl = /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(envUrl) ? envUrl : DEFAULT_SUPABASE_URL;
+const supabaseAnonKey = /^(eyJ|sb_)/.test(envKey) ? envKey : DEFAULT_SUPABASE_ANON_KEY;
 
 // Número do WhatsApp da matriz (fonte única: units.ts), usado no fallback sem Supabase.
 const waNumber = defaultWhatsappLink.match(/wa\.me\/(\d+)/)?.[1] ?? '';

@@ -162,7 +162,13 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           <h1 class="font-serif mt-6 text-5xl leading-[1.05] font-extrabold text-white sm:text-6xl lg:text-7xl">
             Fale Inglês Fluente <span class="text-gold-400">4x Mais Rápido</span>
           </h1>
-          <p class="mt-6 max-w-xl text-lg leading-relaxed text-navy-100">
+          <!-- Mobile: versão resumida -->
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-navy-100 sm:hidden">
+            Aprenda a partir de <strong class="text-white">18 meses</strong> o que em outras escolas levaria 6 anos
+            com o consagrado Método Callan — a maior rede de escolas de inglês da região Norte.
+          </p>
+          <!-- Desktop: versão completa -->
+          <p class="mt-6 hidden max-w-xl text-lg leading-relaxed text-navy-100 sm:block">
             Aprenda a partir de <strong class="text-white">18 meses</strong> o que em outras escolas levaria 6 anos.
             Aulas diárias, 100% conversação e turmas reduzidas com o consagrado Método Callan —
             a maior rede de escolas de inglês da região Norte.

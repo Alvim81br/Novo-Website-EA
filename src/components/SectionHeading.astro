@@ -3,10 +3,13 @@ interface Props {
   eyebrow?: string;
   title: string;
   subtitle?: string;
+  /** Versão curta do subtítulo exibida só no celular; a completa fica no desktop. */
+  subtitleShort?: string;
   light?: boolean;
   align?: 'center' | 'left';
 }
-const { eyebrow, title, subtitle, light = false, align = 'center' } = Astro.props;
+const { eyebrow, title, subtitle, subtitleShort, light = false, align = 'center' } = Astro.props;
+const subtitleClass = ['mt-4 text-lg leading-relaxed', light ? 'text-navy-100' : 'text-gray-600'];
 ---
 
 <div class:list={['reveal max-w-3xl', align === 'center' ? 'mx-auto text-center' : '']}>
@@ -34,8 +37,13 @@ const { eyebrow, title, subtitle, light = false, align = 'center' } = Astro.prop
   >
   </div>
   {
-    subtitle && (
-      <p class:list={['mt-4 text-lg leading-relaxed', light ? 'text-navy-100' : 'text-gray-600']}>{subtitle}</p>
+    subtitle && subtitleShort ? (
+      <>
+        <p class:list={[...subtitleClass, 'sm:hidden']}>{subtitleShort}</p>
+        <p class:list={[...subtitleClass, 'hidden sm:block']}>{subtitle}</p>
+      </>
+    ) : (
+      subtitle && <p class:list={subtitleClass}>{subtitle}</p>
     )
   }
 </div>

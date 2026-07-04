@@ -20,26 +20,26 @@ interface Pin {
 }
 
 // Um pin por unidade física — gêmeas da mesma cidade ficam próximas.
-// Coordenadas em % do card, calibradas para o viewBox recortado "220 90 600 450".
+// Coordenadas em % do card, calibradas para o viewBox recortado "220 40 600 500".
 const pins: Pin[] = [
-  { unitId: 'belem-nazare', text: 'Unidade Belém', x: 58.7, y: 21.7, tip: 'bottom', label: 'right' },
-  { unitId: 'maraba-cidade-nova', text: 'Unidade Novo Horizonte', x: 53.7, y: 53.2, tip: 'top', label: 'left' },
-  { unitId: 'maraba-nova-maraba', text: 'Unidade Nova Marabá', x: 55.0, y: 57.4, tip: 'bottom', label: 'right' },
-  { unitId: 'imperatriz', text: 'Imperatriz', x: 65.2, y: 50.3, tip: 'top', label: 'right' },
-  { unitId: 'parauapebas-cidade-nova', text: 'Unidade Cidade Nova', x: 47.7, y: 60.0, tip: 'top', label: 'left' },
-  { unitId: 'parauapebas-cidade-jardim', text: 'Unidade Cidade Jardim', x: 51.2, y: 63.3, tip: 'top', label: 'left' },
-  { unitId: 'parauapebas-carajas', text: 'Unidade Carajás', x: 43.8, y: 67.6, tip: 'bottom', label: 'left' },
-  { unitId: 'canaa-dos-carajas', text: 'Unidade Canaã dos Carajás', x: 49.7, y: 70.8, tip: 'bottom', label: 'bottom' },
+  { unitId: 'belem-nazare', text: 'Unidade Belém', x: 58.7, y: 29.5, tip: 'bottom', label: 'right' },
+  { unitId: 'maraba-cidade-nova', text: 'Unidade Novo Horizonte', x: 53.7, y: 57.9, tip: 'top', label: 'left' },
+  { unitId: 'maraba-nova-maraba', text: 'Unidade Nova Marabá', x: 55.0, y: 61.7, tip: 'bottom', label: 'right' },
+  { unitId: 'imperatriz', text: 'Imperatriz', x: 65.2, y: 55.3, tip: 'top', label: 'right' },
+  { unitId: 'parauapebas-cidade-nova', text: 'Unidade Cidade Nova', x: 47.7, y: 64.0, tip: 'top', label: 'left' },
+  { unitId: 'parauapebas-cidade-jardim', text: 'Unidade Cidade Jardim', x: 51.2, y: 66.9, tip: 'top', label: 'left' },
+  { unitId: 'parauapebas-carajas', text: 'Unidade Carajás', x: 43.8, y: 70.9, tip: 'bottom', label: 'left' },
+  { unitId: 'canaa-dos-carajas', text: 'Unidade Canaã dos Carajás', x: 49.7, y: 73.8, tip: 'bottom', label: 'bottom' },
 ];
 
 const unitById = (id: string) => units.find((u) => u.id === id);
 ---
 
-<div class="reveal relative mx-auto aspect-[4/3] max-w-2xl overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-navy-100">
+<div class="reveal relative mx-auto aspect-[6/5] max-w-2xl overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-navy-100">
   <!-- Mapa: contornos reais PA + MA (recorte na região das unidades) -->
   <svg
     class="block h-full w-full"
-    viewBox="220 90 600 450"
+    viewBox="220 40 600 500"
     fill="none"
     preserveAspectRatio="xMidYMid meet"
     aria-hidden="true"

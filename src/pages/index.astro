@@ -532,8 +532,17 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="Nossos alunos amam suas aulas"
         subtitle="A satisfação com o Método Callan nos dá a certeza de que estamos no caminho certo. Nossos alunos são nossos maiores exemplos de sucesso!"
       />
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((testimonial) => <TestimonialCard testimonial={testimonial} />)}
+      <!-- Mobile: carrossel horizontal (swipe) com espiada no próximo card; sm+: grid -->
+      <div
+        class="mt-12 -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:snap-none sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {
+          testimonials.map((testimonial) => (
+            <div class="w-[82%] shrink-0 snap-start sm:w-auto sm:shrink-0">
+              <TestimonialCard testimonial={testimonial} />
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>

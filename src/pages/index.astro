@@ -278,19 +278,19 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="5 diferenciais que só a English Academy tem"
         subtitle="Não somos apenas mais uma escola de idiomas. Cada diferencial foi projetado para eliminar as barreiras que impedem você de ser fluente."
       />
-      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
         {
           exclusivos.map((item, index) => (
             <a
               href={item.href}
               class:list={[
-                'reveal group rounded-2xl p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl',
+                'reveal group rounded-2xl p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-7',
                 index === 0 ? 'bg-navy-700 text-white lg:col-span-1' : 'border border-gray-100 bg-white',
               ]}
             >
               <p
                 class:list={[
-                  'font-display text-5xl font-extrabold',
+                  'font-display text-4xl font-extrabold sm:text-5xl',
                   index === 0 ? 'text-gold-400' : 'text-navy-100',
                 ]}
               >
@@ -298,7 +298,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
               </p>
               <h3
                 class:list={[
-                  'mt-3 font-display text-xl font-bold',
+                  'mt-3 font-display text-lg font-bold sm:text-xl',
                   index === 0 ? 'text-white' : 'text-navy-700',
                 ]}
               >
@@ -318,7 +318,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
             </a>
           ))
         }
-        <div class="reveal flex flex-col justify-center rounded-2xl border-2 border-dashed border-gold-400 bg-gold-50 p-7">
+        <div class="reveal flex flex-col justify-center rounded-2xl border-2 border-dashed border-gold-400 bg-gold-50 p-5 sm:p-7">
           <h3 class="font-display text-xl font-bold text-navy-700">Quer ver tudo isso na prática?</h3>
           <p class="mt-2 text-gray-600">Agende uma aula experimental gratuita e comprove.</p>
           <a
@@ -358,7 +358,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         subtitle="Criado na Inglaterra em 1960 por Robin Callan, o método mais rápido do mundo para aprender um idioma."
         light
       />
-      <div class="mt-14 grid gap-6 sm:grid-cols-3">
+      <div class="mt-14 grid grid-cols-3 gap-2 sm:gap-6">
         {
           [
             {
@@ -380,17 +380,17 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
               icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M16 14.6c2.6.3 4.5 2 4.5 4.4"/></svg>`,
             },
           ].map((stat) => (
-            <div class="reveal group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-sm transition hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.08]">
+            <div class="reveal group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 text-center backdrop-blur-sm transition hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.08] sm:p-8">
               <div
-                class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-navy-900 shadow-md transition group-hover:scale-110"
+                class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-navy-900 shadow-md transition group-hover:scale-110 sm:h-12 sm:w-12"
                 aria-hidden="true"
                 set:html={stat.icon}
               />
-              <p class="font-display mt-5 text-5xl font-extrabold text-gold-400 sm:text-6xl" data-counter>
+              <p class="font-display mt-2 text-3xl font-extrabold text-gold-400 sm:mt-5 sm:text-6xl" data-counter>
                 {stat.value}
               </p>
-              <p class="font-display mt-2 text-lg font-bold text-white">{stat.label}</p>
-              <p class="mt-1 text-sm text-navy-200">{stat.description}</p>
+              <p class="font-display mt-1 text-xs leading-tight font-bold text-white sm:mt-2 sm:text-lg">{stat.label}</p>
+              <p class="mt-1 hidden text-sm text-navy-200 sm:block">{stat.description}</p>
               <div
                 class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-navy-500 via-red-ea to-gold-400 opacity-0 transition group-hover:opacity-100"
                 aria-hidden="true"
@@ -421,7 +421,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="Cursos para cada fase da vida"
         subtitle="Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças — presenciais ou online ao vivo."
       />
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
         {
           segments.map((segment) => (
             <a
@@ -430,7 +430,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
             >
               <div
                 class:list={[
-                  'relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br',
+                  'relative flex h-28 items-center justify-center overflow-hidden bg-gradient-to-br sm:h-40',
                   cardThemes[segment.id]?.gradient ?? 'from-navy-700 to-navy-900',
                 ]}
               >
@@ -451,7 +451,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                   <img
                     src={segment.cardLogo}
                     alt={segment.title}
-                    class="relative h-20 w-auto object-contain drop-shadow-lg transition duration-300 group-hover:scale-110"
+                    class="relative h-14 w-auto object-contain drop-shadow-lg transition duration-300 group-hover:scale-110 sm:h-20"
                     width="90"
                     height="80"
                     loading="lazy"
@@ -460,9 +460,9 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                   />
                 )}
               </div>
-              <div class="flex flex-1 flex-col p-6">
+              <div class="flex flex-1 flex-col p-4 sm:p-6">
                 <p class="text-xs font-bold tracking-widest text-red-ea uppercase">{segment.audience}</p>
-                <h3 class="mt-2 font-display text-xl font-bold text-navy-700">{segment.title}</h3>
+                <h3 class="mt-2 font-display text-base font-bold text-navy-700 sm:text-xl">{segment.title}</h3>
                 <p class="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{segment.subtitle}</p>
                 <p class="mt-4 inline-flex items-center gap-1 text-sm font-bold text-navy-700 transition group-hover:gap-2">
                   Ver turmas <span aria-hidden="true">→</span>
@@ -487,15 +487,15 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="Quem compara escolhe o Método Callan"
         subtitle="Intercâmbio, aulas de gramática ou aplicativos? Veja o que só o Método Callan entrega de uma vez só."
       />
-      <div class="reveal mt-12 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table class="w-full text-left text-sm sm:text-base">
+      <div class="reveal mt-12 overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <table class="w-full min-w-[620px] text-left text-sm sm:text-base">
           <thead>
             <tr class="bg-navy-700 text-white">
               <th scope="col" class="px-5 py-4 font-display">Benefício</th>
               <th scope="col" class="px-4 py-4 text-center font-display text-gold-300">Método Callan</th>
-              <th scope="col" class="hidden px-4 py-4 text-center font-display sm:table-cell">Intercâmbio</th>
-              <th scope="col" class="hidden px-4 py-4 text-center font-display sm:table-cell">Gramática</th>
-              <th scope="col" class="hidden px-4 py-4 text-center font-display sm:table-cell">Apps</th>
+              <th scope="col" class="px-4 py-4 text-center font-display">Intercâmbio</th>
+              <th scope="col" class="px-4 py-4 text-center font-display">Gramática</th>
+              <th scope="col" class="px-4 py-4 text-center font-display">Apps</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
@@ -506,13 +506,13 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                   <td class="bg-gold-50/60 px-4 py-4 text-center text-xl">
                     <span class={linha.callan ? 'text-green-600' : 'text-red-ea'}>{linha.callan ? '✔' : '✘'}</span>
                   </td>
-                  <td class="hidden px-4 py-4 text-center text-xl sm:table-cell">
+                  <td class="px-4 py-4 text-center text-xl">
                     <span class={linha.intercambio ? 'text-green-600' : 'text-red-ea'}>{linha.intercambio ? '✔' : '✘'}</span>
                   </td>
-                  <td class="hidden px-4 py-4 text-center text-xl sm:table-cell">
+                  <td class="px-4 py-4 text-center text-xl">
                     <span class={linha.gramatica ? 'text-green-600' : 'text-red-ea'}>{linha.gramatica ? '✔' : '✘'}</span>
                   </td>
-                  <td class="hidden px-4 py-4 text-center text-xl sm:table-cell">
+                  <td class="px-4 py-4 text-center text-xl">
                     <span class={linha.apps ? 'text-green-600' : 'text-red-ea'}>{linha.apps ? '✔' : '✘'}</span>
                   </td>
                 </tr>

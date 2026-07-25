@@ -6,6 +6,11 @@ interface Props {
   class?: string;
 }
 const { class: className = 'h-10' } = Astro.props;
+
+// "ACADEMY" é renderizada letra a letra e distribuída (justify-between) para
+// ocupar exatamente a mesma largura de "ENGLISH", independente da métrica da
+// fonte — assim as duas linhas ficam sempre alinhadas nas duas pontas.
+const academy = [...'ACADEMY'];
 ---
 
 <span class={`flex items-center gap-3 ${className}`}>
@@ -19,8 +24,10 @@ const { class: className = 'h-10' } = Astro.props;
     decoding="async"
     onerror="this.style.display='none'"
   />
-  <span class="flex flex-col justify-center leading-none" aria-hidden="true">
-    <span class="font-brand text-[1.2em] font-bold tracking-wide text-white">ENGLISH</span>
-    <span class="font-display mt-1 text-[1.2em] font-medium tracking-[0.1em] text-[#CFA13F]">ACADEMY</span>
+  <span class="flex flex-col items-stretch justify-center leading-none" aria-hidden="true">
+    <span class="font-brand text-[1.2em] font-bold text-white">ENGLISH</span>
+    <span class="font-display mt-1 flex w-full justify-between text-[1em] font-medium text-[#CFA13F]">
+      {academy.map((letra) => <span>{letra}</span>)}
+    </span>
   </span>
 </span>

@@ -123,6 +123,13 @@ html {
   h2 {
     font-family: var(--font-serif);
   }
+
+  /* Corpo de texto das páginas em Helvetica. Fica no <main> de propósito:
+     Header e Footer estão fora dele e seguem com a fonte padrão (Lato). */
+  main {
+    --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: var(--font-body);
+  }
 }
 
 /* ===== Animações de entrada no scroll ===== */

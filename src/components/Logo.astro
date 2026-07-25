@@ -1,7 +1,7 @@
 ---
 // Logomarca oficial da English Academy: escudo (WebP otimizado em /public/logo-ea.webp)
 // com wordmark na tipografia da marca — "ENGLISH" em Cinzel (serifada clássica,
-// branca) e "ACADEMY" em Nunito Bold (dourada).
+// dourada) e "ACADEMY" em Nunito Bold (branca), como na arte oficial.
 interface Props {
   class?: string;
 }
@@ -28,8 +28,8 @@ const academy = [...'ACADEMY'];
     class="flex translate-y-[0.055em] flex-col items-stretch justify-center leading-none"
     aria-hidden="true"
   >
-    <span class="font-brand text-[1.2em] font-bold text-white">ENGLISH</span>
-    <span class="font-logo mx-auto flex w-[95%] justify-between text-[0.67em] font-bold text-[#CFA13F]">
+    <span class="font-brand text-[1.2em] font-bold text-gold-400">ENGLISH</span>
+    <span class="font-logo mx-auto flex w-[95%] justify-between text-[0.67em] font-bold text-white">
       {academy.map((letra) => <span>{letra}</span>)}
     </span>
   </span>

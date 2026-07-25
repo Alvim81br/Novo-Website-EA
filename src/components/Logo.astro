@@ -24,9 +24,12 @@ const academy = [...'ACADEMY'];
     decoding="async"
     onerror="this.style.display='none'"
   />
-  <span class="flex flex-col items-stretch justify-center leading-none" aria-hidden="true">
+  <span
+    class="flex translate-y-[0.055em] flex-col items-stretch justify-center leading-none"
+    aria-hidden="true"
+  >
     <span class="font-brand text-[1.2em] font-bold text-white">ENGLISH</span>
-    <span class="font-logo mt-1 flex w-full justify-between text-[1em] font-bold text-[#CFA13F]">
+    <span class="font-logo mt-[-0.2em] flex w-full justify-between text-[1em] font-bold text-[#CFA13F]">
       {academy.map((letra) => <span>{letra}</span>)}
     </span>
   </span>

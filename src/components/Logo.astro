@@ -7,9 +7,9 @@ interface Props {
 }
 const { class: className = 'h-10' } = Astro.props;
 
-// "ACADEMY" é renderizada letra a letra e distribuída (justify-between) para
-// ocupar exatamente a mesma largura de "ENGLISH", independente da métrica da
-// fonte — assim as duas linhas ficam sempre alinhadas nas duas pontas.
+// "ACADEMY" é renderizada letra a letra e distribuída (justify-between) dentro de
+// 95% da largura de "ENGLISH", ficando centralizada sob ela. As proporções seguem
+// a arte oficial: altura ~48% e largura ~96% das de "ENGLISH".
 const academy = [...'ACADEMY'];
 ---
 
@@ -25,11 +25,11 @@ const academy = [...'ACADEMY'];
     onerror="this.style.display='none'"
   />
   <span
-    class="flex translate-y-[0.055em] flex-col items-stretch justify-center leading-none"
+    class="flex translate-y-[0.024em] flex-col items-stretch justify-center leading-none"
     aria-hidden="true"
   >
     <span class="font-brand text-[1.2em] font-bold text-white">ENGLISH</span>
-    <span class="font-logo mt-[-0.2em] flex w-full justify-between text-[1em] font-bold text-[#CFA13F]">
+    <span class="font-logo mx-auto flex w-[95%] justify-between text-[0.58em] font-bold text-[#CFA13F]">
       {academy.map((letra) => <span>{letra}</span>)}
     </span>
   </span>

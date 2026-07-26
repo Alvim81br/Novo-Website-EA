@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
+import UnitsMap from '../components/UnitsMap.astro';
 import { faq } from '../data/faq';
 
 // Ícones próprios em SVG (traço elegante, sem emojis)
@@ -131,19 +132,24 @@ const faqSchema = {
             </p>
           </div>
         </div>
-        <div class="reveal grid grid-cols-2 gap-5">
-          <div class="rounded-2xl bg-navy-700 p-7 text-center">
-            <p class="font-display text-5xl font-extrabold text-gold-400">09</p>
-            <p class="mt-2 font-semibold text-white">unidades estrategicamente localizadas</p>
-          </div>
-          <div class="rounded-2xl bg-gold-400 p-7 text-center">
-            <p class="font-display text-5xl font-extrabold text-navy-900">120</p>
-            <p class="mt-2 font-semibold text-navy-900">colaboradores dedicados</p>
-          </div>
-          <div class="col-span-2 rounded-2xl border-2 border-navy-100 bg-navy-50 p-7 text-center">
-            <p class="font-display text-5xl font-extrabold text-navy-700">+7 mil</p>
-            <p class="mt-2 font-semibold text-navy-700">alunos em sua jornada rumo à fluência</p>
-          </div>
+        <div class="reveal">
+          <UnitsMap />
+        </div>
+      </div>
+
+      <!-- Números da rede: os três em linha, do mesmo tamanho -->
+      <div class="reveal mt-12 grid gap-5 sm:grid-cols-3">
+        <div class="rounded-2xl bg-navy-700 p-7 text-center">
+          <p class="font-display text-5xl font-extrabold text-gold-400">09</p>
+          <p class="mt-2 font-semibold text-white">unidades estrategicamente localizadas</p>
+        </div>
+        <div class="rounded-2xl bg-gold-400 p-7 text-center">
+          <p class="font-display text-5xl font-extrabold text-navy-900">120</p>
+          <p class="mt-2 font-semibold text-navy-900">colaboradores dedicados</p>
+        </div>
+        <div class="rounded-2xl border-2 border-navy-100 bg-navy-50 p-7 text-center">
+          <p class="font-display text-5xl font-extrabold text-navy-700">+7 mil</p>
+          <p class="mt-2 font-semibold text-navy-700">alunos em sua jornada rumo à fluência</p>
         </div>
       </div>
     </div>

@@ -11,9 +11,12 @@ import '@fontsource/cinzel/700.css';
 import '@fontsource/nunito/700.css';
 import '@fontsource/playfair-display/700.css';
 import '@fontsource/playfair-display/800.css';
+// Itálico verdadeiro do título do hero da Home (evita itálico sintético do navegador)
+import '@fontsource/playfair-display/800-italic.css';
 // Preload dos woff2 críticos (títulos serifados above-the-fold)
 import playfair700Url from '@fontsource/playfair-display/files/playfair-display-latin-700-normal.woff2?url';
 import playfair800Url from '@fontsource/playfair-display/files/playfair-display-latin-800-normal.woff2?url';
+import playfair800ItalicUrl from '@fontsource/playfair-display/files/playfair-display-latin-800-italic.woff2?url';
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -66,6 +69,7 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
     <!-- Fontes críticas (títulos above-the-fold) -->
     <link rel="preload" as="font" type="font/woff2" href={playfair700Url} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={playfair800Url} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={playfair800ItalicUrl} crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

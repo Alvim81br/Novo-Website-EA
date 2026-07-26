@@ -119,9 +119,12 @@ html {
     font-family: var(--font-display);
   }
 
-  /* Títulos de seção em serifa (mesma do hero) */
+  /* Títulos de seção em serifa (mesma do hero), em itálico.
+     Os h2 que trocam a fonte por classe (ex.: font-display nos cards do blog e
+     no formulário) usam `not-italic` para continuar retos. */
   h2 {
     font-family: var(--font-serif);
+    font-style: italic;
   }
 
   /* Corpo de texto das páginas em Helvetica. Fica no <main> de propósito:

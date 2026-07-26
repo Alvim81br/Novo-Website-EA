@@ -172,7 +172,36 @@ const courseSchema = {
             <p>Você não apenas aprende inglês — você vive o inglês em cada aula.</p>
           </div>
         </div>
-        <div class="reveal grid grid-cols-3 gap-4 text-center">
+        <div class="reveal space-y-6">
+          <!-- Tela do vídeo do Método Callan.
+               Para publicar o vídeo, troque este bloco pelo iframe do YouTube:
+               <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/ID_DO_VIDEO"
+                 title="Método Callan" frameborder="0" allowfullscreen
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe> -->
+          <div class="relative aspect-video overflow-hidden rounded-2xl bg-gradient-to-br from-navy-700 to-navy-950 shadow-lg ring-1 ring-black/5">
+            <div
+              class="absolute inset-0 opacity-[0.07]"
+              style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 22px 22px;"
+              aria-hidden="true"
+            >
+            </div>
+            <span class="absolute top-3 left-3 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold tracking-wide text-white backdrop-blur-sm">
+              English Academy
+            </span>
+            <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+              <span
+                class="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-red-ea shadow-lg"
+                aria-hidden="true"
+              >
+                <svg class="ml-1 h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+              <p class="text-sm font-semibold text-navy-100">Vídeo em breve</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 text-center">
           <div class="rounded-2xl bg-navy-700 p-6">
             <p class="font-display text-4xl font-extrabold text-gold-400" data-counter>4x</p>
             <p class="mt-2 text-sm font-semibold text-white">mais rápido que métodos tradicionais</p>
@@ -184,6 +213,7 @@ const courseSchema = {
           <div class="rounded-2xl bg-red-ea p-6">
             <p class="font-display text-4xl font-extrabold text-white" data-counter>60+</p>
             <p class="mt-2 text-sm font-semibold text-white">anos de resultados comprovados</p>
+          </div>
           </div>
         </div>
       </div>

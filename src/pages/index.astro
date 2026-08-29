@@ -56,29 +56,36 @@ const heroStudents = [
   },
 ];
 
+// `short` é a versão exibida no mobile (cards em 2 colunas ficam altos demais
+// com o texto completo); `text` continua valendo de sm+ para cima.
 const exclusivos = [
   {
     title: 'Método Callan',
+    short: 'Conversação intensiva e correção imediata desde a primeira aula.',
     text: 'A metodologia que revolucionou o ensino de inglês: conversação intensiva, repetição sistemática e correção imediata desde o primeiro dia.',
     href: '/metodo-callan/',
   },
   {
     title: 'Garantia de Fluência',
+    short: 'Não atingiu a fluência? Você continua estudando grátis.',
     text: 'Se você seguir a metodologia e não atingir a fluência ao final do curso, continua estudando grátis até alcançar. Zero riscos.',
     href: '/metodo-callan/#garantia',
   },
   {
     title: 'Programa Passaporte',
+    short: 'Estude em outras turmas do seu nível, sem custo extra.',
     text: 'Participe de outras turmas do seu nível sempre que quiser, sem pagar nada a mais. Dobre sua exposição ao inglês.',
     href: '/metodo-callan/#passaporte',
   },
   {
     title: 'Extra Class',
+    short: 'Toda sexta: Conversation Clubs, Games e Movie Nights.',
     text: 'Toda sexta: Conversation Clubs, Games, Movie Nights, Music Sessions e muito mais. Imersão de verdade, além da sala de aula.',
     href: '/metodo-callan/#extra-clubs',
   },
   {
     title: 'App com Inteligência Artificial',
+    short: 'Conversação com IA e feedback de pronúncia, 24 horas por dia.',
     text: 'Seu professor de inglês no bolso, 24/7: conversação com IA, feedback instantâneo de pronúncia e progresso integrado às aulas.',
     href: '/metodo-callan/#app',
   },
@@ -156,7 +163,9 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
     <div class="relative mx-auto max-w-7xl px-4 pt-6 pb-16 lg:px-8 lg:pt-3 lg:pb-16">
       <div class="grid items-center gap-12 lg:grid-cols-2">
         <div class="lg:self-start lg:pt-8">
-          <p class="inline-flex items-center gap-2 rounded-full border border-gold-400/40 bg-gold-400/10 px-4 py-1.5 text-sm font-bold text-gold-300">
+          <!-- Selo: no mobile precisa caber em UMA linha (iPhone 14 = 390px),
+               por isso usa fonte/padding menores e nowrap. -->
+          <p class="inline-flex max-w-full items-center gap-1.5 rounded-full border border-gold-400/40 bg-gold-400/10 px-3 py-1.5 text-[0.6875rem] font-bold whitespace-nowrap text-gold-300 sm:gap-2 sm:px-4 sm:text-sm">
             ★ Accredited School — Método Callan desde 2013
           </p>
           <h1 class="font-serif mt-6 text-5xl leading-[1.05] font-extrabold text-white italic sm:text-6xl lg:text-7xl">
@@ -304,14 +313,20 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
               </p>
               <h3
                 class:list={[
-                  'mt-3 font-display text-lg font-bold sm:text-xl',
+                  'mt-3 font-display text-base font-bold sm:text-xl',
                   index === 0 ? 'text-white' : 'text-navy-700',
                 ]}
               >
                 {item.title}
               </h3>
-              <p class:list={['mt-2 leading-relaxed', index === 0 ? 'text-navy-100' : 'text-gray-600']}>
-                {item.text}
+              <p
+                class:list={[
+                  'mt-2 text-sm leading-relaxed sm:text-base',
+                  index === 0 ? 'text-navy-100' : 'text-gray-600',
+                ]}
+              >
+                <span class="sm:hidden">{item.short}</span>
+                <span class="hidden sm:inline">{item.text}</span>
               </p>
               <p
                 class:list={[
@@ -493,40 +508,57 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="Quem compara escolhe o Método Callan"
         subtitle="Intercâmbio, aulas de gramática ou aplicativos? Veja o que só o Método Callan entrega de uma vez só."
       />
-      <div class="reveal mt-12 overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table class="w-full min-w-[620px] text-left text-sm sm:text-base">
-          <thead>
-            <tr class="bg-navy-700 text-white">
-              <th scope="col" class="px-5 py-4 font-display">Benefício</th>
-              <th scope="col" class="px-4 py-4 text-center font-display text-gold-300">Método Callan</th>
-              <th scope="col" class="px-4 py-4 text-center font-display">Intercâmbio</th>
-              <th scope="col" class="px-4 py-4 text-center font-display">Gramática</th>
-              <th scope="col" class="px-4 py-4 text-center font-display">Apps</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-100">
-            {
-              comparativo.map((linha) => (
-                <tr class="transition hover:bg-navy-50/50">
-                  <td class="px-5 py-4 font-semibold text-gray-700">{linha.beneficio}</td>
-                  <td class="bg-gold-50/60 px-4 py-4 text-center text-xl">
-                    <span class={linha.callan ? 'text-green-600' : 'text-red-ea'}>{linha.callan ? '✔' : '✘'}</span>
-                  </td>
-                  <td class="px-4 py-4 text-center text-xl">
-                    <span class={linha.intercambio ? 'text-green-600' : 'text-red-ea'}>{linha.intercambio ? '✔' : '✘'}</span>
-                  </td>
-                  <td class="px-4 py-4 text-center text-xl">
-                    <span class={linha.gramatica ? 'text-green-600' : 'text-red-ea'}>{linha.gramatica ? '✔' : '✘'}</span>
-                  </td>
-                  <td class="px-4 py-4 text-center text-xl">
-                    <span class={linha.apps ? 'text-green-600' : 'text-red-ea'}>{linha.apps ? '✔' : '✘'}</span>
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+      <!-- A tabela rola na horizontal quando não cabe na tela (mobile). O bloco
+           .scroll-hint mostra o degradê + a seta enquanto houver colunas
+           escondidas à direita; o script em BaseLayout cuida de exibir/ocultar. -->
+      <div class="scroll-hint reveal mt-12">
+        <div class="scroll-hint-viewport overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <table class="w-full min-w-[620px] text-left text-sm sm:text-base">
+            <thead>
+              <tr class="bg-navy-700 text-white">
+                <th scope="col" class="px-5 py-4 font-display">Benefício</th>
+                <th scope="col" class="px-4 py-4 text-center font-display text-gold-300">Método Callan</th>
+                <th scope="col" class="px-4 py-4 text-center font-display">Intercâmbio</th>
+                <th scope="col" class="px-4 py-4 text-center font-display">Gramática</th>
+                <th scope="col" class="px-4 py-4 text-center font-display">Apps</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              {
+                comparativo.map((linha) => (
+                  <tr class="transition hover:bg-navy-50/50">
+                    <td class="px-5 py-4 font-semibold text-gray-700">{linha.beneficio}</td>
+                    <td class="bg-gold-50/60 px-4 py-4 text-center text-xl">
+                      <span class={linha.callan ? 'text-green-600' : 'text-red-ea'}>{linha.callan ? '✔' : '✘'}</span>
+                    </td>
+                    <td class="px-4 py-4 text-center text-xl">
+                      <span class={linha.intercambio ? 'text-green-600' : 'text-red-ea'}>{linha.intercambio ? '✔' : '✘'}</span>
+                    </td>
+                    <td class="px-4 py-4 text-center text-xl">
+                      <span class={linha.gramatica ? 'text-green-600' : 'text-red-ea'}>{linha.gramatica ? '✔' : '✘'}</span>
+                    </td>
+                    <td class="px-4 py-4 text-center text-xl">
+                      <span class={linha.apps ? 'text-green-600' : 'text-red-ea'}>{linha.apps ? '✔' : '✘'}</span>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Degradê + seta: sinalizam que há colunas escondidas à direita -->
+        <div class="scroll-hint-fade-head" aria-hidden="true"></div>
+        <div class="scroll-hint-fade" aria-hidden="true"></div>
+        <div class="scroll-hint-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+            <path d="m9 5 7 7-7 7" />
+          </svg>
+        </div>
       </div>
+      <p class="scroll-hint-label">
+        <span aria-hidden="true">←→</span> Arraste para ver todas as colunas
+      </p>
     </div>
   </section>
 

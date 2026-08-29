@@ -4,7 +4,6 @@ import SectionHeading from '../../components/SectionHeading.astro';
 import CTABand from '../../components/CTABand.astro';
 import { segments } from '../../data/courses';
 import { site } from '../../data/site';
-import { defaultWhatsappLink } from '../../data/units';
 ---
 
 <BaseLayout
@@ -139,23 +138,6 @@ import { defaultWhatsappLink } from '../../data/units';
               </a>
             </div>
           )}
-
-          <div class="reveal mt-10 flex flex-col gap-4 sm:flex-row">
-            <a
-              href="/aula-experimental/"
-              class="rounded-full bg-red-ea px-8 py-3.5 text-center font-bold text-white transition hover:bg-red-ea-dark"
-            >
-              Agendar Aula Experimental Grátis
-            </a>
-            <a
-              href={defaultWhatsappLink}
-              target="_blank"
-              rel="noopener"
-              class="rounded-full border-2 border-navy-200 px-8 py-3.5 text-center font-bold text-navy-700 transition hover:border-navy-700 hover:bg-navy-50"
-            >
-              Consultar valores no WhatsApp
-            </a>
-          </div>
         </div>
       </section>
     ))

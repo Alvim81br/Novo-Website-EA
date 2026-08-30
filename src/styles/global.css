@@ -203,6 +203,25 @@ html {
   transform: scaleX(1);
 }
 
+/* ===== Selo "Accredited School" do hero =====
+   Em telas estreitas (abaixo de 416px, onde a pílula compacta não caberia numa
+   linha) o selo acompanha a largura do texto abaixo e a fonte escala com a
+   tela — assim ele fica o maior possível sem nunca quebrar em duas linhas.
+   A partir de 416px volta a ser a pílula compacta de 14px. */
+.hero-badge {
+  display: flex;
+  width: 100%;
+  white-space: nowrap;
+  font-size: min(0.875rem, calc((100vw - 64px) / 25));
+}
+@media (min-width: 26rem) {
+  .hero-badge {
+    display: inline-flex;
+    width: auto;
+    font-size: 0.875rem;
+  }
+}
+
 /* ===== Indicador de rolagem horizontal (mobile) =====
    Usado em blocos que rolam para o lado (ex.: tabela comparativa). O script em
    BaseLayout.astro adiciona .is-scrollable enquanto ainda houver conteúdo

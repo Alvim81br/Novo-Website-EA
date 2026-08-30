@@ -163,9 +163,9 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
     <div class="relative mx-auto max-w-7xl px-4 pt-6 pb-16 lg:px-8 lg:pt-3 lg:pb-16">
       <div class="grid items-center gap-12 lg:grid-cols-2">
         <div class="lg:self-start lg:pt-8">
-          <!-- Selo: no mobile precisa caber em UMA linha (iPhone 14 = 390px),
-               por isso usa fonte/padding menores e nowrap. -->
-          <p class="inline-flex max-w-full items-center gap-1.5 rounded-full border border-gold-400/40 bg-gold-400/10 px-3 py-1.5 text-[0.6875rem] font-bold whitespace-nowrap text-gold-300 sm:gap-2 sm:px-4 sm:text-sm">
+          <!-- Selo: no mobile ocupa a mesma largura do texto abaixo e a fonte
+               acompanha a tela para caber em UMA linha (ver .hero-badge). -->
+          <p class="hero-badge items-center gap-2 rounded-full border border-gold-400/40 bg-gold-400/10 px-4 py-1.5 font-bold text-gold-300">
             ★ Accredited School — Método Callan desde 2013
           </p>
           <h1 class="font-serif mt-6 text-5xl leading-[1.05] font-extrabold text-white italic sm:text-6xl lg:text-7xl">

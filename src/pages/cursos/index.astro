@@ -90,7 +90,45 @@ import { site } from '../../data/site';
                    tabela, com poucas colunas, ficava esticada demais. */
                 <div class="reveal lg:max-w-[592px]">
                   <h3 class="font-display text-lg font-bold text-navy-700">{group.label}</h3>
-                  <div class="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+
+                  <!-- Mobile: um card por turma (a tabela de 4 colunas ficava espremida) -->
+                  <div class="mt-4 space-y-3 sm:hidden">
+                    {group.classes.map((turma) => (
+                      <div
+                        class:list={[
+                          'rounded-2xl border bg-white p-5 shadow-sm',
+                          turma.highlight ? 'border-gold-400 bg-gold-50' : 'border-gray-200',
+                        ]}
+                      >
+                        <div class="flex flex-wrap items-center gap-2">
+                          <span class="font-display text-lg font-bold text-navy-700">{turma.name}</span>
+                          {turma.highlight && (
+                            <span class="rounded-full bg-gold-400 px-2.5 py-0.5 text-xs font-bold whitespace-nowrap text-navy-900">
+                              Mais rápida
+                            </span>
+                          )}
+                        </div>
+                        {turma.age && <p class="mt-0.5 text-xs text-gray-500">{turma.age}</p>}
+                        <dl class="mt-3 grid grid-cols-3 gap-2 text-center">
+                          <div class="rounded-xl bg-navy-50/70 px-1 py-2">
+                            <dt class="text-[11px] font-bold tracking-wide text-gray-500 uppercase">Duração</dt>
+                            <dd class="mt-0.5 text-sm font-semibold text-navy-800">{turma.duration}</dd>
+                          </div>
+                          <div class="rounded-xl bg-navy-50/70 px-1 py-2">
+                            <dt class="text-[11px] font-bold tracking-wide text-gray-500 uppercase">Carga</dt>
+                            <dd class="mt-0.5 text-sm font-semibold text-navy-800">{turma.hours}</dd>
+                          </div>
+                          <div class="rounded-xl bg-navy-50/70 px-1 py-2">
+                            <dt class="text-[11px] font-bold tracking-wide text-gray-500 uppercase">Frequência</dt>
+                            <dd class="mt-0.5 text-sm font-semibold text-navy-800">{turma.frequency}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ))}
+                  </div>
+
+                  <!-- Tablet/desktop: tabela -->
+                  <div class="mt-4 hidden overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm sm:block">
                     <table class="w-full text-left text-sm">
                       <thead>
                         <tr class="bg-navy-700 text-white">

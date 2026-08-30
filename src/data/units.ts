@@ -8,6 +8,14 @@ export interface Unit {
   whatsappLink: string;
   instagram: string;
   online?: boolean;
+  /**
+   * Horário de funcionamento exibido no card da unidade (uma linha por item,
+   * ex.: ['Seg a Sex: 8h às 21h', 'Sáb: 8h às 12h']). Preencha por unidade;
+   * enquanto vazio, nada aparece.
+   */
+  hours?: string[];
+  /** Link "Como chegar" (Google Maps) — gerado automaticamente do endereço. */
+  mapsLink?: string;
 }
 
 const waMessage = encodeURIComponent(
@@ -111,6 +119,15 @@ export const units: Unit[] = [
     online: true,
   },
 ];
+
+// Link "Como chegar" no Google Maps, gerado do endereço de cada unidade física.
+for (const unit of units) {
+  if (!unit.online) {
+    unit.mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `English Academy, ${unit.address}, ${unit.city} - ${unit.state}`
+    )}`;
+  }
+}
 
 /** WhatsApp padrão usado nos CTAs globais (unidade matriz — Parauapebas Cidade Nova). */
 export const defaultWhatsappLink = units[0]!.whatsappLink;

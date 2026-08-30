@@ -29,10 +29,12 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 
 ## 🗂️ Onde editar o conteúdo
 
-- **Unidades / WhatsApp / Instagram** → `src/data/units.ts`
+- **Unidades / WhatsApp / Instagram / horários** → `src/data/units.ts` (o botão "Como chegar" é gerado do endereço; preencha `hours` por unidade para exibir o horário de funcionamento)
 - **Turmas e cursos** → `src/data/courses.ts`
-- **Depoimentos** → `src/data/testimonials.ts`
-- **FAQ** → `src/data/faq.ts`
+- **Depoimentos em texto** → `src/data/testimonials.ts`
+- **Depoimentos em vídeo** → `src/data/depoimentos.ts` — publique o vídeo como YouTube Shorts e cole o ID no campo `youtube`; a seção da home fica oculta enquanto nenhum card tiver vídeo
+- **FAQ** → `src/data/faq.ts` (as perguntas exibidas em `/aula-experimental/` são as listadas em `perguntasConversao`)
+- **Selo de avaliações do Google** → `src/data/site.ts` (`googleReviews`) — use os números reais do Perfil da Empresa; liga o selo no formulário e as estrelas no schema
 - **Navegação, redes sociais, textos globais** → `src/data/site.ts`
 - **Artigos do blog** → adicione arquivos `.md` em `src/content/blog/`
 - **Cores e fontes da marca** → `src/styles/global.css` (tokens `@theme`)

@@ -76,9 +76,9 @@ export const units: Unit[] = [
     instagram: 'english_academy_bel',
   },
   {
-    id: 'maraba-cidade-nova',
+    id: 'maraba-novo-horizonte',
     city: 'Marabá',
-    name: 'Marabá — Cidade Nova',
+    name: 'Marabá — Novo Horizonte',
     state: 'PA',
     address: 'Av. Tocantins, 457C, Novo Horizonte',
     whatsapp: ['(94) 99176-4708', '(94) 98179-7287'],

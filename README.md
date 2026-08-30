@@ -24,6 +24,8 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 | `/blog/`              | Blog "Dicas Para Aprender Inglês Mais Rápido"                    |
 | `/unidades/`          | As 9 unidades (PA/MA) + English Academy Live                     |
 | `/aula-experimental/` | Página de conversão com formulário de leads                     |
+| `/obrigado/`          | Confirmação do formulário — dispara a conversão (noindex)        |
+| `/politica-de-privacidade/` | Política de privacidade (LGPD)                             |
 
 ## 🗂️ Onde editar o conteúdo
 
@@ -47,7 +49,27 @@ O formulário de `/aula-experimental/` grava os leads em uma tabela `leads` no S
 
 > A anon key só permite **inserir** leads (RLS). A leitura é feita pelo painel do Supabase ou por integrações (Make, CRM) com a service role key.
 >
-> **Sem Supabase configurado**, o formulário automaticamente encaminha o lead formatado para o WhatsApp da escola — o site nunca perde um lead.
+> **Sem Supabase configurado** (ou se o insert falhar), o formulário automaticamente encaminha o lead formatado para o WhatsApp **da unidade escolhida** — o site nunca perde um lead.
+>
+> ⚠️ **Plano gratuito do Supabase pausa o projeto após ~7 dias sem atividade** — e projeto pausado = formulário caindo no fallback. O workflow `.github/workflows/supabase-keep-alive.yml` pinga a API a cada 3 dias, mas o GitHub **desativa crons após 60 dias sem commits no repositório**; se o repo ficar parado, reative o workflow na aba Actions ou verifique o projeto no painel do Supabase.
+
+## 📊 Medição de campanhas (GA4 · Meta Pixel · GTM)
+
+O site tem medição pronta, desligada por padrão — para ativar, preencha os IDs em
+`src/data/site.ts` (`analytics`) **ou** nas variáveis `PUBLIC_GTM_ID` / `PUBLIC_GA4_ID` /
+`PUBLIC_META_PIXEL_ID` da hospedagem e faça o deploy:
+
+- **LGPD:** nenhum script carrega antes de o visitante aceitar os cookies no banner
+  (`CookieConsent.astro`); recusou, nada é carregado.
+- **Com GTM preenchido**, GA4 e Pixel devem ser configurados como tags *dentro* do contêiner
+  (o site não os carrega direto, para não medir em dobro). Sem GTM, GA4 e Pixel carregam direto.
+- **Conversões:** o envio do formulário redireciona para `/obrigado/`, que dispara
+  `generate_lead` (GA4) e `Lead` (Meta) — use essa página/evento como conversão nas campanhas.
+  Todo clique em link de WhatsApp dispara `whatsapp_click` (GA4) / `Contact` (Meta).
+- **Atribuição:** UTMs (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`),
+  `gclid` e `fbclid` da visita são gravados junto com o lead no Supabase.
+- **Checklist manual:** cadastrar o domínio no [Google Search Console](https://search.google.com/search-console)
+  e enviar o sitemap `https://www.englishacademy.net.br/sitemap-index.xml`.
 
 ## 🌐 Deploy (futuro)
 

@@ -16,6 +16,13 @@ export interface Unit {
   hours?: string[];
   /** Link "Como chegar" (Google Maps) — gerado automaticamente do endereço. */
   mapsLink?: string;
+  /**
+   * Unidade fora das listagens públicas: cards de /unidades/, rodapé, painel do
+   * WhatsApp, select do formulário e o JSON-LD de /unidades/. Continua no array
+   * porque o mapa (UnitsMap.astro) e as landings por cidade ([slug].astro) a
+   * buscam por id — remover o objeto apagaria o pin e quebraria a landing.
+   */
+  unlisted?: boolean;
 }
 
 const waMessage = encodeURIComponent(
@@ -59,6 +66,7 @@ export const units: Unit[] = [
   },
   {
     id: 'belem-nazare',
+    unlisted: true,
     city: 'Belém',
     name: 'Belém — Nazaré',
     state: 'PA',
@@ -131,3 +139,10 @@ for (const unit of units) {
 
 /** WhatsApp padrão usado nos CTAs globais (unidade matriz — Parauapebas Cidade Nova). */
 export const defaultWhatsappLink = units[0]!.whatsappLink;
+
+/**
+ * Unidades que aparecem nas listagens do site. Use esta lista para listar;
+ * use `units` (completa) para buscar uma unidade por id — é o que mantém as
+ * unidades `unlisted` no mapa e nas landings por cidade.
+ */
+export const listedUnits = units.filter((unit) => !unit.unlisted);

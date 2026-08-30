@@ -1,5 +1,5 @@
 ---
-import { units } from '../data/units';
+import { listedUnits } from '../data/units';
 ---
 
 <div id="wa-widget" class="fixed right-5 bottom-5 z-50 flex flex-col items-end">
@@ -16,7 +16,7 @@ import { units } from '../data/units';
     </div>
     <ul class="max-h-[22rem] overflow-y-auto py-1">
       {
-        units.map((unit) => (
+        listedUnits.map((unit) => (
           <li>
             <a
               href={unit.whatsappLink}

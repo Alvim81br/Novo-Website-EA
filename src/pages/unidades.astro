@@ -3,10 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CTABand from '../components/CTABand.astro';
 import UnitCard from '../components/UnitCard.astro';
-import { units } from '../data/units';
+import { listedUnits } from '../data/units';
 import { site } from '../data/site';
 
-const unitsSchema = units
+const unitsSchema = listedUnits
   .filter((unit) => !unit.online)
   .map((unit) => ({
     '@context': 'https://schema.org',
@@ -60,7 +60,7 @@ const unitsSchema = units
   <section class="bg-gray-50 py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {units.map((unit) => <UnitCard unit={unit} />)}
+        {listedUnits.map((unit) => <UnitCard unit={unit} />)}
       </div>
     </div>
   </section>

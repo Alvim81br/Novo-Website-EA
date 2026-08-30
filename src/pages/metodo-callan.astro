@@ -33,7 +33,7 @@ const pilares = [
   {
     icon: 'celular',
     title: 'App Exclusivo',
-    text: 'Pratique em todo lugar: estude de forma fluida e natural o que aprendeu em sala, de qualquer lugar, pelo celular.',
+    text: 'O Callan App oficial, só para alunos de escolas credenciadas: grave suas respostas, faça ditados com correção automática e treine exercícios do seu Stage de qualquer lugar.',
   },
 ];
 
@@ -70,36 +70,40 @@ const extraClubs = [
   },
 ];
 
+// Callan App — o aplicativo oficial do método, liberado para alunos de escolas
+// credenciadas. Os recursos abaixo são os da Callan Student Practice Area (CSPA),
+// que todo aluno da EA tem. Não citar eBooks: a escola vende só livro físico.
+// Texto do app próprio com IA arquivado em docs/app-ia-conteudo-futuro.md
 const appFeatures = [
   {
-    icon: 'iaChat',
-    title: 'Conversação com IA',
-    text: 'Pratique com nossa assistente virtual que responde de forma natural e corrige seus erros em tempo real.',
-  },
-  {
-    icon: 'raio',
-    title: 'Feedback Instantâneo',
-    text: 'Correções imediatas de pronúncia, gramática e vocabulário enquanto você pratica.',
-  },
-  {
     icon: 'microfone',
-    title: 'Pronúncia Perfeita',
-    text: 'Reconhecimento de voz avançado que analisa sua pronúncia e dá dicas específicas para melhorar.',
+    title: 'Grave e Compare Sua Voz',
+    text: 'Na área Question & Answer você ouve a pergunta, responde gravando a sua voz e compara com a gravação de um falante nativo. Repita quantas vezes quiser.',
   },
   {
-    icon: 'maleta',
-    title: 'Cenários Realistas',
-    text: 'Simule situações reais: entrevistas de emprego, viagens internacionais, reuniões de negócios.',
+    icon: 'caneta',
+    title: 'Ditados com Correção na Hora',
+    text: 'A seção Dictations treina escuta e escrita ao mesmo tempo — e corrige você automaticamente, sem esperar a próxima aula.',
   },
   {
-    icon: 'livro',
-    title: 'Vocabulário Expandido',
-    text: 'Jogos interativos e flashcards inteligentes que se adaptam ao que você precisa aprender.',
+    icon: 'checklist',
+    title: 'Exercícios Exclusivos',
+    text: 'Material original da Callan, de gramática e vocabulário, feito para consolidar exatamente o que você viu em sala.',
   },
   {
-    icon: 'progresso',
-    title: 'Progresso Integrado',
-    text: 'Seu desempenho no app é integrado às aulas — seus professores sabem exatamente onde apoiar você.',
+    icon: 'fone',
+    title: 'Áudio das Suas Lições',
+    text: 'Seu livro dá acesso ao áudio das lições: reveja a matéria no trânsito, na academia ou nos minutos antes da aula.',
+  },
+  {
+    icon: 'professores',
+    title: 'Professores Callan de Verdade',
+    text: 'Áudio e vídeo gravados por professores Callan reais — a mesma pronúncia e o mesmo ritmo que você encontra na sala de aula.',
+  },
+  {
+    icon: 'celular',
+    title: 'Do Stage 1 ao 12, Onde Você Estiver',
+    text: 'A prática acompanha você do primeiro dia ao avançado, no iPhone, no Android, no PC ou no Mac — com modo claro e escuro.',
   },
 ];
 
@@ -362,9 +366,9 @@ const courseSchema = {
   <section id="app" class="scroll-mt-24 bg-white py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <SectionHeading
-        eyebrow="Tecnologia exclusiva"
-        title="Seu professor de inglês no bolso, 24/7"
-        subtitle="Nosso aplicativo coloca o poder da Inteligência Artificial ao seu serviço — o casamento perfeito entre tecnologia de ponta e metodologia comprovada."
+        eyebrow="Aplicativo exclusivo"
+        title="Treine entre uma aula e outra, no seu ritmo"
+        subtitle="O Callan App é o aplicativo oficial do método — gratuito e liberado apenas para alunos de escolas credenciadas, como a English Academy. Dentro dele fica a Callan Student Practice Area: prática guiada de escuta, fala e escrita, sempre no conteúdo do seu Stage."
       />
       <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
@@ -380,7 +384,8 @@ const courseSchema = {
         }
       </div>
       <p class="reveal mt-10 text-center text-sm text-gray-500">
-        Disponível na Apple Store e no Google Play para todos os alunos.
+        Gratuito na App Store e no Google Play — seu acesso é liberado pela English Academy na
+        matrícula.
       </p>
     </div>
   </section>

@@ -13,6 +13,8 @@ export interface VideoDepoimento {
 
 // Depoimentos em vídeo dos alunos. Para ativar um card, basta preencher `youtube`
 // com o ID do vídeo (e, se quiser, `thumb`, `name` e `caption`).
+// A seção da home só aparece quando existe pelo menos um card com `youtube`
+// preenchido — cards sem vídeo não são exibidos (nada de player vazio no ar).
 export const depoimentos: VideoDepoimento[] = [
   { gradient: 'from-navy-700 via-navy-800 to-navy-950' },
   { gradient: 'from-red-ea via-[#a02233] to-[#5e1325]' },

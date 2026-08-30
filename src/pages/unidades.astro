@@ -20,6 +20,8 @@ const unitsSchema = units
       addressCountry: 'BR',
     },
     telephone: unit.whatsapp[0],
+    hasMap: unit.mapsLink,
+    url: `${site.url}/unidades/#${unit.id}`,
     parentOrganization: { '@type': 'EducationalOrganization', name: site.name, url: site.url },
   }));
 ---

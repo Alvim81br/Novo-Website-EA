@@ -1,13 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LeadForm from '../components/LeadForm.astro';
-import { testimonials } from '../data/testimonials';
+import SectionHeading from '../components/SectionHeading.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import GoogleRating from '../components/GoogleRating.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
+import { testimonials } from '../data/testimonials';
+import { faqConversao } from '../data/faq';
+
+// As 5 objeções mais comuns respondidas na própria página de conversão,
+// com o schema FAQPage correspondente (elegível a rich results).
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqConversao.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
 ---
 
 <BaseLayout
   title="Aula Experimental Grátis — Agende Agora | English Academy"
   description="Agende sua aula experimental gratuita de 45 minutos e conheça o Método Callan na prática — sem nenhuma obrigação de matrícula. Veja por que ensinamos inglês 4x mais rápido."
+  schema={faqSchema}
 >
   <section class="hero-grad-aula relative overflow-hidden py-16 lg:py-20">
     <div class="absolute inset-0" aria-hidden="true">
@@ -58,6 +75,10 @@ import TestimonialCard from '../components/TestimonialCard.astro';
           <p class="mt-2 text-sm text-gray-600">
             Preencha seus dados e nossa equipe entrará em contato pelo WhatsApp para confirmar o melhor dia e horário.
           </p>
+          <!-- Selo do Google: aparece quando site.googleReviews estiver preenchido -->
+          <div class="mt-4">
+            <GoogleRating />
+          </div>
           <div class="mt-6">
             <LeadForm />
           </div>
@@ -71,6 +92,20 @@ import TestimonialCard from '../components/TestimonialCard.astro';
       <h2 class="reveal text-center text-4xl font-bold text-navy-700 sm:text-5xl">Quem fez, recomenda</h2>
       <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {testimonials.slice(0, 3).map((testimonial) => <TestimonialCard testimonial={testimonial} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Objeções respondidas na hora da decisão -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Ficou alguma dúvida?"
+        title="Perguntas frequentes antes de agendar"
+        subtitle="As respostas que mais ajudam quem está decidindo começar — sem letras miúdas."
+      />
+      <div class="mt-12">
+        <FAQAccordion items={faqConversao} />
       </div>
     </div>
   </section>

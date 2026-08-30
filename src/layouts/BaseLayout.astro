@@ -1,11 +1,11 @@
 ---
 import '../styles/global.css';
-import '@fontsource/montserrat/500.css';
+// Pesos auditados: Montserrat 500 e Lato itálico não são usados em nenhuma
+// página — se voltar a usá-los, reimporte aqui.
 import '@fontsource/montserrat/600.css';
 import '@fontsource/montserrat/700.css';
 import '@fontsource/montserrat/800.css';
 import '@fontsource/lato/400.css';
-import '@fontsource/lato/400-italic.css';
 import '@fontsource/lato/700.css';
 import '@fontsource/cinzel/700.css';
 import '@fontsource/nunito/700.css';
@@ -23,6 +23,8 @@ import playfair800ItalicUrl from '@fontsource/playfair-display/files/playfair-di
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import Analytics from '../components/Analytics.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -32,9 +34,11 @@ interface Props {
   ogImage?: string;
   /** JSON-LD adicional da página (schema.org). */
   schema?: object | object[];
+  /** Páginas fora do índice de busca (ex.: /obrigado/). */
+  noindex?: boolean;
 }
 
-const { title, description = site.description, ogImage = '/og-image.jpg', schema } = Astro.props;
+const { title, description = site.description, ogImage = '/og-image.jpg', schema, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImageUrl = new URL(ogImage, Astro.site);
 
@@ -49,6 +53,17 @@ const baseSchema = {
   image: ogImageUrl.href,
   // Apenas perfis sociais reais/canônicos (o Instagram é o único confirmado).
   sameAs: [site.social.instagram],
+  // Estrelas na busca — só com os números reais do Google preenchidos em site.ts.
+  ...(site.googleReviews.rating > 0 && site.googleReviews.count > 0
+    ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: site.googleReviews.rating,
+          reviewCount: site.googleReviews.count,
+          bestRating: 5,
+        },
+      }
+    : {}),
 };
 
 const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];
@@ -67,6 +82,10 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <!-- Medição (GA4/GTM/Meta Pixel) — só carrega após consentimento (LGPD) -->
+    <Analytics />
 
     <!-- Fontes críticas (títulos above-the-fold) -->
     <link rel="preload" as="font" type="font/woff2" href={playfair700Url} crossorigin />
@@ -100,8 +119,32 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
     </main>
     <Footer />
     <WhatsAppButton />
+    <CookieConsent />
 
     <script>
+      // Guarda os parâmetros de campanha (UTM/gclid/fbclid) da primeira página
+      // da visita para o formulário de leads enviar junto ao Supabase.
+      try {
+        const KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
+        const params = new URLSearchParams(location.search);
+        if (KEYS.some((k) => params.has(k)) && !sessionStorage.getItem('ea-utm')) {
+          const utm: Record<string, string> = {};
+          for (const k of KEYS) {
+            const v = params.get(k);
+            if (v) utm[k] = v.slice(0, 200);
+          }
+          sessionStorage.setItem('ea-utm', JSON.stringify(utm));
+        }
+      } catch {}
+
+      // Todo clique em link de WhatsApp vira evento de conversão (GA4/Meta).
+      document.addEventListener('click', (event) => {
+        const target = event.target as Element | null;
+        const link = target?.closest?.('a[href*="wa.me/"]');
+        if (!link) return;
+        (window as any).eaTrack?.('whatsapp_click', { page: location.pathname });
+      });
+
       // Revela elementos .reveal conforme entram na viewport
       const observer = new IntersectionObserver(
         (entries) => {

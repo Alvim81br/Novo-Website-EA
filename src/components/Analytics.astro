@@ -1,0 +1,115 @@
+---
+// Medição com consentimento (LGPD): nenhum script de GA4/GTM/Meta Pixel é
+// carregado antes de o visitante aceitar os cookies no banner (CookieConsent).
+//
+// IDs: variáveis de ambiente PUBLIC_GTM_ID / PUBLIC_GA4_ID / PUBLIC_META_PIXEL_ID
+// têm prioridade; sem elas, valem os valores de site.analytics (src/data/site.ts).
+// Com GTM configurado, GA4 e Pixel devem ser tags DENTRO do contêiner (o site
+// não os carrega direto, para não medir em dobro).
+//
+// A função global `eaTrack(nome, params)` é definida sempre (mesmo sem IDs) e
+// é segura de chamar de qualquer página: envia para GTM (dataLayer), GA4 (gtag)
+// e Meta (fbq) conforme o que estiver carregado.
+import { site } from '../data/site';
+
+const gtmId = import.meta.env.PUBLIC_GTM_ID || site.analytics.gtmId;
+const ga4Id = import.meta.env.PUBLIC_GA4_ID || site.analytics.ga4Id;
+const metaPixelId = import.meta.env.PUBLIC_META_PIXEL_ID || site.analytics.metaPixelId;
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID || site.analytics.clarityId;
+---
+
+<script is:inline define:vars={{ gtmId, ga4Id, metaPixelId, clarityId }}>
+  window.dataLayer = window.dataLayer || [];
+  window.eaHasTrackers = Boolean(gtmId || ga4Id || metaPixelId || clarityId);
+
+  // Eventos padronizados do site → eventos equivalentes no Meta.
+  window.eaTrack = function (name, params) {
+    try {
+      var p = params || {};
+      window.dataLayer.push(Object.assign({ event: name }, p));
+      if (window.gtag) window.gtag('event', name, p);
+      if (window.fbq) {
+        if (name === 'generate_lead') window.fbq('track', 'Lead', p);
+        else if (name === 'whatsapp_click') window.fbq('track', 'Contact', p);
+        else window.fbq('trackCustom', name, p);
+      }
+    } catch (e) {}
+  };
+
+  window.eaLoadTrackers = function () {
+    if (window.__eaTrackersLoaded || !window.eaHasTrackers) return;
+    window.__eaTrackersLoaded = true;
+
+    if (clarityId) {
+      // Microsoft Clarity (mapas de calor e gravações de sessão — grátis)
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', clarityId);
+    }
+
+    if (gtmId) {
+      // Google Tag Manager (GA4 e Pixel entram como tags do contêiner)
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0];
+        var j = d.createElement(s);
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', gtmId);
+      return;
+    }
+
+    if (ga4Id) {
+      // GA4 direto (gtag.js)
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
+      document.head.appendChild(s);
+      window.gtag =
+        window.gtag ||
+        function () {
+          window.dataLayer.push(arguments);
+        };
+      window.gtag('js', new Date());
+      window.gtag('config', ga4Id);
+    }
+
+    if (metaPixelId) {
+      // Meta Pixel direto
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = true;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = true;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      window.fbq('init', metaPixelId);
+      window.fbq('track', 'PageView');
+    }
+  };
+
+  // Consentimento já dado em visita anterior → carrega direto.
+  try {
+    if (localStorage.getItem('ea-consent') === 'granted') window.eaLoadTrackers();
+  } catch (e) {}
+</script>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.englishacademybr.com/sitemap-index.xml
+Sitemap: https://www.englishacademy.net.br/sitemap-index.xml

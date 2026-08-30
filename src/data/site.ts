@@ -30,6 +30,7 @@ export const site = {
     gtmId: '', // ex.: GTM-XXXXXXX
     ga4Id: '', // ex.: G-XXXXXXXXXX
     metaPixelId: '', // ex.: 1234567890
+    clarityId: '', // Microsoft Clarity (mapas de calor grátis), ex.: abcdefghij
   },
   /**
    * Selo de avaliações do Google (prova social ao lado do formulário) e

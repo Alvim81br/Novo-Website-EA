@@ -55,6 +55,27 @@ const articleSchema = {
       >
         <Content />
       </div>
+
+      <!-- Autor (E-E-A-T): quem assina o conteúdo e por que sabe do que fala -->
+      <aside class="mx-auto mt-14 max-w-3xl px-4 lg:px-8">
+        <div class="flex items-start gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-6">
+          <span
+            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-navy-700 font-display text-lg font-bold text-gold-300"
+            aria-hidden="true"
+          >
+            IA
+          </span>
+          <div>
+            <p class="font-display font-bold text-navy-800">{post.data.author}</p>
+            <p class="mt-1 text-sm leading-relaxed text-gray-600">
+              Fundador da English Academy. Conheceu o Método Callan estudando em Dublin, na Irlanda, e trouxe
+              a metodologia para o Norte do Brasil em 2013 — hoje lidera a maior rede de escolas de inglês da
+              região, com 9 unidades no Pará, no Maranhão e online.
+              <a href="/english-academy/" class="font-bold text-navy-700 underline">Conheça nossa história</a>.
+            </p>
+          </div>
+        </div>
+      </aside>
     </div>
   </article>
 

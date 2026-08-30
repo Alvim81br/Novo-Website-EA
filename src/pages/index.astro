@@ -216,9 +216,13 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
             data-interval="4000"
           >
             {
+              /* Só a 1ª foto entra no carregamento inicial; as demais ficam em
+                 data-src e são baixadas depois do load (o carrossel só troca
+                 aos 4s — economiza ~300 KB do caminho crítico do mobile). */
               heroStudents.map((student, i) => (
                 <img
-                  src={student.src}
+                  src={i === 0 ? student.src : undefined}
+                  data-src={i === 0 ? undefined : student.src}
                   alt={i === 0 ? student.alt : ''}
                   class="absolute inset-0 h-full w-full object-contain object-bottom drop-shadow-[0_24px_36px_rgba(0,10,40,0.55)] transition-opacity duration-[1200ms] ease-in-out"
                   style={`opacity: ${i === 0 ? 1 : 0}; transform: scale(${student.scale}); transform-origin: bottom center;`}
@@ -226,8 +230,8 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                   data-name={student.name}
                   data-age={student.age}
                   data-label={student.label}
-                  width="900"
-                  height="1350"
+                  width="800"
+                  height="1200"
                   loading={i === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   fetchpriority={i === 0 ? 'high' : undefined}
@@ -661,6 +665,17 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           (img) => img.dataset.failed !== '1'
         );
       const interval = Number(carousel.dataset.interval) || 4000;
+
+      // Fotos 2+ ficam em data-src e só baixam depois do load da página
+      // (fora do caminho crítico). O carrossel troca aos 4s — dá tempo de sobra.
+      const hydrate = () => {
+        carousel.querySelectorAll<HTMLImageElement>('img[data-src]').forEach((img) => {
+          img.src = img.dataset.src ?? '';
+          img.removeAttribute('data-src');
+        });
+      };
+      if (document.readyState === 'complete') hydrate();
+      else window.addEventListener('load', hydrate, { once: true });
 
       const applyCard = (img: HTMLImageElement | undefined) => {
         if (!img) return;

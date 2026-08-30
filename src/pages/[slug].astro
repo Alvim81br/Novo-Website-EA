@@ -1,0 +1,248 @@
+---
+// Landing pages locais: /ingles-em-parauapebas/, /ingles-em-maraba/, …
+// e /curso-de-ingles-online/. Conteúdo por cidade em src/data/cidades.ts.
+// São as páginas de destino para a busca "curso de inglês em {cidade}" e
+// para o link de site do Google Business Profile de cada unidade.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import UnitCard from '../components/UnitCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import LeadForm from '../components/LeadForm.astro';
+import GoogleRating from '../components/GoogleRating.astro';
+import { cidades } from '../data/cidades';
+import { units } from '../data/units';
+import { testimonials } from '../data/testimonials';
+import { faqConversao } from '../data/faq';
+import { site } from '../data/site';
+
+export async function getStaticPaths() {
+  return cidades.map((cidade) => ({ params: { slug: cidade.slug }, props: { cidade } }));
+}
+
+const { cidade } = Astro.props;
+
+const cityUnits = units.filter((unit) => cidade.unitIds.includes(unit.id));
+const firstUnit = cityUnits[0]!;
+
+// Depoimentos da própria cidade quando existirem; senão, os gerais.
+const locais = testimonials.filter((t) => t.city.startsWith(cidade.nome.split(' ')[0] ?? ''));
+const depoimentosCidade = locais.length > 0 ? locais.slice(0, 3) : testimonials.slice(0, 3);
+const depoimentosSaoLocais = locais.length > 0;
+
+const outrasCidades = cidades.filter((c) => c.slug !== cidade.slug);
+
+const h1 = cidade.online ? 'Curso de inglês online' : `Curso de inglês em ${cidade.nome}`;
+
+const unitsSchema = cityUnits
+  .filter((unit) => !unit.online)
+  .map((unit) => ({
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: `English Academy — ${unit.name}`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: unit.address,
+      addressLocality: unit.city,
+      addressRegion: unit.state,
+      addressCountry: 'BR',
+    },
+    telephone: unit.whatsapp[0],
+    hasMap: unit.mapsLink,
+    url: `${site.url}/${cidade.slug}/`,
+    parentOrganization: { '@type': 'EducationalOrganization', name: site.name, url: site.url },
+  }));
+
+const porQue = [
+  {
+    title: 'Método Callan desde 2013',
+    text: 'Somos Accredited School da Callan Method Organisation: a metodologia usada em mais de 40 países, com professores treinados pela própria organização.',
+    href: '/metodo-callan/',
+    linkLabel: 'Conhecer o método',
+  },
+  {
+    title: 'Fluência a partir de 18 meses',
+    text: 'Aulas todos os dias, 100% conversação e turmas com em média 12 alunos: você aprende em 1/4 do tempo das escolas tradicionais.',
+    href: '/cursos/',
+    linkLabel: 'Ver as turmas',
+  },
+  {
+    title: 'Garantia de Fluência',
+    text: 'Se você seguir a metodologia e não atingir a fluência ao final do curso, continua estudando grátis até alcançar. Zero riscos.',
+    href: '/metodo-callan/#garantia',
+    linkLabel: 'Como funciona a garantia',
+  },
+];
+---
+
+<BaseLayout title={cidade.titulo} description={cidade.descricao} schema={unitsSchema}>
+  <!-- Hero local -->
+  <section class="hero-grad-unidades relative overflow-hidden py-16 lg:py-20">
+    <div class="absolute inset-0" aria-hidden="true">
+      <div class="animate-float absolute top-[22%] left-[8%] h-4 w-4 rounded-full bg-gold-400/80 ring-4 ring-gold-400/25"></div>
+      <div class="animate-float absolute top-[30%] right-[14%] h-4 w-4 rounded-full bg-red-ea/80 ring-4 ring-red-ea/25" style="animation-delay: 0.7s"></div>
+      <span class="animate-twinkle absolute top-[18%] left-[38%] text-xl text-gold-300/60">✦</span>
+      <span class="animate-twinkle-slow absolute bottom-[24%] right-[30%] text-base text-white/40">✦</span>
+      <div class="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+    </div>
+    <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">
+        English Academy · {cidade.online ? '100% online ao vivo' : `${cidade.nome} — ${cidade.uf}`}
+      </p>
+      <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
+        {h1} <span class="text-gold-400">{cidade.headlineDestaque}</span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-navy-100">{cidade.intro}</p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href="#agendar"
+          class="btn-shine w-full rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:scale-[1.02] hover:bg-red-ea-dark sm:w-auto"
+        >
+          Agendar Aula Experimental Grátis
+        </a>
+        <a
+          href={firstUnit.whatsappLink}
+          target="_blank"
+          rel="noopener"
+          class="w-full rounded-full border-2 border-white/30 px-8 py-4 text-center text-base font-bold text-white transition hover:border-white hover:bg-white/10 sm:w-auto"
+        >
+          Falar no WhatsApp
+        </a>
+      </div>
+      <p class="mt-5 text-sm text-navy-200">
+        ✓ Aulas todos os dias · ✓ 100% conversação · ✓ Turmas de em média 12 alunos
+      </p>
+    </div>
+  </section>
+
+  <!-- Unidades da cidade -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow={cidade.online ? 'English Academy Live' : 'Onde estudar'}
+        title={cidade.online ? 'Estude de qualquer lugar do Brasil' : `Nossas unidades em ${cidade.nome}`}
+        subtitle={
+          cidade.online
+            ? 'Aulas ao vivo na nossa plataforma exclusiva — a mesma metodologia e os mesmos professores treinados pela Callan Organisation.'
+            : 'Escolha a unidade mais perto de você — em todas, o mesmo Método Callan e o mesmo padrão de ensino da rede.'
+        }
+      />
+      <div
+        class:list={[
+          'mt-12 grid gap-6',
+          cityUnits.length >= 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : cityUnits.length === 2 ? 'mx-auto max-w-3xl sm:grid-cols-2' : 'mx-auto max-w-md',
+        ]}
+      >
+        {cityUnits.map((unit) => <UnitCard unit={unit} />)}
+      </div>
+      {
+        cidade.online && (
+          <div class="reveal mt-10 text-center">
+            <a
+              href={site.livePlatform}
+              target="_blank"
+              rel="noopener"
+              class="inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white transition hover:bg-navy-600"
+            >
+              Conhecer a plataforma EA Live →
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Por que a English Academy -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Por que estudar com a gente"
+        title="Inglês de verdade, sem enrolação"
+        subtitle="O que faz nossos alunos chegarem à fluência 4x mais rápido que em escolas tradicionais."
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-3">
+        {
+          porQue.map((item) => (
+            <a
+              href={item.href}
+              class="reveal group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+            >
+              <h3 class="font-display text-lg font-bold text-navy-700">{item.title}</h3>
+              <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
+              <p class="mt-4 text-sm font-bold text-red-ea transition group-hover:translate-x-1">{item.linkLabel} →</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="bg-gray-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading
+        eyebrow="Depoimentos"
+        title={depoimentosSaoLocais ? `Quem estuda com a gente em ${cidade.nome}` : 'Quem estuda com a gente recomenda'}
+        subtitle="Avaliações reais de alunos da nossa rede."
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {depoimentosCidade.map((testimonial) => <TestimonialCard testimonial={testimonial} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <SectionHeading eyebrow="Dúvidas frequentes" title="Perguntas e respostas" />
+      <div class="mt-12">
+        <FAQAccordion items={faqConversao} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Agendamento -->
+  <section id="agendar" class="hero-grad-aula relative scroll-mt-24 overflow-hidden py-16 lg:py-20">
+    <div class="absolute inset-0" aria-hidden="true">
+      <span class="animate-twinkle absolute top-[16%] left-[16%] text-2xl text-gold-300/70">✦</span>
+      <span class="animate-twinkle-slow absolute bottom-[22%] right-[18%] text-base text-white/40">✦</span>
+      <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/25 blur-3xl"></div>
+    </div>
+    <div class="relative mx-auto max-w-2xl px-4 lg:px-8">
+      <div class="reveal rounded-3xl bg-white p-8 shadow-2xl lg:p-10">
+        <h2 class="font-display text-2xl font-bold text-navy-700 not-italic">
+          {cidade.online ? 'Agende sua aula experimental online' : `Agende sua aula experimental em ${cidade.nome}`}
+        </h2>
+        <p class="mt-2 text-sm text-gray-600">
+          45 minutos, totalmente grátis e sem compromisso de matrícula. Preencha e nossa equipe te chama no
+          WhatsApp para combinar o melhor dia e horário.
+        </p>
+        <div class="mt-4">
+          <GoogleRating />
+        </div>
+        <div class="mt-6">
+          <LeadForm defaultUnit={cidade.defaultUnit} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Outras cidades (links internos) -->
+  <section class="bg-white py-12">
+    <div class="mx-auto max-w-4xl px-4 text-center lg:px-8">
+      <p class="text-sm font-bold tracking-widest text-gray-400 uppercase">English Academy perto de você</p>
+      <p class="mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-sm">
+        {
+          outrasCidades.map((outra, i) => (
+            <>
+              <a href={`/${outra.slug}/`} class="font-semibold text-navy-700 underline-offset-2 hover:underline">
+                {outra.online ? 'Curso online ao vivo' : `Inglês em ${outra.nome}`}
+              </a>
+              {i < outrasCidades.length - 1 && <span class="text-gray-300" aria-hidden="true">·</span>}
+            </>
+          ))
+        }
+      </p>
+    </div>
+  </section>
+</BaseLayout>

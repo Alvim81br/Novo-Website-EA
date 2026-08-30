@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import { site, nav } from '../data/site';
 import { units } from '../data/units';
+import { cidades } from '../data/cidades';
 
 const year = new Date().getFullYear();
 ---
@@ -111,6 +112,19 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="mt-12 space-y-2 border-t border-white/10 pt-6 text-center text-xs text-navy-200">
+      <p class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1">
+        <span class="font-semibold text-navy-100">Curso de inglês em:</span>
+        {
+          cidades.map((cidade, i) => (
+            <>
+              <a href={`/${cidade.slug}/`} class="transition hover:text-gold-300">
+                {cidade.online ? 'Online ao vivo' : cidade.nome}
+              </a>
+              {i < cidades.length - 1 && <span aria-hidden="true">·</span>}
+            </>
+          ))
+        }
+      </p>
       <p>© {year} English Academy — Todos os direitos reservados. Accredited School — Callan Method Organisation.</p>
       <p>
         <a href={`mailto:${site.email}`} class="transition hover:text-gold-300">{site.email}</a>

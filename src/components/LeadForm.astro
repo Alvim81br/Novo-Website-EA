@@ -29,6 +29,12 @@ const courses = [
 ];
 
 const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
+
+interface Props {
+  /** Nome da unidade pré-selecionada (usado nas landing pages por cidade). */
+  defaultUnit?: string;
+}
+const { defaultUnit } = Astro.props;
 ---
 
 <form
@@ -84,8 +90,8 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
         required
         class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none"
       >
-        <option value="" disabled selected>Selecione a unidade</option>
-        {units.map((unit) => <option value={unit.name}>{unit.name}</option>)}
+        <option value="" disabled selected={!defaultUnit}>Selecione a unidade</option>
+        {units.map((unit) => <option value={unit.name} selected={unit.name === defaultUnit}>{unit.name}</option>)}
       </select>
     </div>
     <div>

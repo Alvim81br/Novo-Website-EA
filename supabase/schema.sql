@@ -10,8 +10,27 @@ create table if not exists public.leads (
   course text not null,
   schedule text,
   source text,
-  contacted boolean not null default false
+  contacted boolean not null default false,
+  -- Origem da campanha (preenchidas pelo site a partir da URL de chegada)
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  utm_term text,
+  utm_content text,
+  gclid text,
+  fbclid text
 );
+
+-- Migração para bancos criados antes das colunas de campanha
+-- (segura de rodar mais de uma vez):
+alter table public.leads
+  add column if not exists utm_source text,
+  add column if not exists utm_medium text,
+  add column if not exists utm_campaign text,
+  add column if not exists utm_term text,
+  add column if not exists utm_content text,
+  add column if not exists gclid text,
+  add column if not exists fbclid text;
 
 -- Segurança: o site usa a anon key apenas para INSERIR leads.
 -- Ninguém consegue ler, alterar ou apagar leads sem a service role key.

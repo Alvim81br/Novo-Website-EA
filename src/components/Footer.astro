@@ -81,6 +81,11 @@ const year = new Date().getFullYear();
               Aula Experimental Grátis
             </a>
           </li>
+          <li>
+            <a href="/politica-de-privacidade/" class="text-navy-100 transition hover:text-gold-300">
+              Política de Privacidade
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -105,8 +110,13 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <div class="mt-12 border-t border-white/10 pt-6 text-center text-xs text-navy-200">
+    <div class="mt-12 space-y-2 border-t border-white/10 pt-6 text-center text-xs text-navy-200">
       <p>© {year} English Academy — Todos os direitos reservados. Accredited School — Callan Method Organisation.</p>
+      <p>
+        <a href={`mailto:${site.email}`} class="transition hover:text-gold-300">{site.email}</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/politica-de-privacidade/" class="transition hover:text-gold-300">Política de Privacidade</a>
+      </p>
     </div>
   </div>
 </footer>

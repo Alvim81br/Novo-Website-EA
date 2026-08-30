@@ -1,0 +1,66 @@
+---
+// Banner de consentimento (LGPD). Só aparece quando há IDs de medição
+// configurados (ver Analytics.astro) e o visitante ainda não escolheu.
+// "Aceitar" carrega GA4/GTM/Pixel; "Só o essencial" mantém o site sem
+// nenhum cookie de medição.
+---
+
+<div
+  id="cookie-consent"
+  hidden
+  class="fixed inset-x-4 bottom-4 z-[70] sm:left-5 sm:right-auto sm:max-w-md"
+  role="region"
+  aria-label="Aviso de privacidade e cookies"
+>
+  <div class="rounded-2xl bg-navy-900/95 p-5 text-white shadow-2xl ring-1 ring-white/15 backdrop-blur">
+    <p class="text-sm leading-relaxed text-navy-100">
+      Usamos cookies para medir nossas campanhas e melhorar sua experiência. Você decide — os detalhes
+      estão na
+      <a href="/politica-de-privacidade/" class="font-bold text-gold-300 underline hover:text-gold-200">
+        Política de Privacidade</a>.
+    </p>
+    <div class="mt-4 flex flex-col gap-2.5 sm:flex-row">
+      <button
+        id="cc-accept"
+        type="button"
+        class="flex-1 rounded-full bg-gold-400 px-5 py-2.5 text-sm font-bold text-navy-900 transition hover:bg-gold-300"
+      >
+        Aceitar cookies
+      </button>
+      <button
+        id="cc-decline"
+        type="button"
+        class="flex-1 rounded-full border border-white/30 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/10"
+      >
+        Só o essencial
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY = 'ea-consent';
+  const box = document.getElementById('cookie-consent');
+  const w = window as unknown as {
+    eaHasTrackers?: boolean;
+    eaLoadTrackers?: () => void;
+  };
+
+  let stored: string | null = null;
+  try {
+    stored = localStorage.getItem(KEY);
+  } catch {}
+
+  if (box && w.eaHasTrackers && !stored) box.hidden = false;
+
+  function choose(value: 'granted' | 'denied') {
+    try {
+      localStorage.setItem(KEY, value);
+    } catch {}
+    if (value === 'granted') w.eaLoadTrackers?.();
+    if (box) box.hidden = true;
+  }
+
+  document.getElementById('cc-accept')?.addEventListener('click', () => choose('granted'));
+  document.getElementById('cc-decline')?.addEventListener('click', () => choose('denied'));
+</script>

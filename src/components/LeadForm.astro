@@ -14,6 +14,12 @@ const supabaseAnonKey =
 // Número do WhatsApp da matriz (fonte única: units.ts), usado no fallback sem Supabase.
 const waNumber = defaultWhatsappLink.match(/wa\.me\/(\d+)/)?.[1] ?? '';
 
+// Mapa unidade → número: o fallback de WhatsApp fala com a unidade que a
+// pessoa escolheu no formulário (e não sempre com a matriz).
+const waNumberByUnit = Object.fromEntries(
+  units.map((unit) => [unit.name, unit.whatsappLink.match(/wa\.me\/(\d+)/)?.[1] ?? waNumber])
+);
+
 const courses = [
   'Inglês para Adultos',
   'Inglês para Adolescentes (Teens)',
@@ -31,6 +37,7 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
   data-supabase-url={supabaseUrl}
   data-supabase-key={supabaseAnonKey}
   data-wa-number={waNumber}
+  data-wa-by-unit={JSON.stringify(waNumberByUnit)}
   novalidate
 >
   <div class="grid gap-5 sm:grid-cols-2">
@@ -117,7 +124,9 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
   <p id="lead-feedback" class="hidden rounded-xl px-4 py-3 text-sm font-semibold" role="status"></p>
 
   <p class="text-center text-xs text-gray-500">
-    Seus dados são usados apenas para agendar sua aula experimental. Prefere falar direto?
+    Ao enviar, você autoriza nosso contato pelo WhatsApp para agendar sua aula, conforme a
+    <a href="/politica-de-privacidade/" class="font-bold text-navy-700 underline">Política de Privacidade</a>.
+    Prefere falar direto?
     <a href={defaultWhatsappLink} target="_blank" rel="noopener" class="font-bold text-navy-700 underline">
       Chame no WhatsApp
     </a>.
@@ -135,6 +144,42 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
     feedback.classList.add(ok ? 'bg-green-50' : 'bg-red-50', ok ? 'text-green-800' : 'text-red-800');
   }
 
+  // Parâmetros de campanha guardados na chegada ao site (ver BaseLayout).
+  function getUtm(): Record<string, string> {
+    try {
+      return JSON.parse(sessionStorage.getItem('ea-utm') ?? '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  // Evento de conversão (GA4/GTM/Meta) — no-op seguro se a medição não estiver ativa.
+  function track(name: string, params?: Record<string, unknown>) {
+    (window as any).eaTrack?.(name, params);
+  }
+
+  // Número de WhatsApp da unidade escolhida (fallback: matriz).
+  function waNumberFor(unit: string): string {
+    try {
+      const map = JSON.parse(form?.dataset.waByUnit ?? '{}') as Record<string, string>;
+      return map[unit] || form?.dataset.waNumber || '';
+    } catch {
+      return form?.dataset.waNumber || '';
+    }
+  }
+
+  // Encaminha o lead para o WhatsApp da unidade escolhida (caminho de emergência).
+  function sendViaWhatsApp(data: Record<string, FormDataEntryValue>) {
+    const text = encodeURIComponent(
+      `Olá! Quero agendar uma aula experimental gratuita.\n\nNome: ${data.name}\nWhatsApp: ${data.phone}\nUnidade: ${data.unit}\nCurso: ${data.course}\nHorário: ${data.schedule || 'Sem preferência'}`
+    );
+    window.open(`https://wa.me/${waNumberFor(String(data.unit))}?text=${text}`, '_blank');
+    track('generate_lead', { method: 'whatsapp_fallback', unit: data.unit });
+    try {
+      sessionStorage.setItem('ea-lead-fired', '1');
+    } catch {}
+  }
+
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
@@ -143,7 +188,8 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
     const data = Object.fromEntries(new FormData(form).entries());
     const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 
-    // Honeypot: bots preenchem o campo oculto — finge sucesso e descarta.
+    // Honeypot: bots preenchem o campo oculto — finge sucesso e descarta
+    // (sem redirecionar nem disparar evento, para não sujar as métricas).
     if (data.website) {
       form.reset();
       showFeedback('Recebemos seu pedido! 🎉 Nossa equipe vai te chamar no WhatsApp em breve.', true);
@@ -152,10 +198,7 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
 
     if (!supabaseUrl || !supabaseKey) {
       // Supabase ainda não configurado: encaminha o lead para o WhatsApp.
-      const text = encodeURIComponent(
-        `Olá! Quero agendar uma aula experimental gratuita.\n\nNome: ${data.name}\nWhatsApp: ${data.phone}\nUnidade: ${data.unit}\nCurso: ${data.course}\nHorário: ${data.schedule || 'Sem preferência'}`
-      );
-      window.open(`https://wa.me/${form.dataset.waNumber}?text=${text}`, '_blank');
+      sendViaWhatsApp(data);
       showFeedback('Estamos te redirecionando para o WhatsApp para concluir o agendamento. 😊', true);
       return;
     }
@@ -164,6 +207,7 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
     button.textContent = 'Enviando...';
 
     try {
+      const utm = getUtm();
       const response = await fetch(`${supabaseUrl}/rest/v1/leads`, {
         method: 'POST',
         headers: {
@@ -179,6 +223,14 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
           course: data.course,
           schedule: data.schedule || null,
           source: window.location.pathname,
+          // Origem da campanha (colunas criadas em supabase/schema.sql)
+          utm_source: utm.utm_source ?? null,
+          utm_medium: utm.utm_medium ?? null,
+          utm_campaign: utm.utm_campaign ?? null,
+          utm_term: utm.utm_term ?? null,
+          utm_content: utm.utm_content ?? null,
+          gclid: utm.gclid ?? null,
+          fbclid: utm.fbclid ?? null,
         }),
       });
 
@@ -187,19 +239,18 @@ const schedules = ['Manhã', 'Tarde', 'Noite', 'Sábado'];
         throw new Error(`Supabase respondeu ${response.status} ${detail}`);
       }
 
-      form.reset();
-      showFeedback(
-        'Recebemos seu pedido! 🎉 Nossa equipe vai te chamar no WhatsApp em breve para confirmar sua aula experimental gratuita.',
-        true
+      // Sucesso → página de obrigado, onde o evento generate_lead é disparado
+      // (é ela que GA4/Meta usam como ponto de conversão das campanhas).
+      track('lead_form_submit', { unit: data.unit });
+      window.location.assign(
+        `/obrigado/?u=${encodeURIComponent(String(data.unit))}&via=form`
       );
+      return;
     } catch (error) {
       // Se o salvamento falhar por qualquer motivo (rede, bloqueio, etc.), não
-      // perdemos o lead: encaminhamos os dados para o WhatsApp da unidade.
+      // perdemos o lead: encaminhamos os dados para o WhatsApp da unidade escolhida.
       console.error(error);
-      const text = encodeURIComponent(
-        `Olá! Quero agendar uma aula experimental gratuita.\n\nNome: ${data.name}\nWhatsApp: ${data.phone}\nUnidade: ${data.unit}\nCurso: ${data.course}\nHorário: ${data.schedule || 'Sem preferência'}`
-      );
-      window.open(`https://wa.me/${form.dataset.waNumber}?text=${text}`, '_blank');
+      sendViaWhatsApp(data);
       showFeedback(
         'Estamos te levando ao WhatsApp para concluir seu agendamento agora mesmo. 😊',
         true

@@ -3,6 +3,20 @@ export interface FaqItem {
   answer: string;
 }
 
+/**
+ * As 5 objeções mais decisivas, na ordem certa para a página de conversão
+ * (/aula-experimental/). Selecionadas pelo início da pergunta para não
+ * depender da posição na lista — se uma pergunta for reescrita, atualize
+ * o trecho correspondente aqui.
+ */
+const perguntasConversao = [
+  'A aula experimental é realmente gratuita',
+  'Eu vou realmente falar inglês a partir de 18 meses',
+  'Já estudei em uma franquia conhecida',
+  'Qual a idade mínima',
+  'Não moro em uma cidade com unidade física',
+];
+
 export const faq: FaqItem[] = [
   {
     question: 'Qual a idade mínima para estudar na English Academy?',
@@ -50,3 +64,7 @@ export const faq: FaqItem[] = [
       'Sim! A aula experimental dura em média 45 minutos, é totalmente gratuita e não há nenhuma obrigação de se matricular. É a melhor forma de conhecer o Método Callan na prática.',
   },
 ];
+
+export const faqConversao: FaqItem[] = perguntasConversao
+  .map((inicio) => faq.find((item) => item.question.startsWith(inicio)))
+  .filter((item): item is FaqItem => Boolean(item));

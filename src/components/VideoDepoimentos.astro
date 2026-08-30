@@ -1,8 +1,14 @@
 ---
 import SectionHeading from './SectionHeading.astro';
 import { depoimentos } from '../data/depoimentos';
+
+// Só entram no carrossel os depoimentos com vídeo real (campo `youtube`).
+// Sem nenhum vídeo publicado, a seção inteira fica oculta — prometer
+// "assista" sem nada para assistir derruba a confiança.
+const videos = depoimentos.filter((dep) => dep.youtube);
 ---
 
+{videos.length > 0 && (
 <section class="bg-gray-50 py-20">
   <div class="mx-auto max-w-7xl px-4 lg:px-8">
     <SectionHeading
@@ -17,7 +23,7 @@ import { depoimentos } from '../data/depoimentos';
       class="reveal mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:grid lg:grid-cols-5 lg:gap-5 lg:overflow-visible lg:pb-0"
     >
       {
-        depoimentos.map((dep) => (
+        videos.map((dep) => (
           <button
             type="button"
             class="group relative aspect-[9/16] w-[58vw] max-w-[230px] shrink-0 snap-center overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-ea lg:w-auto lg:max-w-none"
@@ -108,6 +114,7 @@ import { depoimentos } from '../data/depoimentos';
     </div>
   </div>
 </section>
+)}
 
 <script>
   const modal = document.getElementById('video-modal');

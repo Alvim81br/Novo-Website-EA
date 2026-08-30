@@ -53,6 +53,17 @@ const baseSchema = {
   image: ogImageUrl.href,
   // Apenas perfis sociais reais/canônicos (o Instagram é o único confirmado).
   sameAs: [site.social.instagram],
+  // Estrelas na busca — só com os números reais do Google preenchidos em site.ts.
+  ...(site.googleReviews.rating > 0 && site.googleReviews.count > 0
+    ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: site.googleReviews.rating,
+          reviewCount: site.googleReviews.count,
+          bestRating: 5,
+        },
+      }
+    : {}),
 };
 
 const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];

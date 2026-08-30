@@ -144,6 +144,30 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
         { threshold: 0.6 }
       );
       document.querySelectorAll('[data-counter]').forEach((el) => counterObserver.observe(el));
+
+      // Indicador de rolagem horizontal: em telas pequenas, blocos .scroll-hint
+      // ganham .is-scrollable enquanto sobrar conteúdo escondido à direita
+      // (degradê + seta). Some ao chegar no fim ou quando tudo cabe na tela.
+      document.querySelectorAll<HTMLElement>('.scroll-hint').forEach((hint) => {
+        const viewport = hint.querySelector<HTMLElement>('.scroll-hint-viewport');
+        if (!viewport) return;
+
+        const head = viewport.querySelector<HTMLElement>('thead');
+
+        const update = () => {
+          const remaining = viewport.scrollWidth - viewport.clientWidth - viewport.scrollLeft;
+          hint.classList.toggle('is-scrollable', remaining > 8);
+          // Altura do cabeçalho: o degradê muda de cor sobre ele
+          if (head) hint.style.setProperty('--scroll-hint-head', `${head.offsetHeight}px`);
+        };
+
+        update();
+        viewport.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+        if ('ResizeObserver' in window) new ResizeObserver(update).observe(viewport);
+        // Fontes carregam depois e mudam a largura da tabela
+        document.fonts?.ready.then(update);
+      });
     </script>
   </body>
 </html>

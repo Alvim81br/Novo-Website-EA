@@ -203,7 +203,117 @@ html {
   transform: scaleX(1);
 }
 
+/* ===== Selo "Accredited School" do hero =====
+   Em telas estreitas (abaixo de 416px, onde a pílula compacta não caberia numa
+   linha) o selo acompanha a largura do texto abaixo e a fonte escala com a
+   tela — assim ele fica o maior possível sem nunca quebrar em duas linhas.
+   A partir de 416px volta a ser a pílula compacta de 14px. */
+.hero-badge {
+  display: flex;
+  width: 100%;
+  white-space: nowrap;
+  font-size: min(0.875rem, calc((100vw - 64px) / 25));
+}
+@media (min-width: 26rem) {
+  .hero-badge {
+    display: inline-flex;
+    width: auto;
+    font-size: 0.875rem;
+  }
+}
+
+/* ===== Indicador de rolagem horizontal (mobile) =====
+   Usado em blocos que rolam para o lado (ex.: tabela comparativa). O script em
+   BaseLayout.astro adiciona .is-scrollable enquanto ainda houver conteúdo
+   escondido à direita — no desktop, onde tudo cabe, nada é exibido. */
+.scroll-hint {
+  position: relative;
+}
+.scroll-hint-fade,
+.scroll-hint-fade-head,
+.scroll-hint-arrow,
+.scroll-hint-label {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s ease;
+}
+.scroll-hint.is-scrollable .scroll-hint-fade,
+.scroll-hint.is-scrollable .scroll-hint-fade-head,
+.scroll-hint.is-scrollable .scroll-hint-arrow,
+.scroll-hint.is-scrollable + .scroll-hint-label {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Duas faixas de degradê: uma sobre o cabeçalho navy da tabela e outra sobre o
+   corpo branco — `--scroll-hint-head` recebe a altura do <thead> via JS. */
+.scroll-hint-fade {
+  position: absolute;
+  top: calc(1px + var(--scroll-hint-head, 0px));
+  right: 1px;
+  bottom: 1px;
+  width: 4.5rem;
+  pointer-events: none;
+  border-radius: 0 0 1rem 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0));
+}
+.scroll-hint-fade-head {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  height: var(--scroll-hint-head, 0px);
+  width: 4.5rem;
+  pointer-events: none;
+  border-radius: 0 1rem 0 0;
+  background: linear-gradient(to left, var(--color-navy-700), rgba(0, 50, 125, 0));
+}
+
+.scroll-hint-arrow {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  pointer-events: none;
+  border-radius: 9999px;
+  color: #fff;
+  background: var(--color-navy-700);
+  box-shadow: 0 6px 16px rgba(11, 31, 59, 0.28);
+  transform: translateY(-50%);
+}
+
+.scroll-hint-label {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-navy-700);
+}
+.scroll-hint-label span {
+  margin-right: 0.25rem;
+  color: var(--color-red-ea);
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  @keyframes ea-nudge-x {
+    0%,
+    100% {
+      transform: translate(0, -50%);
+    }
+    50% {
+      transform: translate(0.375rem, -50%);
+    }
+  }
+  .scroll-hint.is-scrollable .scroll-hint-arrow {
+    animation: ea-nudge-x 1.6s ease-in-out infinite;
+  }
+
   @keyframes ea-float {
     0%,
     100% {

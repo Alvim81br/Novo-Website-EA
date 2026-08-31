@@ -23,6 +23,8 @@ export interface Unit {
    * buscam por id — remover o objeto apagaria o pin e quebraria a landing.
    */
   unlisted?: boolean;
+  /** Site próprio da unidade (botão "Visitar Website") — hoje só a EA Live. */
+  website?: string;
 }
 
 const waMessage = encodeURIComponent(
@@ -125,6 +127,7 @@ export const units: Unit[] = [
     whatsappLink: wa('11913102263'),
     instagram: 'english_academy_live',
     online: true,
+    website: 'https://www.englishacademy.live',
   },
 ];
 

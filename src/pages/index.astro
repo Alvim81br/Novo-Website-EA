@@ -120,6 +120,11 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
     // foguete — protagonista global
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="h-28 w-28"><path d="M4.5 14c-1.6 1.6-2 5.5-2 5.5s3.9-.4 5.5-2"/><path d="M14.5 5.5C17.5 2.5 21 3 21 3s.5 3.5-2.5 6.5L11 17l-4-4 7.5-7.5z"/><circle cx="15" cy="9" r="1.4"/></svg>`,
   },
+  espanhol: {
+    gradient: 'from-[#8f1d24] via-[#a8232b] to-gold-600',
+    // balão de fala — conversação
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="h-28 w-28"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8z"/><path d="M8.5 12h7M12 8.5v7"/></svg>`,
+  },
   online: {
     gradient: 'from-navy-800 via-navy-700 to-gold-600',
     // laptop — ao vivo
@@ -275,7 +280,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           <p class="mt-1.5 text-sm font-semibold text-navy-700">alunos rumo à fluência</p>
         </div>
         <div class="text-center">
-          <p class="font-display text-3xl font-extrabold text-navy-800 sm:text-4xl" data-counter>9</p>
+          <p class="font-display text-3xl font-extrabold text-navy-800 sm:text-4xl" data-counter>8</p>
           <p class="mt-1.5 text-sm font-semibold text-navy-700">unidades no PA, MA e online</p>
         </div>
         <div class="text-center">
@@ -447,7 +452,8 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="Cursos para cada fase da vida"
         subtitle="Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças — presenciais ou online ao vivo."
       />
-      <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+      <!-- 5 segmentos: em telas grandes cabem lado a lado; abaixo disso, 2 por linha. -->
+      <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-5">
         {
           segments.map((segment) => (
             <a

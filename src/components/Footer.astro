@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import { site, nav } from '../data/site';
-import { units } from '../data/units';
+import { listedUnits } from '../data/units';
 import { cidades } from '../data/cidades';
 
 const year = new Date().getFullYear();
@@ -94,7 +94,7 @@ const year = new Date().getFullYear();
         <h3 class="font-display text-sm font-bold tracking-wider text-gold-400 uppercase">Nossas Unidades</h3>
         <ul class="mt-4 grid gap-x-6 gap-y-2.5 text-sm sm:grid-cols-2">
           {
-            units.map((unit) => (
+            listedUnits.map((unit) => (
               <li>
                 <a
                   href={unit.whatsappLink}

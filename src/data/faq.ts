@@ -41,7 +41,7 @@ export const faq: FaqItem[] = [
   {
     question: 'Em quais cidades a English Academy está presente?',
     answer:
-      'Estamos em Parauapebas (Cidade Nova e Cidade Jardim), Marabá (Cidade Nova e Nova Marabá), Canaã dos Carajás, Belém e Imperatriz — além da English Academy Live, nossa plataforma online ao vivo para todo o Brasil.',
+      'Estamos em Parauapebas (Cidade Nova e Cidade Jardim), Marabá (Novo Horizonte e Nova Marabá), Canaã dos Carajás, Belém e Imperatriz — além da English Academy Live, nossa plataforma online ao vivo para todo o Brasil.',
   },
   {
     question: 'Não moro em uma cidade com unidade física. Como faço?',

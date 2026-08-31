@@ -67,10 +67,14 @@ O formulário de `/aula-experimental/` grava os leads em uma tabela `leads` no S
 ## 👥 Painel de leads por unidade
 
 Página onde **cada comercial vê só os leads da sua unidade**, liga ou chama no WhatsApp com um
-toque e marca quem já foi atendido. Feita para o celular. Cada pessoa recebe um link com a sua
-chave — `https://www.englishacademy.net.br/painel/?k=<chave>` — e salva nos favoritos: sem login
-nem senha para decorar. A chave da direção (linha com `unit` nulo em `unit_access`) enxerga todas
-as unidades e mostra o nome da escola em cada card.
+toque e marca quem já foi atendido. Feita para o celular. A chave da direção (linha com `unit`
+nulo em `unit_access`) enxerga todas as unidades e mostra o nome da escola em cada card.
+
+**Como se entra — duas travas:** a pessoa abre `…/painel/?k=<chave>` (a chave diz a unidade) e
+digita o **PIN de 6 dígitos** dela (que diz quem é). Só o link não abre nada: link encaminhado,
+print ou celular emprestado não bastam. Acertando, o aparelho guarda uma sessão de 30 dias, a
+chave sai da barra de endereço (não fica no histórico) e a senha não é pedida de novo ali.
+Cinco erros de PIN bloqueiam aquele acesso por 15 minutos. O rodapé tem "Sair deste aparelho".
 
 São duas peças, e a divisão tem motivo:
 
@@ -85,8 +89,10 @@ São duas peças, e a divisão tem motivo:
 
 - **Como a página fala com a função** → `/api/leads`, um proxy declarado no `netlify.toml` e no
   `vercel.json`. Fica tudo na mesma origem: sem CORS e sem expor a URL do Supabase na página.
-- **Criar / revogar acesso** → tabela `unit_access` (o SQL de exemplo está em `supabase/schema.sql`).
-  Revogar é `active = false`: o link morre na hora, sem mexer no resto.
+- **Criar acesso / trocar PIN / revogar** → tabela `unit_access` (SQL pronto em `supabase/schema.sql`).
+  Revogar é `active = false` mais apagar as sessões daquele token: o acesso morre na hora.
+  O PIN é guardado só como hash (SHA-256 de `pin || token`) — não dá para consultá-lo depois,
+  só gerar um novo.
 - **Publicar mudanças nos dados** → `supabase functions deploy leads` (ou o MCP do Supabase).
   A função roda com a service role, que nunca sai do servidor; a página não embute chave nenhuma.
 - **Privacidade** → `noindex`, fora do sitemap e a chave só trafega na URL do painel. São dados

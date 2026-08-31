@@ -26,8 +26,9 @@ const agent = {
   avatar: '/consultora-kamila.webp',
 };
 
-// Chamada de conversão que aparece ao lado do balão antes de o chat abrir.
-const teaser = 'Olá! 👋 Quer receber uma <b>proposta personalizada</b>?';
+// Chamada de conversão que aparece ao lado do balão antes de o chat abrir
+// (precedida pelos "três pontinhos", como se a Kamila estivesse digitando).
+const teaser = 'Quer ver o <b>valor do investimento</b> em nosso curso de inglês?';
 
 // Unidades oferecidas na última pergunta (com o WhatsApp de cada uma, usado
 // no fim da conversa e no plano B se o Supabase estiver fora do ar).
@@ -88,6 +89,15 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
 
     <div id="ea-chat-actions" class="border-t border-gray-100 bg-white p-3"></div>
   </section>
+
+  <!-- "Digitando..." antes da chamada de conversão -->
+  <div
+    id="ea-chat-typing"
+    class="hidden rounded-2xl rounded-br-md bg-white px-4 py-3.5 shadow-xl ring-1 ring-black/5"
+    aria-hidden="true"
+  >
+    <span class="ea-chat-dots ea-chat-dots--brand"><span></span><span></span><span></span></span>
+  </div>
 
   <!-- Chamada de conversão (aparece antes de a janela abrir) -->
   <div
@@ -215,6 +225,14 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
     background: #6b7280;
     animation: ea-chat-dot 1.1s infinite;
   }
+  /* Pontinhos da chamada de conversão (fora da janela): cor da marca e um
+     pouco maiores, porque ficam sozinhos na bolha. */
+  .ea-chat-dots--brand span {
+    height: 0.5rem;
+    width: 0.5rem;
+    background: var(--color-red-ea, #d92e2e);
+  }
+
   .ea-chat-dots span:nth-child(2) {
     animation-delay: 0.15s;
   }
@@ -237,7 +255,8 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
   }
 
   const AUTO_OPEN_MS = 6000; // abre sozinho depois de alguns segundos
-  const TEASER_MS = 2500; // chamada de conversão aparece antes disso
+  const TYPING_MS = 900; // "digitando..." ao lado do balão, logo na chegada
+  const TEASER_MS = 2600; // e então a chamada de conversão
   const DONE_KEY = 'ea-chat-done'; // localStorage: lead já enviado
   const CLOSED_KEY = 'ea-chat-closed'; // sessionStorage: visitante fechou
   const AUTO_KEY = 'ea-chat-auto'; // sessionStorage: já abriu sozinho uma vez
@@ -252,6 +271,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
   const toggleClose = document.getElementById('ea-chat-toggle-close');
   const closeBtn = document.getElementById('ea-chat-close');
   const teaser = document.getElementById('ea-chat-teaser');
+  const typing = document.getElementById('ea-chat-typing');
   const teaserOpen = document.getElementById('ea-chat-teaser-open');
   const teaserClose = document.getElementById('ea-chat-teaser-close');
 
@@ -611,12 +631,20 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
     }
 
     function hideTeaser() {
+      typing?.classList.add('hidden');
       teaser!.classList.add('hidden');
       teaser!.classList.remove('flex');
     }
 
+    /** Bolha só com os "três pontinhos", antes da chamada de conversão. */
+    function showTyping() {
+      if (!panel!.classList.contains('hidden') || store('session', CLOSED_KEY)) return;
+      typing?.classList.remove('hidden');
+    }
+
     function showTeaser() {
-      if (!panel!.classList.contains('hidden')) return;
+      if (!panel!.classList.contains('hidden') || store('session', CLOSED_KEY)) return;
+      typing?.classList.add('hidden');
       teaser!.classList.remove('hidden');
       teaser!.classList.add('flex');
     }
@@ -660,6 +688,8 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
     const thanksPage = window.location.pathname.startsWith('/obrigado');
 
     if (!alreadyLead && !dismissed && !thanksPage) {
+      // Logo na chegada: "digitando..." e, em seguida, a chamada de conversão.
+      window.setTimeout(showTyping, TYPING_MS);
       window.setTimeout(showTeaser, TEASER_MS);
 
       // Abre sozinho uma vez por visita, alguns segundos depois da chegada.

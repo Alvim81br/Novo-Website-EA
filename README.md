@@ -80,9 +80,9 @@ Onde mexer (topo do arquivo):
 | O quê | Onde |
 | :---- | :--- |
 | Nome, status e foto de quem conversa | `agent` — hoje a Kamila (`/public/consultora-kamila.webp`); para trocar, coloque a foto quadrada (~240px, enquadrada no rosto) em `/public` e atualize nome e caminho |
-| Chamada de conversão ao lado do balão | `teaser` |
+| Chamada de conversão ao lado do balão | `teaser` (antes dela aparecem os "três pontinhos", como se a consultora estivesse digitando) |
 | Perguntas, respostas e validações | função `conversation()` no `<script>` |
-| Segundos até abrir sozinho | `AUTO_OPEN_MS` (e `TEASER_MS` para a chamada) |
+| Tempos de entrada | `TYPING_MS` (digitando) → `TEASER_MS` (chamada) → `AUTO_OPEN_MS` (janela abre sozinha) |
 | Unidades oferecidas | `src/data/units.ts` (só as `listedUnits`) |
 
 Regras de bom senso já embutidas: abre sozinho **uma vez por visita**, não reaparece se a

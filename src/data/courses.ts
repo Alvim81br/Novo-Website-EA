@@ -147,6 +147,43 @@ export const segments: CourseSegment[] = [
     ],
   },
   {
+    id: 'espanhol',
+    title: 'Espanhol',
+    subtitle: 'Fale a segunda língua mais falada do mundo.',
+    description:
+      'O mesmo Método Callan que acelera o inglês, aplicado ao espanhol: aulas 100% faladas, com conversação intensiva e correção imediata desde o primeiro dia. Uma língua falada por mais de 20 países e vizinha do Brasil em quase toda a fronteira — dominá-la abre portas no trabalho, nos estudos e nas viagens por toda a América Latina.',
+    audience: 'Jovens e adultos',
+    cardLogo: '/logo-espanhol.webp',
+    logos: [
+      {
+        src: '/logo-espanhol.webp',
+        alt: 'Academia de Español',
+        width: 560,
+        height: 624,
+        sizeClass: 'w-28 sm:w-32',
+      },
+    ],
+    groups: [
+      {
+        label: 'Turmas de Espanhol',
+        classes: [
+          {
+            name: 'Premium Espanhol',
+            duration: '2 anos e meio',
+            hours: '1h30/aula + 1h extra',
+            frequency: '3x por semana',
+          },
+          {
+            name: 'Executive Espanhol',
+            duration: '3 anos e meio',
+            hours: '2h/aula + 1h extra',
+            frequency: '2x por semana',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'online',
     title: 'Online e ao Vivo',
     subtitle: 'O Método Callan ao vivo, de onde você estiver.',

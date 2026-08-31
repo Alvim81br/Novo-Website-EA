@@ -1,0 +1,57 @@
+# Ponte de mídia para os depoimentos em vídeo do site.
+#
+# O ambiente remoto do Claude não alcança o Google Drive diretamente, então
+# este workflow roda no runner do GitHub (rede aberta): baixa os vídeos da
+# pasta compartilhada do Drive, gera um pacote de triagem (frames +
+# transcrições + metadados) e publica na release `depoimentos-work`, de onde
+# o Claude consegue baixar. Modo "finalists" publica os originais escolhidos.
+#
+# Disparo: alteração em .github/depoimentos/manifest.json (na branch de
+# trabalho) ou manualmente pela aba Actions.
+name: Depoimentos pipeline
+
+on:
+  push:
+    branches: [claude/website-design-review-xg0jch]
+    paths: ['.github/depoimentos/manifest.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instala dependências
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install --quiet gdown faster-whisper
+
+      - name: Executa pipeline (modo do manifest)
+        run: python .github/scripts/depoimentos_pipeline.py
+
+      - name: Publica na release depoimentos-work
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mode=$(python -c "import json; print(json.load(open('.github/depoimentos/manifest.json'))['mode'])")
+          if [ "$mode" = "cleanup" ]; then
+            gh release delete depoimentos-work --yes --cleanup-tag || echo "release já apagada"
+            echo "Limpeza concluída — release depoimentos-work removida."
+            exit 0
+          fi
+          gh release view depoimentos-work >/dev/null 2>&1 || \
+            gh release create depoimentos-work --prerelease \
+              --title "Depoimentos — área de trabalho (temporária)" \
+              --notes "Assets temporários do pipeline de depoimentos do site. Esta release será apagada ao fim do trabalho."
+          gh release upload depoimentos-work out/* --clobber
+          echo "Assets publicados:" && ls -la out/

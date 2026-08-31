@@ -6,6 +6,8 @@ create table if not exists public.leads (
   created_at timestamptz not null default now(),
   name text not null,
   phone text not null,
+  -- Só o chat conversacional (LeadChat.astro) pergunta o e-mail
+  email text,
   unit text not null,
   course text not null,
   schedule text,
@@ -21,9 +23,10 @@ create table if not exists public.leads (
   fbclid text
 );
 
--- Migração para bancos criados antes das colunas de campanha
+-- Migração para bancos criados antes do e-mail e das colunas de campanha
 -- (segura de rodar mais de uma vez):
 alter table public.leads
+  add column if not exists email text,
   add column if not exists utm_source text,
   add column if not exists utm_medium text,
   add column if not exists utm_campaign text,

@@ -59,7 +59,6 @@ O formulário de `/aula-experimental/` grava os leads em uma tabela `leads` no S
 >
 > A anon key só permite **inserir** leads (RLS). A leitura é feita pelo painel do Supabase, pelo
 > painel por unidade (abaixo) ou por integrações (Make, CRM) com a service role key.
-
 >
 > **Sem Supabase configurado** (ou se o insert falhar), o formulário automaticamente encaminha o lead formatado para o WhatsApp **da unidade escolhida** — o site nunca perde um lead.
 >

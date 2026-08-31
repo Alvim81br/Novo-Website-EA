@@ -25,6 +25,7 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 | `/unidades/`          | As 9 unidades (PA/MA) + English Academy Live                     |
 | `/aula-experimental/` | Página de conversão com formulário de leads                     |
 | `/obrigado/`          | Confirmação do formulário — dispara a conversão (noindex)        |
+| `/painel/`            | Painel de leads do comercial, por unidade (noindex, interno)     |
 | `/politica-de-privacidade/` | Política de privacidade (LGPD)                             |
 | `/ingles-em-{cidade}/` | Landing pages locais (Parauapebas, Marabá, Canaã, Belém, Imperatriz) |
 | `/curso-de-ingles-online/` | Landing page da English Academy Live                        |
@@ -59,27 +60,38 @@ O formulário de `/aula-experimental/` grava os leads em uma tabela `leads` no S
 > A anon key só permite **inserir** leads (RLS). A leitura é feita pelo painel do Supabase, pelo
 > painel por unidade (abaixo) ou por integrações (Make, CRM) com a service role key.
 
-## 👥 Painel de leads por unidade
-
-`supabase/functions/leads/` — página web onde **cada comercial vê só os leads da sua unidade**,
-liga ou chama no WhatsApp com um toque e marca quem já foi atendido. Feita para o celular.
-
-Cada pessoa recebe um link com a sua chave:
-`https://kitekwfjytbewwqatmit.supabase.co/functions/v1/leads?k=<chave>` — basta salvar nos
-favoritos, sem login nem senha para decorar. A chave da direção (linha com `unit` nulo em
-`unit_access`) enxerga todas as unidades e mostra o nome da escola em cada card.
-
-- **Criar / revogar acesso** → tabela `unit_access` (o SQL de exemplo está em `supabase/schema.sql`).
-  Revogar é `active = false`: o link morre na hora, sem mexer no resto.
-- **Publicar mudanças na página** → `supabase functions deploy leads` (ou o MCP do Supabase).
-  A função roda com a service role, que nunca sai do servidor; a página não embute chave nenhuma.
-- **Privacidade** → `noindex`, `Cache-Control: no-store` e `Referrer-Policy: no-referrer` (a chave
-  na URL não vaza no Referer ao clicar no WhatsApp). São dados pessoais: o link é interno e a
-  chave não deve circular fora da equipe (LGPD).
 >
 > **Sem Supabase configurado** (ou se o insert falhar), o formulário automaticamente encaminha o lead formatado para o WhatsApp **da unidade escolhida** — o site nunca perde um lead.
 >
 > ⚠️ **Plano gratuito do Supabase pausa o projeto após ~7 dias sem atividade** — e projeto pausado = formulário caindo no fallback. O workflow `.github/workflows/supabase-keep-alive.yml` pinga a API a cada 3 dias, mas o GitHub **desativa crons após 60 dias sem commits no repositório**; se o repo ficar parado, reative o workflow na aba Actions ou verifique o projeto no painel do Supabase.
+
+## 👥 Painel de leads por unidade
+
+Página onde **cada comercial vê só os leads da sua unidade**, liga ou chama no WhatsApp com um
+toque e marca quem já foi atendido. Feita para o celular. Cada pessoa recebe um link com a sua
+chave — `https://www.englishacademy.net.br/painel/?k=<chave>` — e salva nos favoritos: sem login
+nem senha para decorar. A chave da direção (linha com `unit` nulo em `unit_access`) enxerga todas
+as unidades e mostra o nome da escola em cada card.
+
+São duas peças, e a divisão tem motivo:
+
+| Peça | Onde | Papel |
+| :--- | :--- | :---- |
+| Página | `src/pages/painel.astro` | O HTML, servido pelo Netlify junto com o site |
+| Dados | `supabase/functions/leads/` | Edge Function que devolve **JSON** com os leads da chave |
+
+> ⚠️ **Não devolva HTML pela Edge Function.** O runtime do Supabase reescreve o `content-type`
+> da resposta para `text/plain` (confirmado nos logs: `response.headers.content_type`), e o
+> navegador mostra o código em vez da página. Com JSON isso é inofensivo — quem lê é o `fetch()`.
+
+- **Como a página fala com a função** → `/api/leads`, um proxy declarado no `netlify.toml` e no
+  `vercel.json`. Fica tudo na mesma origem: sem CORS e sem expor a URL do Supabase na página.
+- **Criar / revogar acesso** → tabela `unit_access` (o SQL de exemplo está em `supabase/schema.sql`).
+  Revogar é `active = false`: o link morre na hora, sem mexer no resto.
+- **Publicar mudanças nos dados** → `supabase functions deploy leads` (ou o MCP do Supabase).
+  A função roda com a service role, que nunca sai do servidor; a página não embute chave nenhuma.
+- **Privacidade** → `noindex`, fora do sitemap e a chave só trafega na URL do painel. São dados
+  pessoais: o link é interno e a chave não deve circular fora da equipe (LGPD).
 
 ## 💬 Chat conversacional de captura (balão do canto inferior direito)
 

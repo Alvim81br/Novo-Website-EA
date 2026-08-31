@@ -1,0 +1,312 @@
+---
+// Painel de leads do comercial — ferramenta interna, fora do site público.
+//
+// A página é estática (o Netlify a entrega como HTML de verdade); os dados vêm
+// da Edge Function do Supabase por `/api/leads`, um proxy configurado no
+// netlify.toml/vercel.json. O proxy deixa a chamada na mesma origem: sem CORS
+// e sem depender do content-type que o Supabase devolve.
+//
+// URL de cada pessoa: /painel/?k=<chave da unidade> (ver tabela unit_access).
+const api = '/api/leads';
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Painel de Leads — English Academy</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <style is:inline>
+      :root {
+        --navy: #00327d;
+        --navy-dark: #001f4d;
+        --verde: #25d366;
+        --cinza: #6b7280;
+        --borda: #e5e7eb;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f4f6fb;
+        color: #1f2937;
+        font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      header { background: linear-gradient(135deg, var(--navy-dark), var(--navy)); color: #fff; padding: 20px 16px; }
+      .wrap { max-width: 720px; margin: 0 auto; }
+      header h1 { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+      header p { margin: 4px 0 0; font-size: 13px; color: #c7d6f0; }
+      .resumo { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+      .pill { background: rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 600; }
+      .pill b { font-size: 15px; }
+      main { padding: 16px; padding-bottom: 48px; }
+      .abas { display: flex; gap: 8px; margin-bottom: 14px; }
+      .aba {
+        flex: 1; text-align: center; padding: 9px; border-radius: 999px; background: #fff;
+        border: 1px solid var(--borda); color: var(--cinza); font-size: 14px; font-weight: 700;
+        cursor: pointer; font-family: inherit;
+      }
+      .aba.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+      .card {
+        background: #fff; border: 1px solid var(--borda); border-radius: 16px; padding: 16px;
+        margin-bottom: 12px; box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+      }
+      .card.feito { opacity: 0.62; }
+      .topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+      .nome { margin: 0; font-size: 18px; font-weight: 800; color: var(--navy-dark); letter-spacing: -0.01em; }
+      .quando { font-size: 12px; color: var(--cinza); white-space: nowrap; padding-top: 4px; }
+      .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+      .tag { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: #eef2f9; color: #3b4a63; }
+      .tag.chat { background: #fce7ef; color: #a61e4d; }
+      .tag.campanha { background: #fff4e0; color: #8a5a00; }
+      .tag.unidade { background: #e7f0ff; color: var(--navy); }
+      .dados { margin: 12px 0 0; font-size: 14px; color: #374151; }
+      .dados div { margin-top: 3px; }
+      .dados a { color: var(--navy); text-decoration: none; font-weight: 600; }
+      .feito-em { color: #15803d; font-weight: 600; }
+      .acoes { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+      .btn {
+        flex: 1 1 140px; text-align: center; padding: 11px 14px; border-radius: 999px; font-size: 14px;
+        font-weight: 700; text-decoration: none; border: 0; cursor: pointer; font-family: inherit;
+      }
+      .btn.zap { background: var(--verde); color: #fff; }
+      .btn.ok { background: #fff; border: 1px solid var(--navy); color: var(--navy); }
+      .btn.desfazer { background: #fff; border: 1px solid var(--borda); color: var(--cinza); flex: 0 0 auto; }
+      .btn[disabled] { opacity: 0.5; cursor: progress; }
+      .vazio {
+        background: #fff; border: 1px dashed var(--borda); border-radius: 16px; padding: 36px 20px;
+        text-align: center; color: var(--cinza);
+      }
+      .rodape { margin-top: 22px; font-size: 12px; color: var(--cinza); text-align: center; line-height: 1.6; }
+      form.entrar { background: #fff; border: 1px solid var(--borda); border-radius: 16px; padding: 22px; margin-top: 18px; }
+      form.entrar label { display: block; font-size: 14px; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; }
+      form.entrar input { width: 100%; padding: 12px 14px; border: 1px solid var(--borda); border-radius: 12px; font-size: 16px; font-family: inherit; }
+      form.entrar button {
+        width: 100%; margin-top: 12px; padding: 12px; border: 0; border-radius: 999px;
+        background: var(--navy); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+      }
+      .erro { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+    </style>
+  </head>
+  <body data-api={api}>
+    <header>
+      <div class="wrap">
+        <h1 id="titulo">Painel de Leads</h1>
+        <p id="subtitulo">English Academy</p>
+        <div class="resumo" id="resumo" hidden>
+          <span class="pill"><b id="n-pendentes">0</b> a contatar</span>
+          <span class="pill"><b id="n-hoje">0</b> nas últimas 24h</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <nav class="abas" id="abas" hidden>
+          <button class="aba on" type="button" data-filtro="pendentes">A contatar</button>
+          <button class="aba" type="button" data-filtro="todos">Todos</button>
+        </nav>
+        <div id="conteudo"><div class="vazio">Carregando…</div></div>
+        <p class="rodape">
+          Dados pessoais de quem pediu contato — uso interno da English Academy.<br />
+          Não repasse esta página nem a sua chave para fora da equipe (LGPD).
+        </p>
+      </div>
+    </main>
+
+    <script>
+      interface Lead {
+        id: string;
+        created_at: string;
+        name: string;
+        phone: string;
+        email: string | null;
+        unit: string;
+        course: string | null;
+        schedule: string | null;
+        source: string | null;
+        contacted: boolean;
+        contacted_at: string | null;
+        utm_source: string | null;
+        utm_campaign: string | null;
+      }
+
+      const TZ = 'America/Sao_Paulo';
+      const api = document.body.dataset.api ?? '/api/leads';
+      const chave = new URLSearchParams(location.search).get('k') ?? '';
+
+      const titulo = document.getElementById('titulo')!;
+      const subtitulo = document.getElementById('subtitulo')!;
+      const resumo = document.getElementById('resumo')!;
+      const abas = document.getElementById('abas')!;
+      const conteudo = document.getElementById('conteudo')!;
+
+      let leads: Lead[] = [];
+      let unidade: string | null = null;
+      let filtro: 'pendentes' | 'todos' = 'pendentes';
+
+      function esc(valor: unknown): string {
+        return String(valor ?? '').replace(/[&<>"']/g, (c) =>
+          ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
+        );
+      }
+
+      function quando(iso: string): string {
+        const data = new Date(iso);
+        const min = Math.floor((Date.now() - data.getTime()) / 60000);
+        if (min < 1) return 'agora';
+        if (min < 60) return `há ${min} min`;
+        if (min < 24 * 60) return `há ${Math.floor(min / 60)}h`;
+        if (min < 48 * 60) return 'ontem';
+        return data.toLocaleDateString('pt-BR', { timeZone: TZ, day: '2-digit', month: '2-digit' });
+      }
+
+      function dataHora(iso: string): string {
+        return new Date(iso).toLocaleString('pt-BR', {
+          timeZone: TZ,
+          day: '2-digit',
+          month: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      }
+
+      function whatsapp(lead: Lead): string {
+        const digitos = (lead.phone ?? '').replace(/\D/g, '');
+        if (digitos.length < 10) return '';
+        const numero = digitos.length <= 11 ? `55${digitos}` : digitos;
+        const primeiro = (lead.name ?? '').trim().split(/\s+/)[0] ?? '';
+        const texto = encodeURIComponent(
+          `Olá ${primeiro}! Aqui é da English Academy 😊 Vi que você pediu uma proposta pelo nosso site. Posso te passar os valores e condições?`
+        );
+        return `https://wa.me/${numero}?text=${texto}`;
+      }
+
+      function telaDeEntrada(mensagem = '') {
+        abas.hidden = true;
+        resumo.hidden = true;
+        conteudo.innerHTML = `
+          ${mensagem ? `<div class="erro">${esc(mensagem)}</div>` : ''}
+          <form class="entrar" method="get">
+            <label for="k">Cole aqui a sua chave de acesso</label>
+            <input id="k" name="k" autocomplete="off" spellcheck="false" placeholder="ex.: 3f9a1c…" required>
+            <button type="submit">Ver meus leads</button>
+          </form>`;
+      }
+
+      function cartao(lead: Lead): string {
+        const doChat = (lead.source ?? '').startsWith('chat:');
+        const zap = whatsapp(lead);
+        const campanha = lead.utm_campaign ?? lead.utm_source;
+        const curso = lead.course && !lead.course.startsWith('Não informado') ? lead.course : '';
+
+        const tags = [
+          `<span class="tag ${doChat ? 'chat' : ''}">${doChat ? '💬 Chat do site' : '📝 Formulário'}</span>`,
+          unidade ? '' : `<span class="tag unidade">${esc(lead.unit)}</span>`,
+          curso ? `<span class="tag">${esc(curso)}</span>` : '',
+          lead.schedule ? `<span class="tag">🕒 ${esc(lead.schedule)}</span>` : '',
+          campanha ? `<span class="tag campanha">📣 ${esc(campanha)}</span>` : '',
+        ].join('');
+
+        return `<article class="card${lead.contacted ? ' feito' : ''}" data-id="${esc(lead.id)}">
+          <div class="topo">
+            <h2 class="nome">${esc(lead.name)}</h2>
+            <span class="quando" title="${esc(dataHora(lead.created_at))}">${esc(quando(lead.created_at))}</span>
+          </div>
+          <div class="tags">${tags}</div>
+          <div class="dados">
+            <div>📱 <a href="tel:${esc((lead.phone ?? '').replace(/\s/g, ''))}">${esc(lead.phone)}</a></div>
+            ${lead.email ? `<div>✉️ <a href="mailto:${esc(lead.email)}">${esc(lead.email)}</a></div>` : ''}
+            ${
+              lead.contacted
+                ? `<div class="feito-em">✓ Atendido${lead.contacted_at ? ` em ${esc(dataHora(lead.contacted_at))}` : ''}</div>`
+                : ''
+            }
+          </div>
+          <div class="acoes">
+            ${zap ? `<a class="btn zap" href="${esc(zap)}" target="_blank" rel="noreferrer noopener">Chamar no WhatsApp</a>` : ''}
+            <button class="btn ${lead.contacted ? 'desfazer' : 'ok'}" type="button" data-acao="${lead.contacted ? 'reabrir' : 'atendido'}">
+              ${lead.contacted ? 'Reabrir' : 'Marcar como atendido'}
+            </button>
+          </div>
+        </article>`;
+      }
+
+      function pintar() {
+        const lista = filtro === 'pendentes' ? leads.filter((l) => !l.contacted) : leads;
+        const pendentes = leads.filter((l) => !l.contacted).length;
+        const hoje = leads.filter((l) => Date.now() - new Date(l.created_at).getTime() < 24 * 3600 * 1000).length;
+
+        document.getElementById('n-pendentes')!.textContent = String(pendentes);
+        document.getElementById('n-hoje')!.textContent = String(hoje);
+        resumo.hidden = false;
+        abas.hidden = false;
+
+        conteudo.innerHTML = lista.length
+          ? lista.map(cartao).join('')
+          : `<div class="vazio">${
+              filtro === 'pendentes' ? 'Nenhum lead esperando contato. 🎉' : 'Ainda não há leads por aqui.'
+            }</div>`;
+      }
+
+      async function marcar(botao: HTMLButtonElement, id: string, acao: string) {
+        botao.disabled = true;
+        try {
+          const resposta = await fetch(api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ k: chave, id, acao }),
+          });
+          if (!resposta.ok) throw new Error(String(resposta.status));
+          const lead = leads.find((l) => l.id === id);
+          if (lead) {
+            lead.contacted = acao === 'atendido';
+            lead.contacted_at = lead.contacted ? new Date().toISOString() : null;
+          }
+          pintar();
+        } catch {
+          botao.disabled = false;
+          botao.textContent = 'Não deu — tente de novo';
+        }
+      }
+
+      conteudo.addEventListener('click', (evento) => {
+        const botao = (evento.target as HTMLElement).closest<HTMLButtonElement>('button[data-acao]');
+        const card = botao?.closest<HTMLElement>('.card');
+        if (botao && card?.dataset.id) void marcar(botao, card.dataset.id, botao.dataset.acao ?? '');
+      });
+
+      abas.addEventListener('click', (evento) => {
+        const aba = (evento.target as HTMLElement).closest<HTMLElement>('.aba');
+        if (!aba?.dataset.filtro) return;
+        filtro = aba.dataset.filtro as 'pendentes' | 'todos';
+        for (const outra of abas.querySelectorAll('.aba')) outra.classList.toggle('on', outra === aba);
+        pintar();
+      });
+
+      async function carregar() {
+        if (!chave) return telaDeEntrada();
+        try {
+          const resposta = await fetch(`${api}?k=${encodeURIComponent(chave)}`);
+          if (resposta.status === 401) return telaDeEntrada('Chave inválida ou desativada.');
+          if (!resposta.ok) throw new Error(String(resposta.status));
+
+          const dados = await resposta.json();
+          unidade = dados.unidade ?? null;
+          leads = dados.leads ?? [];
+          titulo.textContent = unidade ?? 'Todas as unidades';
+          subtitulo.textContent = dados.label ?? '';
+          document.title = `Leads — ${unidade ?? 'Todas as unidades'}`;
+          pintar();
+        } catch {
+          abas.hidden = true;
+          conteudo.innerHTML =
+            '<div class="erro">Não consegui carregar os leads agora. Confira a conexão e recarregue a página.</div>';
+        }
+      }
+
+      void carregar();
+    </script>
+  </body>
+</html>

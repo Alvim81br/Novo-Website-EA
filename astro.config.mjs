@@ -8,8 +8,9 @@ export default defineConfig({
   output: 'static',
   integrations: [
     sitemap({
-      // /obrigado/ é página de conversão (noindex) — fica fora do sitemap.
-      filter: (page) => !page.includes('/obrigado/'),
+      // Fora do sitemap: /obrigado/ é página de conversão (noindex) e /painel/
+      // é ferramenta interna do comercial. Ambas com noindex no HTML também.
+      filter: (page) => !page.includes('/obrigado/') && !page.includes('/painel/'),
     }),
   ],
   vite: {

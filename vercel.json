@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/leads",
+      "destination": "https://kitekwfjytbewwqatmit.functions.supabase.co/leads"
+    }
+  ],
   "redirects": [
     {
       "source": "/(.*)",

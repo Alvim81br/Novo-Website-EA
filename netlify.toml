@@ -6,6 +6,16 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# Dados do painel de leads (/painel/): o navegador fala com o próprio site e o
+# Netlify busca na Edge Function do Supabase. Assim a chamada fica na mesma
+# origem — sem CORS — e a página continua sendo servida como HTML pelo Netlify.
+# Precisa vir antes do redirect de domínio para não ser engolido por ele.
+[[redirects]]
+  from = "/api/leads"
+  to = "https://kitekwfjytbewwqatmit.functions.supabase.co/leads"
+  status = 200
+  force = true
+
 # Redireciona o domínio raiz para www (canônico)
 [[redirects]]
   from = "https://englishacademy.net.br/*"

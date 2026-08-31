@@ -34,7 +34,13 @@ export const segments: CourseSegment[] = [
     audience: 'A partir de 14 anos',
     cardLogo: '/logo-ea.webp',
     logos: [
-      { src: '/logo-callan.webp', alt: 'Método Callan', width: 741, height: 184, sizeClass: 'w-40 sm:w-full' },
+      {
+        src: '/logo-callan.webp',
+        alt: 'Callan Method — Accredited School',
+        width: 760,
+        height: 466,
+        sizeClass: 'w-40 sm:w-44',
+      },
     ],
     groups: [
       {
@@ -150,10 +156,10 @@ export const segments: CourseSegment[] = [
     cardLogo: '/logo_live_ofc.webp',
     logos: [
       {
-        src: '/logo_live_ofc.webp',
+        src: '/logo-live-flat.webp',
         alt: 'English Academy Live',
-        width: 352,
-        height: 320,
+        width: 600,
+        height: 599,
         sizeClass: 'w-28 sm:w-32',
       },
     ],

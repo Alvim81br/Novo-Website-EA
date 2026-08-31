@@ -49,22 +49,22 @@ function esc(value: unknown): string {
 }
 
 function pagina(titulo: string, corpo: string, status = 200): Response {
-  return new Response(
-    `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+  const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>${esc(titulo)}</title><style>${CSS}</style></head><body>${corpo}</body></html>`,
-    {
-      status,
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        // A chave viaja na URL: sem Referer, ela não vaza para o WhatsApp e afins.
-        "Referrer-Policy": "no-referrer",
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, nofollow",
-      },
-    },
-  );
+<title>${esc(titulo)}</title><style>${CSS}</style></head><body>${corpo}</body></html>`;
+
+  // Corpo em bytes + Headers explícito: com string crua o runtime pode carimbar
+  // um `text/plain` por cima, e aí o navegador mostra o código em vez da página.
+  const headers = new Headers();
+  headers.set("content-type", "text/html; charset=utf-8");
+  // A chave viaja na URL: sem Referer, ela não vaza para o WhatsApp e afins.
+  headers.set("referrer-policy", "no-referrer");
+  headers.set("cache-control", "no-store");
+  headers.set("x-robots-tag", "noindex, nofollow");
+
+  return new Response(new TextEncoder().encode(html), { status, headers });
 }
 
 const CSS = `

@@ -43,6 +43,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          mode=$(python -c "import json; print(json.load(open('.github/depoimentos/manifest.json'))['mode'])")
+          if [ "$mode" = "cleanup" ]; then
+            gh release delete depoimentos-work --yes --cleanup-tag || echo "release já apagada"
+            echo "Limpeza concluída — release depoimentos-work removida."
+            exit 0
+          fi
           gh release view depoimentos-work >/dev/null 2>&1 || \
             gh release create depoimentos-work --prerelease \
               --title "Depoimentos — área de trabalho (temporária)" \

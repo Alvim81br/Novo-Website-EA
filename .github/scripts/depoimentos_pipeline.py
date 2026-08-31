@@ -190,6 +190,8 @@ def main() -> None:
         run_triage(manifest)
     elif mode == 'finalists':
         run_finalists(manifest)
+    elif mode == 'cleanup':
+        print('modo cleanup — a release é apagada no passo seguinte do workflow')
     else:
         raise SystemExit(f'modo desconhecido: {mode!r}')
 

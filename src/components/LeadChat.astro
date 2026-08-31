@@ -1,0 +1,676 @@
+---
+// Balão conversacional de captura de leads (canto inferior direito).
+// Substitui o antigo balão de WhatsApp flutuante — os botões e links de
+// WhatsApp das páginas continuam iguais (units.ts é a fonte única).
+//
+// Como funciona: alguns segundos depois que a pessoa chega na página o chat
+// abre sozinho, faz as perguntas uma a uma (com os "três pontinhos" de quem
+// está digitando) e grava o lead na mesma tabela `leads` do Supabase usada
+// pelo formulário de /aula-experimental/. Se o Supabase falhar, a conversa
+// termina oferecendo o WhatsApp da unidade escolhida — nenhum lead se perde.
+import { listedUnits } from '../data/units';
+
+// Credenciais PÚBLICAS do Supabase (anon key + RLS só de INSERT — ver
+// supabase/schema.sql). Mesmos valores do LeadForm, fixos pelo mesmo motivo:
+// variáveis coladas no painel da hospedagem podem carregar espaços invisíveis.
+const supabaseUrl = 'https://kitekwfjytbewwqatmit.supabase.co';
+const supabaseAnonKey =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdGVrd2ZqeXRiZXd3cWF0bWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDEzMjgsImV4cCI6MjA5Njc3NzMyOH0.Lr7hjFTOBYaB5ArYLx9lMm9z3xCUgPjCZE6DdDbIUBg';
+
+// Identidade de quem conversa. Para usar uma consultora real, troque o nome e
+// coloque a foto em /public (ex.: '/consultora.webp') — o círculo já recorta.
+const agent = {
+  name: 'English Academy',
+  status: 'Online agora',
+  avatar: '/logo-ea.webp',
+};
+
+// Chamada de conversão que aparece ao lado do balão antes de o chat abrir.
+const teaser = 'Olá! 👋 Quer receber uma <b>proposta personalizada</b>?';
+
+// Unidades oferecidas na última pergunta (com o WhatsApp de cada uma, usado
+// no fim da conversa e no plano B se o Supabase estiver fora do ar).
+const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.whatsappLink }));
+---
+
+<div
+  id="ea-chat"
+  class="fixed right-4 bottom-4 z-50 flex flex-col items-end gap-3 print:hidden"
+  data-supabase-url={supabaseUrl}
+  data-supabase-key={supabaseAnonKey}
+  data-units={JSON.stringify(chatUnits)}
+>
+  <!-- Janela da conversa -->
+  <section
+    id="ea-chat-panel"
+    class="ea-chat-panel hidden w-[22rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10"
+    role="dialog"
+    aria-labelledby="ea-chat-title"
+  >
+    <header class="flex items-center gap-3 bg-gradient-to-r from-red-ea to-red-ea-dark px-4 py-3 text-white">
+      <img
+        src={agent.avatar}
+        alt=""
+        width="40"
+        height="40"
+        class="h-10 w-10 shrink-0 rounded-full bg-white object-contain p-1 ring-2 ring-white/60"
+      />
+      <div class="min-w-0 flex-1">
+        <p id="ea-chat-title" class="truncate text-sm font-bold">{agent.name}</p>
+        <p class="flex items-center gap-1.5 text-xs text-white/90">
+          <span class="inline-block h-2 w-2 rounded-full bg-green-400"></span>
+          {agent.status}
+        </p>
+      </div>
+      <button
+        id="ea-chat-close"
+        type="button"
+        aria-label="Fechar conversa"
+        class="shrink-0 rounded-full p-1.5 text-white/90 transition hover:bg-white/15 hover:text-white"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </header>
+
+    <div
+      id="ea-chat-log"
+      class="flex h-[min(20rem,50vh)] flex-col overflow-y-auto bg-gray-50 px-3 py-4"
+      role="log"
+      aria-live="polite"
+      aria-label="Mensagens da conversa"
+    >
+      <!-- `mt-auto`: as mensagens crescem de baixo para cima (sem vazio no topo) -->
+      <div id="ea-chat-stream" class="mt-auto flex flex-col gap-2.5"></div>
+    </div>
+
+    <div id="ea-chat-actions" class="border-t border-gray-100 bg-white p-3"></div>
+  </section>
+
+  <!-- Chamada de conversão (aparece antes de a janela abrir) -->
+  <div
+    id="ea-chat-teaser"
+    class="hidden max-w-[16rem] items-start gap-1 rounded-2xl rounded-br-md bg-white px-4 py-3 shadow-xl ring-1 ring-black/5"
+  >
+    <button id="ea-chat-teaser-open" type="button" class="text-left text-sm leading-snug text-navy-800">
+      <span set:html={teaser} />
+    </button>
+    <button
+      id="ea-chat-teaser-close"
+      type="button"
+      aria-label="Dispensar mensagem"
+      class="-mt-1 -mr-1 shrink-0 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+    >
+      <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Balão flutuante -->
+  <button
+    id="ea-chat-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="ea-chat-panel"
+    aria-label="Abrir conversa com a English Academy"
+    class="ea-chat-toggle relative flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-xl ring-1 ring-black/5 transition hover:scale-110 hover:shadow-2xl"
+  >
+    <img src={agent.avatar} alt="" width="56" height="56" class="h-12 w-12 rounded-full object-contain" />
+    <span class="absolute right-0.5 bottom-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500"></span>
+    <svg
+      id="ea-chat-toggle-close"
+      class="absolute hidden h-6 w-6 text-navy-800"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
+    </svg>
+  </button>
+</div>
+
+<!-- Estilos globais (não escopados): as bolhas são criadas por JS e não
+     recebem o atributo de escopo do Astro. -->
+<style is:global>
+  @keyframes ea-chat-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ea-chat-dot {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    30% {
+      transform: translateY(-3px);
+      opacity: 1;
+    }
+  }
+
+  .ea-chat-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    animation: ea-chat-in 0.28s ease-out both;
+  }
+  .ea-chat-row--user {
+    justify-content: flex-end;
+  }
+
+  .ea-chat-avatar {
+    height: 1.75rem;
+    width: 1.75rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background: #fff;
+    object-fit: contain;
+    padding: 2px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06);
+  }
+
+  .ea-chat-bubble {
+    max-width: 78%;
+    border-radius: 1rem;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .ea-chat-bubble--bot {
+    border-bottom-left-radius: 0.25rem;
+    background: #eceef1;
+    color: #1f2937;
+  }
+  .ea-chat-bubble--user {
+    border-bottom-right-radius: 0.25rem;
+    background: var(--color-red-ea, #d92e2e);
+    color: #fff;
+    font-weight: 600;
+  }
+  .ea-chat-bubble b {
+    font-weight: 700;
+  }
+
+  .ea-chat-dots {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem 0;
+  }
+  .ea-chat-dots span {
+    height: 0.4rem;
+    width: 0.4rem;
+    border-radius: 9999px;
+    background: #6b7280;
+    animation: ea-chat-dot 1.1s infinite;
+  }
+  .ea-chat-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .ea-chat-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ea-chat-row,
+    .ea-chat-dots span {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  interface ChatUnit {
+    name: string;
+    whatsapp: string;
+  }
+
+  const AUTO_OPEN_MS = 6000; // abre sozinho depois de alguns segundos
+  const TEASER_MS = 2500; // chamada de conversão aparece antes disso
+  const DONE_KEY = 'ea-chat-done'; // localStorage: lead já enviado
+  const CLOSED_KEY = 'ea-chat-closed'; // sessionStorage: visitante fechou
+  const AUTO_KEY = 'ea-chat-auto'; // sessionStorage: já abriu sozinho uma vez
+  const COURSE = 'Não informado (chat)'; // o chat não pergunta o curso
+
+  const root = document.getElementById('ea-chat');
+  const panel = document.getElementById('ea-chat-panel');
+  const log = document.getElementById('ea-chat-log');
+  const stream = document.getElementById('ea-chat-stream');
+  const actions = document.getElementById('ea-chat-actions');
+  const toggle = document.getElementById('ea-chat-toggle');
+  const toggleClose = document.getElementById('ea-chat-toggle-close');
+  const closeBtn = document.getElementById('ea-chat-close');
+  const teaser = document.getElementById('ea-chat-teaser');
+  const teaserOpen = document.getElementById('ea-chat-teaser-open');
+  const teaserClose = document.getElementById('ea-chat-teaser-close');
+
+  if (root && panel && log && stream && actions && toggle && teaser) {
+    const avatar = (root.querySelector('#ea-chat-toggle img') as HTMLImageElement | null)?.src ?? '';
+    let units: ChatUnit[] = [];
+    try {
+      units = JSON.parse(root.dataset.units ?? '[]');
+    } catch {
+      units = [];
+    }
+
+    let started = false; // conversa já iniciada
+    let interacted = false; // houve clique do visitante (libera o autofocus)
+
+    // ——— utilidades ———————————————————————————————————————————————
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    function store(kind: 'local' | 'session', key: string, value?: string): string | null {
+      try {
+        const box = kind === 'local' ? localStorage : sessionStorage;
+        if (value === undefined) return box.getItem(key);
+        box.setItem(key, value);
+        return value;
+      } catch {
+        return null;
+      }
+    }
+
+    function track(name: string, params?: Record<string, unknown>) {
+      (window as any).eaTrack?.(name, params);
+    }
+
+    function escapeHtml(value: string): string {
+      return value.replace(/[&<>"']/g, (char) => {
+        const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return map[char] ?? char;
+      });
+    }
+
+    function scrollToEnd() {
+      log!.scrollTop = log!.scrollHeight;
+    }
+
+    // ——— bolhas ———————————————————————————————————————————————————
+
+    function bubble(html: string, who: 'bot' | 'user'): HTMLElement {
+      const row = document.createElement('div');
+      row.className = `ea-chat-row${who === 'user' ? ' ea-chat-row--user' : ''}`;
+
+      if (who === 'bot' && avatar) {
+        const img = document.createElement('img');
+        img.className = 'ea-chat-avatar';
+        img.src = avatar;
+        img.alt = '';
+        row.appendChild(img);
+      }
+
+      const content = document.createElement('div');
+      content.className = `ea-chat-bubble ea-chat-bubble--${who}`;
+      content.innerHTML = html;
+      row.appendChild(content);
+
+      stream!.appendChild(row);
+      scrollToEnd();
+      return row;
+    }
+
+    /** Mensagem do bot precedida dos "três pontinhos" de quem está digitando. */
+    async function bot(html: string) {
+      const row = bubble('<span class="ea-chat-dots"><span></span><span></span><span></span></span>', 'bot');
+      const plain = html.replace(/<[^>]+>/g, '');
+      await wait(reduceMotion ? 250 : Math.min(1600, 500 + plain.length * 22));
+      row.remove();
+      bubble(html, 'bot');
+    }
+
+    // ——— respostas ————————————————————————————————————————————————
+
+    interface Option {
+      label: string;
+      value: string;
+    }
+
+    /** Botões de escolha; resolve com o `value` do botão clicado. */
+    function choose(options: Option[], scroll = false): Promise<string> {
+      return new Promise((resolve) => {
+        const box = document.createElement('div');
+        box.className = `flex flex-col gap-2${scroll ? ' max-h-48 overflow-y-auto pr-1' : ''}`;
+
+        for (const option of options) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className =
+            'w-full rounded-full border border-red-ea px-4 py-2 text-sm font-bold text-red-ea transition hover:bg-red-ea hover:text-white';
+          button.textContent = option.label;
+          button.addEventListener('click', () => {
+            actions!.replaceChildren();
+            bubble(escapeHtml(option.label), 'user');
+            resolve(option.value);
+          });
+          box.appendChild(button);
+        }
+
+        actions!.replaceChildren(box);
+        scrollToEnd();
+      });
+    }
+
+    interface AskOptions {
+      type?: 'text' | 'email' | 'tel';
+      placeholder: string;
+      autocomplete: string;
+      validate: (value: string) => boolean;
+      error: string;
+    }
+
+    /** Campo de texto; só resolve quando a resposta passa na validação. */
+    function ask(options: AskOptions): Promise<string> {
+      return new Promise((resolve) => {
+        const form = document.createElement('form');
+        form.className = 'flex items-center gap-2';
+        form.noValidate = true;
+
+        const input = document.createElement('input');
+        input.type = options.type ?? 'text';
+        input.placeholder = options.placeholder;
+        input.autocomplete = options.autocomplete;
+        input.className =
+          'min-w-0 flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-800 transition focus:border-navy-700 focus:ring-2 focus:ring-navy-200 focus:outline-none';
+        input.setAttribute('aria-label', options.placeholder);
+
+        const send = document.createElement('button');
+        send.type = 'submit';
+        send.setAttribute('aria-label', 'Enviar resposta');
+        send.className =
+          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-ea text-white transition hover:bg-red-ea-dark';
+        send.innerHTML =
+          '<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 21 23 12 2.2 3l.01 7L17 12 2.21 14z"/></svg>';
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const value = input.value.trim();
+          if (!value) return;
+
+          bubble(escapeHtml(value), 'user');
+          input.value = '';
+
+          if (!options.validate(value)) {
+            input.disabled = true;
+            await bot(options.error);
+            input.disabled = false;
+            if (interacted) input.focus();
+            return;
+          }
+
+          actions!.replaceChildren();
+          resolve(value);
+        });
+
+        form.append(input, send);
+        actions!.replaceChildren(form);
+        // Só rouba o foco (e abre o teclado no celular) se a pessoa já
+        // interagiu — o chat abre sozinho e não deve atrapalhar a leitura.
+        if (interacted) input.focus();
+        scrollToEnd();
+      });
+    }
+
+    // ——— validações ———————————————————————————————————————————————
+
+    const isName = (value: string) => value.length >= 2 && /\p{L}{2}/u.test(value);
+    const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+    const isPhone = (value: string) => {
+      const digits = value.replace(/\D/g, '');
+      return digits.length >= 10 && digits.length <= 13;
+    };
+
+    // ——— envio do lead ————————————————————————————————————————————
+
+    function getUtm(): Record<string, string> {
+      try {
+        return JSON.parse(sessionStorage.getItem('ea-utm') ?? '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    interface Lead {
+      name: string;
+      email: string;
+      phone: string;
+      unit: string;
+    }
+
+    async function saveLead(lead: Lead) {
+      const { supabaseUrl, supabaseKey } = root!.dataset;
+      if (!supabaseUrl || !supabaseKey) throw new Error('Supabase não configurado');
+
+      const utm = getUtm();
+      const response = await fetch(`${supabaseUrl}/rest/v1/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          name: lead.name,
+          email: lead.email,
+          phone: lead.phone,
+          unit: lead.unit,
+          course: COURSE,
+          source: `chat:${window.location.pathname}`,
+          utm_source: utm.utm_source ?? null,
+          utm_medium: utm.utm_medium ?? null,
+          utm_campaign: utm.utm_campaign ?? null,
+          utm_term: utm.utm_term ?? null,
+          utm_content: utm.utm_content ?? null,
+          gclid: utm.gclid ?? null,
+          fbclid: utm.fbclid ?? null,
+        }),
+      });
+
+      if (!response.ok) {
+        const detail = await response.text().catch(() => '');
+        throw new Error(`Supabase respondeu ${response.status} ${detail}`);
+      }
+    }
+
+    /** Plano B: leva a conversa para o WhatsApp da unidade escolhida. */
+    function whatsappFallback(lead: Lead) {
+      const unit = units.find((item) => item.name === lead.unit);
+      const number = unit?.whatsapp.match(/wa\.me\/(\d+)/)?.[1] ?? '';
+      if (!number) return;
+
+      const text = encodeURIComponent(
+        `Olá! Vim pelo site e quero receber uma proposta personalizada.\n\nNome: ${lead.name}\nE-mail: ${lead.email}\nTelefone: ${lead.phone}\nUnidade: ${lead.unit}`
+      );
+
+      const link = document.createElement('a');
+      link.href = `https://wa.me/${number}?text=${text}`;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.className =
+        'flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-bold text-white transition hover:brightness-95';
+      link.innerHTML =
+        '<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.65 15.02L2 22l5.13-1.34A10 10 0 1 0 12 2zm0 18.3c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.05.8.81-2.97-.2-.31A8.26 8.26 0 1 1 12 20.3z"/></svg>Falar agora no WhatsApp';
+      link.addEventListener('click', () => track('whatsapp_click', { page: window.location.pathname, source: 'chat' }));
+
+      actions!.replaceChildren(link);
+      scrollToEnd();
+    }
+
+    // ——— a conversa ———————————————————————————————————————————————
+
+    async function conversation() {
+      await bot('Olá, tudo bem? 👋');
+      await bot('Gostaria de receber uma <b>proposta personalizada</b>?');
+
+      const wants = await choose([
+        { label: 'Sim, quero receber', value: 'sim' },
+        { label: 'Agora não, obrigado', value: 'nao' },
+      ]);
+
+      if (wants === 'nao') {
+        track('chat_declined', { page: window.location.pathname });
+        await bot('Sem problemas! 😊 Se mudar de ideia, é só me chamar aqui embaixo.');
+        store('session', CLOSED_KEY, '1');
+        await wait(2600);
+        setOpen(false);
+        return;
+      }
+
+      track('chat_lead_start', { page: window.location.pathname });
+
+      await bot('Para isso preciso de algumas informações <b>rápidas</b> 🙂');
+      await bot('Qual é o seu <b>nome</b>?');
+      const name = await ask({
+        placeholder: 'Seu nome',
+        autocomplete: 'name',
+        validate: isName,
+        error: 'Pode me dizer seu nome, por favor? 🙂',
+      });
+
+      await bot(`Prazer, ${escapeHtml(name.split(' ')[0] ?? name)} 👋`);
+      await bot('Em qual <b>e-mail</b> gostaria de receber a proposta?');
+      const email = await ask({
+        type: 'email',
+        placeholder: 'seuemail@exemplo.com',
+        autocomplete: 'email',
+        validate: isEmail,
+        error: 'Hmm, esse e-mail parece incompleto. Pode conferir? 🙂',
+      });
+
+      await bot('Poderia me informar seu <b>telefone</b> com o DDD da sua região? (Prometo não incomodar 🙏)');
+      const phone = await ask({
+        type: 'tel',
+        placeholder: '(94) 99999-9999',
+        autocomplete: 'tel',
+        validate: isPhone,
+        error: 'Preciso do número com DDD, ex.: (94) 99999-9999 📱',
+      });
+
+      await bot('Legal, estamos quase lá...');
+      await bot('Qual de nossas <b>unidades</b> é a mais próxima para você?');
+      const unit = await choose(
+        units.map((item) => ({ label: item.name, value: item.name })),
+        true
+      );
+
+      const lead: Lead = { name, email, phone, unit };
+
+      try {
+        await saveLead(lead);
+        store('local', DONE_KEY, String(Date.now()));
+        track('chat_lead_submit', { unit });
+        // Conversão do site (mesma regra da /obrigado/: uma vez por visita).
+        if (!store('session', 'ea-lead-fired')) {
+          track('generate_lead', { method: 'chat', unit });
+          store('session', 'ea-lead-fired', '1');
+        }
+
+        await bot(
+          `Obrigado, ${escapeHtml(name.split(' ')[0] ?? name)}! Em breve nossa equipe de consultores irá entrar em contato para apresentar a <b>melhor proposta para você</b>! 🤝`
+        );
+        await bot('Se preferir, você também pode falar com a unidade agora mesmo 👇');
+        whatsappFallback(lead);
+      } catch (error) {
+        // Nenhum lead se perde: a conversa segue no WhatsApp da unidade.
+        console.error(error);
+        await bot('Tive um probleminha para registrar seus dados por aqui 😕');
+        await bot('Mas podemos continuar agora mesmo no <b>WhatsApp</b> — é só tocar no botão 👇');
+        whatsappFallback(lead);
+      }
+    }
+
+    // ——— abrir / fechar ———————————————————————————————————————————
+
+    function setOpen(open: boolean, auto = false) {
+      panel!.classList.toggle('hidden', !open);
+      toggle!.setAttribute('aria-expanded', String(open));
+      toggle!.setAttribute('aria-label', open ? 'Fechar conversa' : 'Abrir conversa com a English Academy');
+      toggleClose?.classList.toggle('hidden', !open);
+      toggle!.querySelector('img')?.classList.toggle('opacity-0', open);
+      if (open) hideTeaser();
+
+      if (open && !started) {
+        started = true;
+        track('chat_opened', { page: window.location.pathname, mode: auto ? 'auto' : 'click' });
+        void conversation();
+      }
+      if (open) scrollToEnd();
+    }
+
+    function hideTeaser() {
+      teaser!.classList.add('hidden');
+      teaser!.classList.remove('flex');
+    }
+
+    function showTeaser() {
+      if (!panel!.classList.contains('hidden')) return;
+      teaser!.classList.remove('hidden');
+      teaser!.classList.add('flex');
+    }
+
+    toggle.addEventListener('click', () => {
+      interacted = true;
+      setOpen(panel.classList.contains('hidden'));
+      if (panel.classList.contains('hidden')) store('session', CLOSED_KEY, '1');
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      interacted = true;
+      setOpen(false);
+      store('session', CLOSED_KEY, '1');
+    });
+
+    teaserOpen?.addEventListener('click', () => {
+      interacted = true;
+      setOpen(true);
+    });
+
+    teaserClose?.addEventListener('click', () => {
+      interacted = true;
+      hideTeaser();
+      store('session', CLOSED_KEY, '1');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.classList.contains('hidden')) {
+        setOpen(false);
+        store('session', CLOSED_KEY, '1');
+      }
+    });
+
+    // ——— quando aparece sozinho ————————————————————————————————————
+
+    const alreadyLead = Boolean(store('local', DONE_KEY));
+    const dismissed = Boolean(store('session', CLOSED_KEY));
+    const autoDone = Boolean(store('session', AUTO_KEY));
+    // Na /obrigado/ a pessoa acabou de se cadastrar — não insistimos.
+    const thanksPage = window.location.pathname.startsWith('/obrigado');
+
+    if (!alreadyLead && !dismissed && !thanksPage) {
+      window.setTimeout(showTeaser, TEASER_MS);
+
+      // Abre sozinho uma vez por visita, alguns segundos depois da chegada.
+      if (!autoDone) {
+        window.setTimeout(() => {
+          if (store('session', CLOSED_KEY) || !panel.classList.contains('hidden')) return;
+          store('session', AUTO_KEY, '1');
+          setOpen(true, true);
+        }, AUTO_OPEN_MS);
+      }
+    }
+  }
+</script>

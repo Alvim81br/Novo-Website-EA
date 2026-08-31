@@ -22,7 +22,7 @@ import playfair800ItalicUrl from '@fontsource/playfair-display/files/playfair-di
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
+import LeadChat from '../components/LeadChat.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 import { site } from '../data/site';
@@ -118,7 +118,7 @@ const schemas = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [sche
       <slot />
     </main>
     <Footer />
-    <WhatsAppButton />
+    <LeadChat />
     <CookieConsent />
 
     <script>

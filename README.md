@@ -52,11 +52,46 @@ O formulário de `/aula-experimental/` grava os leads em uma tabela `leads` no S
 3. Copie `.env.example` para `.env` e preencha `PUBLIC_SUPABASE_URL` e `PUBLIC_SUPABASE_ANON_KEY` (Project Settings → API)
 4. Faça o build/deploy com essas variáveis de ambiente configuradas
 
+> A tabela tem a coluna `email`, preenchida pelo chat conversacional (o formulário não pergunta
+> e-mail). Em bancos criados antes disso, rode de novo o `supabase/schema.sql` — o `alter table`
+> do arquivo é seguro de repetir.
+>
 > A anon key só permite **inserir** leads (RLS). A leitura é feita pelo painel do Supabase ou por integrações (Make, CRM) com a service role key.
 >
 > **Sem Supabase configurado** (ou se o insert falhar), o formulário automaticamente encaminha o lead formatado para o WhatsApp **da unidade escolhida** — o site nunca perde um lead.
 >
 > ⚠️ **Plano gratuito do Supabase pausa o projeto após ~7 dias sem atividade** — e projeto pausado = formulário caindo no fallback. O workflow `.github/workflows/supabase-keep-alive.yml` pinga a API a cada 3 dias, mas o GitHub **desativa crons após 60 dias sem commits no repositório**; se o repo ficar parado, reative o workflow na aba Actions ou verifique o projeto no painel do Supabase.
+
+## 💬 Chat conversacional de captura (balão do canto inferior direito)
+
+`src/components/LeadChat.astro` — o balão flutuante de todas as páginas. Alguns segundos
+depois que a pessoa chega, o chat **abre sozinho** e conduz a conversa pergunta a pergunta,
+com os "três pontinhos" de quem está digitando entre uma mensagem e outra:
+
+> Olá, tudo bem? → Gostaria de receber uma proposta personalizada? → nome → e-mail →
+> telefone com DDD → unidade mais próxima → mensagem de agradecimento
+
+O lead cai na **mesma tabela `leads`** do formulário de `/aula-experimental/` (com o e-mail
+na coluna `email` e `source` no formato `chat:/pagina`). Se o Supabase falhar, a conversa
+termina no **WhatsApp da unidade escolhida**, com os dados já preenchidos — nenhum lead se perde.
+
+Onde mexer (topo do arquivo):
+
+| O quê | Onde |
+| :---- | :--- |
+| Nome, status e foto de quem conversa | `agent` (para uma consultora real, coloque a foto em `/public` e aponte `avatar`) |
+| Chamada de conversão ao lado do balão | `teaser` |
+| Perguntas, respostas e validações | função `conversation()` no `<script>` |
+| Segundos até abrir sozinho | `AUTO_OPEN_MS` (e `TEASER_MS` para a chamada) |
+| Unidades oferecidas | `src/data/units.ts` (só as `listedUnits`) |
+
+Regras de bom senso já embutidas: abre sozinho **uma vez por visita**, não reaparece se a
+pessoa fechar (sessão), não insiste com quem já enviou o lead (30 dias no `localStorage`),
+não abre na `/obrigado/`, respeita `prefers-reduced-motion` e só foca o campo de texto
+depois do primeiro clique (não abre o teclado do celular sozinho).
+
+> Os botões e links de WhatsApp das páginas (CTAs, rodapé, cards de unidade) **continuam
+> como estavam** — o chat substituiu apenas o antigo balão flutuante de WhatsApp.
 
 ## 📊 Medição de campanhas (GA4 · Meta Pixel · GTM)
 
@@ -70,7 +105,11 @@ O site tem medição pronta, desligada por padrão — para ativar, preencha os 
   (o site não os carrega direto, para não medir em dobro). Sem GTM, GA4 e Pixel carregam direto.
 - **Conversões:** o envio do formulário redireciona para `/obrigado/`, que dispara
   `generate_lead` (GA4) e `Lead` (Meta) — use essa página/evento como conversão nas campanhas.
-  Todo clique em link de WhatsApp dispara `whatsapp_click` (GA4) / `Contact` (Meta).
+  O chat conversacional dispara o mesmo `generate_lead` (com `method: 'chat'`) ao gravar o lead,
+  respeitando a regra de **uma conversão por visita**. Todo clique em link de WhatsApp dispara
+  `whatsapp_click` (GA4) / `Contact` (Meta).
+- **Eventos do chat:** `chat_opened` (com `mode: auto|click`), `chat_lead_start`,
+  `chat_declined` e `chat_lead_submit` — úteis para medir onde a conversa perde gente.
 - **Atribuição:** UTMs (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`),
   `gclid` e `fbclid` da visita são gravados junto com o lead no Supabase.
 - **Checklist manual:** cadastrar o domínio no [Google Search Console](https://search.google.com/search-console)

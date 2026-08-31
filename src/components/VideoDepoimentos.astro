@@ -2,10 +2,10 @@
 import SectionHeading from './SectionHeading.astro';
 import { depoimentos } from '../data/depoimentos';
 
-// Só entram no carrossel os depoimentos com vídeo real (campo `youtube`).
+// Só entram no carrossel os depoimentos com vídeo real (`youtube` ou `mp4`).
 // Sem nenhum vídeo publicado, a seção inteira fica oculta — prometer
 // "assista" sem nada para assistir derruba a confiança.
-const videos = depoimentos.filter((dep) => dep.youtube);
+const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
 ---
 
 {videos.length > 0 && (
@@ -28,6 +28,7 @@ const videos = depoimentos.filter((dep) => dep.youtube);
             type="button"
             class="group relative aspect-[9/16] w-[58vw] max-w-[230px] shrink-0 snap-center overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-ea lg:w-auto lg:max-w-none"
             data-video={dep.youtube ?? ''}
+            data-mp4={dep.mp4 ?? ''}
             aria-label={`Assistir depoimento${dep.name ? ' de ' + dep.name : ' de aluno'}`}
           >
             {dep.thumb || dep.youtube ? (
@@ -111,6 +112,8 @@ const videos = depoimentos.filter((dep) => dep.youtube);
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
       ></iframe>
+      <!-- player para vídeos MP4 hospedados no próprio site -->
+      <video id="video-player" class="hidden h-full w-full" controls playsinline preload="none"></video>
     </div>
   </div>
 </section>
@@ -119,18 +122,34 @@ const videos = depoimentos.filter((dep) => dep.youtube);
 <script>
   const modal = document.getElementById('video-modal');
   const frame = document.getElementById('video-frame') as HTMLIFrameElement | null;
+  const player = document.getElementById('video-player') as HTMLVideoElement | null;
   const closeBtn = document.getElementById('video-close');
 
-  const open = (id: string) => {
-    if (!modal || !frame) return;
-    frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  const open = (youtube: string, mp4: string) => {
+    if (!modal || !frame || !player) return;
+    if (mp4) {
+      frame.classList.add('hidden');
+      frame.src = '';
+      player.classList.remove('hidden');
+      player.src = mp4;
+      player.play().catch(() => {});
+    } else {
+      player.classList.add('hidden');
+      player.pause();
+      player.removeAttribute('src');
+      frame.classList.remove('hidden');
+      frame.src = `https://www.youtube.com/embed/${youtube}?autoplay=1&rel=0`;
+    }
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
   };
   const close = () => {
-    if (!modal || !frame) return;
+    if (!modal || !frame || !player) return;
     frame.src = '';
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.style.overflow = '';
@@ -138,8 +157,9 @@ const videos = depoimentos.filter((dep) => dep.youtube);
 
   document.querySelectorAll<HTMLButtonElement>('[data-video]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const id = btn.dataset.video;
-      if (id) open(id);
+      const youtube = btn.dataset.video ?? '';
+      const mp4 = btn.dataset.mp4 ?? '';
+      if (youtube || mp4) open(youtube, mp4);
     });
   });
 

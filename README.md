@@ -34,7 +34,7 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 - **Unidades / WhatsApp / Instagram / horários** → `src/data/units.ts` (o botão "Como chegar" é gerado do endereço; preencha `hours` por unidade para exibir o horário de funcionamento)
 - **Turmas e cursos** → `src/data/courses.ts`
 - **Depoimentos em texto** → `src/data/testimonials.ts`
-- **Depoimentos em vídeo** → `src/data/depoimentos.ts` — publique o vídeo como YouTube Shorts e cole o ID no campo `youtube`; a seção da home fica oculta enquanto nenhum card tiver vídeo
+- **Depoimentos em vídeo** → `src/data/depoimentos.ts` — preencha `mp4` (arquivo em `/public/depoimentos/`, servido pelo CDN da hospedagem) ou `youtube` (ID de um YouTube Shorts); a seção da home fica oculta enquanto nenhum card tiver vídeo
 - **FAQ** → `src/data/faq.ts` (as perguntas exibidas em `/aula-experimental/` são as listadas em `perguntasConversao`)
 - **Selo de avaliações do Google** → `src/data/site.ts` (`googleReviews`) — use os números reais do Perfil da Empresa; liga o selo no formulário e as estrelas no schema
 - **Landing pages por cidade** → `src/data/cidades.ts` (título, descrição e texto local de cada página; o formulário abre com a unidade da cidade pré-selecionada)

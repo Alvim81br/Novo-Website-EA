@@ -138,10 +138,16 @@ def run_triage(manifest: dict) -> None:
                 'seconds': round(dur, 1),
             })
         except Exception as exc:  # noqa: BLE001
+            print(f'ERRO em {video.name}: {exc}', flush=True)
             (dest / 'ERROR.txt').write_text(str(exc))
             index.append({'key': dest.name, 'original': video.name, 'error': str(exc)})
 
     (pack / 'index.json').write_text(json.dumps(index, indent=1, ensure_ascii=False))
+
+    ok = [entry for entry in index if 'error' not in entry]
+    print(f'{len(ok)}/{len(index)} vídeos processados com sucesso', flush=True)
+    if not ok:
+        raise SystemExit('Nenhum vídeo processado — veja os erros acima.')
 
     OUT.mkdir(exist_ok=True)
     zip_path = OUT / 'triage-pack.zip'
@@ -170,6 +176,9 @@ def run_finalists(manifest: dict) -> None:
 
 
 def main() -> None:
+    missing = [tool for tool in ('ffmpeg', 'ffprobe') if not shutil.which(tool)]
+    if missing:
+        raise SystemExit(f'Ferramentas ausentes no runner: {missing} — instale ffmpeg no workflow.')
     manifest = json.loads(MANIFEST.read_text())
     mode = manifest.get('mode')
     print(f'modo: {mode}', flush=True)

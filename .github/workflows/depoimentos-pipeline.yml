@@ -31,7 +31,10 @@ jobs:
           python-version: '3.11'
 
       - name: Instala dependências
-        run: pip install --quiet gdown faster-whisper
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install --quiet gdown faster-whisper
 
       - name: Executa pipeline (modo do manifest)
         run: python .github/scripts/depoimentos_pipeline.py

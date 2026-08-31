@@ -15,8 +15,12 @@ export interface CourseSegment {
   audience: string;
   /** Logo que identifica o formato no card da home (todas exibidas no mesmo tamanho). */
   cardLogo?: string;
-  /** Logomarcas oficiais do segmento (arquivos em /public). */
-  logos?: { src: string; alt: string; heightClass?: string }[];
+  /**
+   * Logomarcas oficiais do segmento (arquivos em /public), exibidas ao lado do
+   * cabeçalho do curso. A largura (`sizeClass`) é o que controla o peso visual —
+   * escudos ficam mais estreitos que logotipos horizontais para ocuparem a mesma área.
+   */
+  logos?: { src: string; alt: string; width: number; height: number; sizeClass: string }[];
   groups: { label: string; classes: CourseClass[] }[];
 }
 
@@ -29,6 +33,15 @@ export const segments: CourseSegment[] = [
       'Para jovens e adultos (a partir de 14 anos), em aulas dinâmicas e diretas, focadas no aprendizado rápido e permanente. Turmas para um público exigente, que não tem tempo a perder. Com carga horária robusta — até 3 vezes maior que escolas tradicionais — o aluno iniciante chega à fluência 4 vezes mais rápido.',
     audience: 'A partir de 14 anos',
     cardLogo: '/logo-ea.webp',
+    logos: [
+      {
+        src: '/logo-callan.webp',
+        alt: 'Callan Method — Accredited School',
+        width: 760,
+        height: 466,
+        sizeClass: 'w-40 sm:w-44',
+      },
+    ],
     groups: [
       {
         label: 'Turmas Diárias',
@@ -75,7 +88,9 @@ export const segments: CourseSegment[] = [
       'Indicado para adolescentes a partir de 12 anos, com foco em aulas dinâmicas e divertidas, onde a meta é aprender de forma rápida e interativa. Inglês para quem não perde tempo: essa é a idade de aproveitar a vida — sem perder o foco no futuro. As turmas conciliam a precisão do Método Callan com a imersão e a diversão que esse público não abre mão.',
     audience: 'A partir de 12 anos',
     cardLogo: '/logo-teens.webp',
-    logos: [{ src: '/logo-teens.webp', alt: 'English Academy Teens' }],
+    logos: [
+      { src: '/logo-teens.webp', alt: 'English Academy Teens', width: 437, height: 320, sizeClass: 'w-32 sm:w-36' },
+    ],
     groups: [
       {
         label: 'Turmas Teens',
@@ -100,8 +115,14 @@ export const segments: CourseSegment[] = [
     audience: 'A partir de 4 anos',
     cardLogo: '/logo-kids.webp',
     logos: [
-      { src: '/logo-kids.webp', alt: 'Kids Academy' },
-      { src: '/logo-callanforkids.webp', alt: 'Callan for Kids', heightClass: 'h-12 sm:h-14' },
+      { src: '/logo-kids.webp', alt: 'Kids Academy', width: 320, height: 320, sizeClass: 'w-28 sm:w-32' },
+      {
+        src: '/logo-callanforkids.webp',
+        alt: 'Callan for Kids',
+        width: 877,
+        height: 320,
+        sizeClass: 'w-36 sm:w-40',
+      },
     ],
     groups: [
       {
@@ -133,6 +154,15 @@ export const segments: CourseSegment[] = [
       'Para jovens e adultos a partir dos 14 anos que querem estudar com flexibilidade e conforto, com o Método Callan ministrado ao vivo por professores experientes na plataforma English Academy Live. A mesma metodologia, a mesma energia — de qualquer lugar do Brasil.',
     audience: 'A partir de 14 anos · 100% online ao vivo',
     cardLogo: '/logo_live_ofc.webp',
+    logos: [
+      {
+        src: '/logo-live-flat.webp',
+        alt: 'English Academy Live',
+        width: 600,
+        height: 599,
+        sizeClass: 'w-28 sm:w-32',
+      },
+    ],
     groups: [],
   },
 ];

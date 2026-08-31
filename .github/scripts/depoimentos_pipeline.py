@@ -161,18 +161,22 @@ def run_triage(manifest: dict) -> None:
 def run_finalists(manifest: dict) -> None:
     OUT.mkdir(exist_ok=True)
     WORK.mkdir(exist_ok=True)
+    missing = []
     for item in manifest['files']:
         fid, alias = item['id'], safe_name(item['name'])
         dl_dir = WORK / alias
         dl_dir.mkdir(parents=True, exist_ok=True)
-        sh(sys.executable, '-m', 'gdown', '--fuzzy', '-O', str(dl_dir) + '/', f'https://drive.google.com/uc?id={fid}')
+        sh(sys.executable, '-m', 'gdown', '-O', str(dl_dir) + '/', fid, check=False)
         files = [p for p in dl_dir.iterdir() if p.is_file()]
         if not files:
-            print(f'AVISO: nada baixado para {alias} ({fid})', flush=True)
+            print(f'ERRO: nada baixado para {alias} ({fid})', flush=True)
+            missing.append(alias)
             continue
         src = max(files, key=lambda p: p.stat().st_size)
         shutil.move(str(src), OUT / f'{alias}{src.suffix.lower()}')
     print('finalists prontos:', [p.name for p in OUT.iterdir()], flush=True)
+    if missing:
+        raise SystemExit(f'Finalistas não baixados: {missing}')
 
 
 def main() -> None:

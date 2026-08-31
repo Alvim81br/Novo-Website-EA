@@ -163,7 +163,25 @@ export const segments: CourseSegment[] = [
         sizeClass: 'w-28 sm:w-32',
       },
     ],
-    groups: [],
+    groups: [
+      {
+        label: 'Turmas de Espanhol',
+        classes: [
+          {
+            name: 'Premium Espanhol',
+            duration: '2 anos e meio',
+            hours: '1h30/aula + 1h extra',
+            frequency: '3x por semana',
+          },
+          {
+            name: 'Executive Espanhol',
+            duration: '3 anos e meio',
+            hours: '2h/aula + 1h extra',
+            frequency: '2x por semana',
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'online',

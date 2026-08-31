@@ -79,7 +79,7 @@ Onde mexer (topo do arquivo):
 
 | O quê | Onde |
 | :---- | :--- |
-| Nome, status e foto de quem conversa | `agent` (para uma consultora real, coloque a foto em `/public` e aponte `avatar`) |
+| Nome, status e foto de quem conversa | `agent` — hoje a Kamila (`/public/consultora-kamila.webp`); para trocar, coloque a foto quadrada (~240px, enquadrada no rosto) em `/public` e atualize nome e caminho |
 | Chamada de conversão ao lado do balão | `teaser` |
 | Perguntas, respostas e validações | função `conversation()` no `<script>` |
 | Segundos até abrir sozinho | `AUTO_OPEN_MS` (e `TEASER_MS` para a chamada) |

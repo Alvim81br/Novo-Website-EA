@@ -287,7 +287,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
     whatsapp: string;
   }
 
-  const AUTO_OPEN_MS = 6000; // abre sozinho depois de alguns segundos
+  const AUTO_OPEN_MS = 10000; // a janela inteira só abre sozinha aos 10s
   const TYPING_MS = 900; // "digitando..." ao lado do balão, logo na chegada
   const TEASER_MS = 2600; // e então a chamada de conversão
   const DONE_KEY = 'ea-chat-done'; // localStorage: lead já enviado

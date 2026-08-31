@@ -56,7 +56,26 @@ O formulário de `/aula-experimental/` grava os leads em uma tabela `leads` no S
 > e-mail). Em bancos criados antes disso, rode de novo o `supabase/schema.sql` — o `alter table`
 > do arquivo é seguro de repetir.
 >
-> A anon key só permite **inserir** leads (RLS). A leitura é feita pelo painel do Supabase ou por integrações (Make, CRM) com a service role key.
+> A anon key só permite **inserir** leads (RLS). A leitura é feita pelo painel do Supabase, pelo
+> painel por unidade (abaixo) ou por integrações (Make, CRM) com a service role key.
+
+## 👥 Painel de leads por unidade
+
+`supabase/functions/leads/` — página web onde **cada comercial vê só os leads da sua unidade**,
+liga ou chama no WhatsApp com um toque e marca quem já foi atendido. Feita para o celular.
+
+Cada pessoa recebe um link com a sua chave:
+`https://kitekwfjytbewwqatmit.supabase.co/functions/v1/leads?k=<chave>` — basta salvar nos
+favoritos, sem login nem senha para decorar. A chave da direção (linha com `unit` nulo em
+`unit_access`) enxerga todas as unidades e mostra o nome da escola em cada card.
+
+- **Criar / revogar acesso** → tabela `unit_access` (o SQL de exemplo está em `supabase/schema.sql`).
+  Revogar é `active = false`: o link morre na hora, sem mexer no resto.
+- **Publicar mudanças na página** → `supabase functions deploy leads` (ou o MCP do Supabase).
+  A função roda com a service role, que nunca sai do servidor; a página não embute chave nenhuma.
+- **Privacidade** → `noindex`, `Cache-Control: no-store` e `Referrer-Policy: no-referrer` (a chave
+  na URL não vaza no Referer ao clicar no WhatsApp). São dados pessoais: o link é interno e a
+  chave não deve circular fora da equipe (LGPD).
 >
 > **Sem Supabase configurado** (ou se o insert falhar), o formulário automaticamente encaminha o lead formatado para o WhatsApp **da unidade escolhida** — o site nunca perde um lead.
 >

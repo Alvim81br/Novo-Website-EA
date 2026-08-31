@@ -93,6 +93,7 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
       <button
         type="button"
         id="videos-prev"
+        aria-controls="videos-track"
         class="absolute top-1/2 left-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white disabled:pointer-events-none disabled:opacity-35 lg:-left-16"
         aria-label="Vídeo anterior"
         disabled
@@ -104,6 +105,7 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
       <button
         type="button"
         id="videos-next"
+        aria-controls="videos-track"
         class="absolute top-1/2 right-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white disabled:pointer-events-none disabled:opacity-35 lg:-right-16"
         aria-label="Próximo vídeo"
       >

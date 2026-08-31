@@ -2,6 +2,9 @@
 // O deploy acontece pelo workflow .github/workflows/deploy-site.yml a cada
 // merge no main. Arquivos estáticos têm banda ilimitada no plano gratuito.
 //
+// worker/index.js replica o que o netlify.toml fazia: proxy /api/leads
+// (painel de leads), redirect raiz→www e headers de segurança/cache.
+//
 // Quando a zona englishacademy.net.br estiver ativa na conta Cloudflare,
 // descomente o bloco "routes" abaixo para ligar o domínio oficial ao site
 // (até lá, o deploy publica apenas na URL *.workers.dev).
@@ -9,13 +12,16 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "english-academy-site",
   "compatibility_date": "2026-08-31",
+  "main": "worker/index.js",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
   },
   "workers_dev": true
   // "routes": [
-  //   { "pattern": "www.englishacademy.net.br", "custom_domain": true }
+  //   { "pattern": "www.englishacademy.net.br", "custom_domain": true },
+  //   { "pattern": "englishacademy.net.br", "custom_domain": true }
   // ]
 }

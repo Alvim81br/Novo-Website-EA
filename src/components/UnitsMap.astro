@@ -22,7 +22,7 @@ interface Pin {
 // Um pin por unidade física — gêmeas da mesma cidade ficam próximas.
 // Coordenadas em % do card, calibradas para o viewBox recortado "220 40 600 500".
 const pins: Pin[] = [
-  { unitId: 'belem-nazare', text: 'Unidade Belém', x: 58.7, y: 29.5, tip: 'bottom', label: 'right' },
+  { unitId: 'belem-nazare', text: 'Unidade Belém', x: 58.7, y: 29.5, tip: 'bottom', label: 'left' },
   { unitId: 'maraba-cidade-nova', text: 'Unidade Novo Horizonte', x: 53.7, y: 57.9, tip: 'top', label: 'left' },
   { unitId: 'maraba-nova-maraba', text: 'Unidade Nova Marabá', x: 55.0, y: 61.7, tip: 'bottom', label: 'right' },
   { unitId: 'imperatriz', text: 'Imperatriz', x: 65.2, y: 55.3, tip: 'top', label: 'right' },
@@ -38,7 +38,7 @@ const unitById = (id: string) => units.find((u) => u.id === id);
 // roxo sobre o oceano, no canto superior direito, sinalizando o alcance
 // online. Posição em % do card, igual aos pins físicos.
 const liveUnit = unitById('live');
-const livePin = { x: 92, y: 13 };
+const livePin = { x: 78.5, y: 13 };
 ---
 
 <div class="reveal relative mx-auto aspect-[6/5] max-w-2xl overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-navy-100">

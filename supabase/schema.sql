@@ -47,3 +47,38 @@ create policy "Permitir insert anonimo de leads"
 
 -- Nenhuma policy de SELECT/UPDATE/DELETE para anon: leitura somente via
 -- painel do Supabase ou service role (integração com CRM/Make).
+
+-- ---------------------------------------------------------------------------
+-- Painel de leads por unidade (Edge Function `leads`, em functions/leads/)
+-- ---------------------------------------------------------------------------
+
+-- Quando o comercial marcou o lead como atendido.
+alter table public.leads
+  add column if not exists contacted_at timestamptz;
+
+-- O painel abre a lista da unidade pela ordem de chegada.
+create index if not exists leads_unit_created_idx on public.leads (unit, created_at desc);
+
+-- Uma chave de acesso por pessoa/unidade. `unit` nulo = enxerga todas as
+-- unidades (direção/matriz). O link entregue ao comercial é
+-- .../functions/v1/leads?k=<token>.
+create table if not exists public.unit_access (
+  token text primary key,
+  unit text,
+  label text not null,
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
+  last_seen_at timestamptz
+);
+
+-- Sem policies: só a service role (a Edge Function) lê as chaves.
+alter table public.unit_access enable row level security;
+
+-- Gerar a chave de uma unidade (o token aparece no retorno — entregue-o à
+-- pessoa e nunca o publique):
+--   insert into public.unit_access (token, unit, label)
+--   values (encode(gen_random_bytes(16), 'hex'), 'Marabá — Novo Horizonte', 'Comercial — Marabá NH')
+--   returning token;
+--
+-- Revogar o acesso de alguém (o link para de funcionar na hora):
+--   update public.unit_access set active = false where label = 'Comercial — Marabá NH';

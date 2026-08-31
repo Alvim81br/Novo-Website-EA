@@ -26,6 +26,12 @@ const agent = {
   avatar: '/consultora-kamila.webp',
 };
 
+// Cor do chat (cabeçalho, balões de resposta e botões). Fica separada das cores
+// da marca de propósito: é o tom do atendimento, não do site. Para trocar, mexa
+// só aqui — tudo lá embaixo lê essas duas variáveis.
+const accent = '#d6336c';
+const accentDark = '#b82a5b';
+
 // Chamada de conversão que aparece ao lado do balão antes de o chat abrir
 // (precedida pelos "três pontinhos", como se a Kamila estivesse digitando).
 const teaser = 'Quer ver o <b>valor do investimento</b> em nosso curso de inglês?';
@@ -38,6 +44,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
 <div
   id="ea-chat"
   class="fixed right-4 bottom-4 z-50 flex flex-col items-end gap-3 print:hidden"
+  style={`--ea-chat-accent:${accent};--ea-chat-accent-dark:${accentDark}`}
   data-supabase-url={supabaseUrl}
   data-supabase-key={supabaseAnonKey}
   data-units={JSON.stringify(chatUnits)}
@@ -49,7 +56,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
     role="dialog"
     aria-labelledby="ea-chat-title"
   >
-    <header class="flex items-center gap-3 bg-gradient-to-r from-red-ea to-red-ea-dark px-4 py-3 text-white">
+    <header class="flex items-center gap-3 bg-[var(--ea-chat-accent)] px-4 py-3 text-white">
       <img
         src={agent.avatar}
         alt=""
@@ -237,7 +244,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
   }
   .ea-chat-bubble--user {
     border-bottom-right-radius: 0.25rem;
-    background: var(--color-red-ea, #d92e2e);
+    background: var(--ea-chat-accent, #d6336c);
     color: #fff;
     font-weight: 600;
   }
@@ -262,7 +269,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
   .ea-chat-dots--brand span {
     height: 0.5rem;
     width: 0.5rem;
-    background: var(--color-red-ea, #d92e2e);
+    background: var(--ea-chat-accent, #d6336c);
   }
 
   .ea-chat-dots span:nth-child(2) {
@@ -402,7 +409,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
           const button = document.createElement('button');
           button.type = 'button';
           button.className =
-            'w-full rounded-full border border-red-ea px-4 py-2 text-sm font-bold text-red-ea transition hover:bg-red-ea hover:text-white';
+            'w-full rounded-full border border-[var(--ea-chat-accent)] px-4 py-2 text-sm font-bold text-[var(--ea-chat-accent)] transition hover:bg-[var(--ea-chat-accent)] hover:text-white';
           button.textContent = option.label;
           button.addEventListener('click', () => {
             actions!.replaceChildren();
@@ -444,7 +451,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
         send.type = 'submit';
         send.setAttribute('aria-label', 'Enviar resposta');
         send.className =
-          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-ea text-white transition hover:bg-red-ea-dark';
+          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--ea-chat-accent)] text-white transition hover:bg-[var(--ea-chat-accent-dark)]';
         send.innerHTML =
           '<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 21 23 12 2.2 3l.01 7L17 12 2.21 14z"/></svg>';
 

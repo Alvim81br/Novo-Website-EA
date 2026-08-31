@@ -1,5 +1,13 @@
 {
-  "mode": "triage",
-  "folder_id": "1K8HX9yvyQ9Me37YaJzOSEumHnBNgqgrK",
-  "run": 4
+  "mode": "finalists",
+  "files": [
+    { "id": "1xgelUm9YevyBgHYut-_pYFsZ5hXa5yg2", "name": "lincoln" },
+    { "id": "1STQTVhbG_WKAn6DL_wynkx7H0QheuYyj", "name": "david" },
+    { "id": "1bnzNxeIvhUbctgy6SsCy7Lwh1QcjyLQH", "name": "maiza" },
+    { "id": "1kj-lzTsPe3JqNn7hJ_xk_vfzY98Km1qp", "name": "eliades" },
+    { "id": "19nKaHlMQ_pWiNifZNMAiwk7OGdKcS7f8", "name": "giovanni" },
+    { "id": "1g71-VkIEMUo_kumnfIzuoeeIB4H0KVeT", "name": "sivani" },
+    { "id": "15ySvofEUIeUQeKi8DHQMJFJn94SkUAtn", "name": "bianca" }
+  ],
+  "run": 5
 }

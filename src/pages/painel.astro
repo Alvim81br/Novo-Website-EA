@@ -6,7 +6,9 @@
 // netlify.toml/vercel.json. O proxy deixa a chamada na mesma origem: sem CORS
 // e sem depender do content-type que o Supabase devolve.
 //
-// URL de cada pessoa: /painel/?k=<chave da unidade> (ver tabela unit_access).
+// Entrada em duas etapas: a pessoa abre /painel/?k=<chave da unidade> e digita
+// o PIN dela. Acertou, o aparelho guarda uma sessão de 30 dias e a chave sai da
+// barra de endereço — não fica no histórico nem em print da URL.
 const api = '/api/leads';
 ---
 
@@ -27,6 +29,8 @@ const api = '/api/leads';
         --borda: #e5e7eb;
       }
       * { box-sizing: border-box; }
+      /* `display:flex` nas classes abaixo venceria o atributo hidden sozinho. */
+      [hidden] { display: none !important; }
       body {
         margin: 0;
         background: #f4f6fb;
@@ -86,7 +90,11 @@ const api = '/api/leads';
         width: 100%; margin-top: 12px; padding: 12px; border: 0; border-radius: 999px;
         background: var(--navy); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
       }
+      form.entrar button[disabled] { opacity: 0.6; cursor: progress; }
+      form.entrar .pin { text-align: center; letter-spacing: 0.4em; font-size: 22px; font-weight: 700; }
+      form.entrar .ajuda { margin: 10px 0 0; font-size: 13px; color: var(--cinza); text-align: center; }
       .erro { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+      .sair { display: block; margin: 14px auto 0; background: none; border: 0; color: var(--cinza); font-size: 13px; text-decoration: underline; cursor: pointer; font-family: inherit; }
     </style>
   </head>
   <body data-api={api}>
@@ -133,8 +141,30 @@ const api = '/api/leads';
       }
 
       const TZ = 'America/Sao_Paulo';
+      const GUARDADO = 'ea-painel-sessao';
       const api = document.body.dataset.api ?? '/api/leads';
-      const chave = new URLSearchParams(location.search).get('k') ?? '';
+      let chave = new URLSearchParams(location.search).get('k') ?? '';
+      let sessao = '';
+
+      function lerSessao(): string {
+        try {
+          return localStorage.getItem(GUARDADO) ?? '';
+        } catch {
+          return '';
+        }
+      }
+
+      function guardarSessao(id: string) {
+        try {
+          if (id) localStorage.setItem(GUARDADO, id);
+          else localStorage.removeItem(GUARDADO);
+        } catch {}
+      }
+
+      /** Tira a chave da barra de endereço depois que a sessão existe. */
+      function limparUrl() {
+        if (location.search) history.replaceState(null, '', location.pathname);
+      }
 
       const titulo = document.getElementById('titulo')!;
       const subtitulo = document.getElementById('subtitulo')!;
@@ -186,13 +216,75 @@ const api = '/api/leads';
       function telaDeEntrada(mensagem = '') {
         abas.hidden = true;
         resumo.hidden = true;
+        titulo.textContent = 'Painel de Leads';
+        subtitulo.textContent = 'English Academy';
         conteudo.innerHTML = `
           ${mensagem ? `<div class="erro">${esc(mensagem)}</div>` : ''}
           <form class="entrar" method="get">
-            <label for="k">Cole aqui a sua chave de acesso</label>
+            <label for="k">Cole aqui o seu link de acesso</label>
             <input id="k" name="k" autocomplete="off" spellcheck="false" placeholder="ex.: 3f9a1c…" required>
-            <button type="submit">Ver meus leads</button>
+            <button type="submit">Continuar</button>
           </form>`;
+      }
+
+      /** Segunda tranca: a chave diz a unidade, o PIN diz quem é a pessoa. */
+      function telaDePin(dados: { unidade?: string | null; label?: string }, mensagem = '') {
+        abas.hidden = true;
+        resumo.hidden = true;
+        titulo.textContent = dados.unidade ?? 'Todas as unidades';
+        subtitulo.textContent = dados.label ?? '';
+        conteudo.innerHTML = `
+          ${mensagem ? `<div class="erro">${esc(mensagem)}</div>` : ''}
+          <form class="entrar" id="form-pin">
+            <label for="pin">Digite a sua senha de 6 dígitos</label>
+            <input id="pin" class="pin" inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                   autocomplete="one-time-code" placeholder="••••••" required>
+            <button type="submit">Entrar</button>
+            <p class="ajuda">Só pedimos uma vez neste aparelho.</p>
+          </form>`;
+        (document.getElementById('pin') as HTMLInputElement | null)?.focus();
+
+        document.getElementById('form-pin')!.addEventListener('submit', async (evento) => {
+          evento.preventDefault();
+          const campo = document.getElementById('pin') as HTMLInputElement;
+          const botao = evento.currentTarget instanceof HTMLFormElement
+            ? (evento.currentTarget.querySelector('button') as HTMLButtonElement)
+            : null;
+          if (botao) {
+            botao.disabled = true;
+            botao.textContent = 'Conferindo…';
+          }
+
+          try {
+            const resposta = await fetch(api, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ acao: 'entrar', k: chave, pin: campo.value.trim() }),
+            });
+            const corpo = await resposta.json().catch(() => ({}));
+
+            if (resposta.ok && corpo.sessao) {
+              sessao = corpo.sessao;
+              guardarSessao(sessao);
+              limparUrl();
+              mostrar(corpo);
+              return;
+            }
+            if (corpo.erro === 'bloqueado') {
+              return telaDePin(dados, `Muitas tentativas. Tente de novo em ${corpo.minutos ?? 15} minutos.`);
+            }
+            if (corpo.erro === 'pin_errado') {
+              const restantes = typeof corpo.restantes === 'number' ? corpo.restantes : null;
+              return telaDePin(
+                dados,
+                `Senha incorreta.${restantes !== null ? ` Restam ${restantes} tentativa${restantes === 1 ? '' : 's'}.` : ''}`
+              );
+            }
+            return telaDeEntrada('Este link não é mais válido. Peça um novo à direção.');
+          } catch {
+            telaDePin(dados, 'Não consegui conferir agora. Confira a conexão e tente de novo.');
+          }
+        });
       }
 
       function cartao(lead: Lead): string {
@@ -243,11 +335,36 @@ const api = '/api/leads';
         resumo.hidden = false;
         abas.hidden = false;
 
-        conteudo.innerHTML = lista.length
-          ? lista.map(cartao).join('')
-          : `<div class="vazio">${
-              filtro === 'pendentes' ? 'Nenhum lead esperando contato. 🎉' : 'Ainda não há leads por aqui.'
-            }</div>`;
+        conteudo.innerHTML =
+          (lista.length
+            ? lista.map(cartao).join('')
+            : `<div class="vazio">${
+                filtro === 'pendentes' ? 'Nenhum lead esperando contato. 🎉' : 'Ainda não há leads por aqui.'
+              }</div>`) + '<button class="sair" type="button" id="sair">Sair deste aparelho</button>';
+      }
+
+      /** Mostra a lista já carregada (usada no login e no carregamento normal). */
+      function mostrar(dados: { unidade?: string | null; label?: string; leads?: Lead[] }) {
+        unidade = dados.unidade ?? null;
+        leads = dados.leads ?? [];
+        titulo.textContent = unidade ?? 'Todas as unidades';
+        subtitulo.textContent = dados.label ?? '';
+        document.title = `Leads — ${unidade ?? 'Todas as unidades'}`;
+        pintar();
+      }
+
+      async function sair() {
+        try {
+          await fetch(api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ acao: 'sair', s: sessao }),
+          });
+        } catch {}
+        sessao = '';
+        chave = '';
+        guardarSessao('');
+        telaDeEntrada('Você saiu. Abra o seu link de acesso para entrar de novo.');
       }
 
       async function marcar(botao: HTMLButtonElement, id: string, acao: string) {
@@ -256,7 +373,7 @@ const api = '/api/leads';
           const resposta = await fetch(api, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ k: chave, id, acao }),
+            body: JSON.stringify({ acao, s: sessao, id }),
           });
           if (!resposta.ok) throw new Error(String(resposta.status));
           const lead = leads.find((l) => l.id === id);
@@ -272,7 +389,10 @@ const api = '/api/leads';
       }
 
       conteudo.addEventListener('click', (evento) => {
-        const botao = (evento.target as HTMLElement).closest<HTMLButtonElement>('button[data-acao]');
+        const alvo = evento.target as HTMLElement;
+        if (alvo.closest('#sair')) return void sair();
+
+        const botao = alvo.closest<HTMLButtonElement>('button[data-acao]');
         const card = botao?.closest<HTMLElement>('.card');
         if (botao && card?.dataset.id) void marcar(botao, card.dataset.id, botao.dataset.acao ?? '');
       });
@@ -286,19 +406,37 @@ const api = '/api/leads';
       });
 
       async function carregar() {
+        sessao = lerSessao();
+
+        // 1) Já entrou neste aparelho: usa a sessão e nem pede a senha.
+        if (sessao) {
+          try {
+            const resposta = await fetch(`${api}?s=${encodeURIComponent(sessao)}`);
+            if (resposta.ok) {
+              limparUrl();
+              return mostrar(await resposta.json());
+            }
+            // Sessão expirada ou revogada: cai para o fluxo da chave.
+            sessao = '';
+            guardarSessao('');
+          } catch {
+            abas.hidden = true;
+            conteudo.innerHTML =
+              '<div class="erro">Não consegui carregar os leads agora. Confira a conexão e recarregue a página.</div>';
+            return;
+          }
+        }
+
+        // 2) Chegou pelo link da unidade: confere a chave e pede o PIN.
         if (!chave) return telaDeEntrada();
         try {
           const resposta = await fetch(`${api}?k=${encodeURIComponent(chave)}`);
-          if (resposta.status === 401) return telaDeEntrada('Chave inválida ou desativada.');
+          if (resposta.status === 403) return telaDePin(await resposta.json().catch(() => ({})));
+          if (resposta.status === 401) return telaDeEntrada('Este link não é mais válido. Peça um novo à direção.');
           if (!resposta.ok) throw new Error(String(resposta.status));
 
-          const dados = await resposta.json();
-          unidade = dados.unidade ?? null;
-          leads = dados.leads ?? [];
-          titulo.textContent = unidade ?? 'Todas as unidades';
-          subtitulo.textContent = dados.label ?? '';
-          document.title = `Leads — ${unidade ?? 'Todas as unidades'}`;
-          pintar();
+          // Acesso ainda sem PIN configurado — funciona, mas sem a segunda tranca.
+          mostrar(await resposta.json());
         } catch {
           abas.hidden = true;
           conteudo.innerHTML =

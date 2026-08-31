@@ -120,13 +120,19 @@ O site tem medição pronta, desligada por padrão — para ativar, preencha os 
 - **Checklist manual:** cadastrar o domínio no [Google Search Console](https://search.google.com/search-console)
   e enviar o sitemap `https://www.englishacademy.net.br/sitemap-index.xml`.
 
-## 🌐 Deploy (futuro)
+## 🌐 Deploy (Cloudflare)
 
-O site é estático — funciona em Netlify, Vercel ou qualquer hospedagem:
+O site é publicado no **Cloudflare Workers** (arquivos estáticos, banda ilimitada no plano
+gratuito) pelo workflow `.github/workflows/deploy-site.yml` — todo merge no `main` vai ao ar
+sozinho. A configuração fica em `wrangler.jsonc`.
 
-- **Build command:** `npm run build` · **Output:** `dist/`
-- Configure as variáveis `PUBLIC_SUPABASE_URL` e `PUBLIC_SUPABASE_ANON_KEY` no painel da hospedagem
-- Domínio oficial: `www.englishacademy.net.br` (DNS na Hostinger → Netlify)
+- **Segredos necessários no GitHub** (Settings → Secrets → Actions): `CLOUDFLARE_API_TOKEN`
+  (template "Edit Cloudflare Workers") e `CLOUDFLARE_ACCOUNT_ID` — sem eles o deploy é pulado
+  com aviso, sem quebrar o CI
+- **Domínio oficial:** `www.englishacademy.net.br` — zona no Cloudflare (nameservers apontados
+  no registro da Hostinger); o bloco `routes` do `wrangler.jsonc` liga o domínio ao site
+- Build: `npm run build` · saída em `dist/` · deploy manual: `npx wrangler@4 deploy`
+- As variáveis `PUBLIC_*` (Supabase, medição) podem ser definidas no passo de build do workflow
 
 ## 🎨 Identidade
 

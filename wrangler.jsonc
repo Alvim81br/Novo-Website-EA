@@ -1,0 +1,21 @@
+// Hospedagem do site no Cloudflare (Workers + arquivos estáticos).
+// O deploy acontece pelo workflow .github/workflows/deploy-site.yml a cada
+// merge no main. Arquivos estáticos têm banda ilimitada no plano gratuito.
+//
+// Quando a zona englishacademy.net.br estiver ativa na conta Cloudflare,
+// descomente o bloco "routes" abaixo para ligar o domínio oficial ao site
+// (até lá, o deploy publica apenas na URL *.workers.dev).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "english-academy-site",
+  "compatibility_date": "2026-08-31",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "workers_dev": true
+  // "routes": [
+  //   { "pattern": "www.englishacademy.net.br", "custom_domain": true }
+  // ]
+}

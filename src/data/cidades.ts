@@ -44,12 +44,12 @@ export const cidades: Cidade[] = [
     uf: 'PA',
     titulo: 'Curso de Inglês em Marabá — Método Callan | English Academy',
     descricao:
-      'Curso de inglês em Marabá com o Método Callan: aulas diárias, 100% conversação e fluência a partir de 18 meses. Unidades na Cidade Nova e na Nova Marabá. Aula experimental grátis!',
+      'Curso de inglês em Marabá com o Método Callan: aulas diárias, 100% conversação e fluência a partir de 18 meses. Unidades no Novo Horizonte e na Nova Marabá. Aula experimental grátis!',
     headlineDestaque: '4x mais rápido',
     intro:
-      'Em Marabá, a English Academy atende os dois lados da cidade: uma unidade na Cidade Nova (Av. Tocantins) e outra na Nova Marabá (Folha 28). Nas duas, o mesmo padrão da rede — Método Callan 100% em conversação, aulas todos os dias e turmas com em média 12 alunos, para você falar inglês desde a primeira aula.',
-    unitIds: ['maraba-cidade-nova', 'maraba-nova-maraba'],
-    defaultUnit: 'Marabá — Cidade Nova',
+      'Em Marabá, a English Academy atende os dois lados da cidade: uma unidade no Novo Horizonte (Av. Tocantins) e outra na Nova Marabá (Folha 28). Nas duas, o mesmo padrão da rede — Método Callan 100% em conversação, aulas todos os dias e turmas com em média 12 alunos, para você falar inglês desde a primeira aula.',
+    unitIds: ['maraba-novo-horizonte', 'maraba-nova-maraba'],
+    defaultUnit: 'Marabá — Novo Horizonte',
   },
   {
     slug: 'ingles-em-canaa-dos-carajas',

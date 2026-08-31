@@ -102,7 +102,7 @@ def find_videos(folder: Path) -> list[Path]:
 def run_triage(manifest: dict) -> None:
     folder_id = manifest['folder_id']
     WORK.mkdir(exist_ok=True)
-    sh(sys.executable, '-m', 'gdown', '--folder', '--remaining-ok', '-O', str(WORK / 'drive'), folder_id)
+    sh(sys.executable, '-m', 'gdown', '--folder', '-O', str(WORK / 'drive'), folder_id)
 
     videos = find_videos(WORK / 'drive')
     print(f'{len(videos)} vídeos baixados', flush=True)

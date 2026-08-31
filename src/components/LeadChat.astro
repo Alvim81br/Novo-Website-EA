@@ -258,6 +258,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
   const TYPING_MS = 900; // "digitando..." ao lado do balão, logo na chegada
   const TEASER_MS = 2600; // e então a chamada de conversão
   const DONE_KEY = 'ea-chat-done'; // localStorage: lead já enviado
+  const DONE_TTL = 30 * 24 * 60 * 60 * 1000; // ...e por quanto tempo não insistimos
   const CLOSED_KEY = 'ea-chat-closed'; // sessionStorage: visitante fechou
   const AUTO_KEY = 'ea-chat-auto'; // sessionStorage: já abriu sozinho uma vez
   const COURSE = 'Não informado (chat)'; // o chat não pergunta o curso
@@ -681,13 +682,39 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
 
     // ——— quando aparece sozinho ————————————————————————————————————
 
-    const alreadyLead = Boolean(store('local', DONE_KEY));
+    /**
+     * Quem já mandou o lead fica em paz por 30 dias — depois disso o chat
+     * volta a se apresentar (a marca do envio é a data, e ela expira).
+     */
+    function leadRecente(): boolean {
+      const saved = store('local', DONE_KEY);
+      if (!saved) return false;
+      const at = Number(saved);
+      if (Number.isFinite(at) && Date.now() - at < DONE_TTL) return true;
+      try {
+        localStorage.removeItem(DONE_KEY);
+      } catch {}
+      return false;
+    }
+
+    // `?chat=1` (ou `#chat`) ignora as marcas e roda a sequência do começo —
+    // é assim que a equipe testa ou demonstra o chat sem limpar o navegador.
+    const force = new URLSearchParams(window.location.search).get('chat') === '1' || window.location.hash === '#chat';
+    if (force) {
+      try {
+        localStorage.removeItem(DONE_KEY);
+        sessionStorage.removeItem(CLOSED_KEY);
+        sessionStorage.removeItem(AUTO_KEY);
+      } catch {}
+    }
+
+    const alreadyLead = leadRecente();
     const dismissed = Boolean(store('session', CLOSED_KEY));
     const autoDone = Boolean(store('session', AUTO_KEY));
     // Na /obrigado/ a pessoa acabou de se cadastrar — não insistimos.
     const thanksPage = window.location.pathname.startsWith('/obrigado');
 
-    if (!alreadyLead && !dismissed && !thanksPage) {
+    if (force || (!alreadyLead && !dismissed && !thanksPage)) {
       // Logo na chegada: "digitando..." e, em seguida, a chamada de conversão.
       window.setTimeout(showTyping, TYPING_MS);
       window.setTimeout(showTeaser, TEASER_MS);

@@ -90,6 +90,11 @@ pessoa fechar (sessão), não insiste com quem já enviou o lead (30 dias no `lo
 não abre na `/obrigado/`, respeita `prefers-reduced-motion` e só foca o campo de texto
 depois do primeiro clique (não abre o teclado do celular sozinho).
 
+> **Testando e não aparece nada?** É porque uma dessas regras está valendo para o seu
+> navegador — você já fechou o chat nesta sessão ou já enviou um lead de teste. Abra a
+> página com **`?chat=1`** no fim da URL (ex.: `/?chat=1`) que ele ignora as marcas e roda
+> a sequência do começo. O balão, esse, aparece sempre — clicar nele abre a conversa.
+
 > Os botões e links de WhatsApp das páginas (CTAs, rodapé, cards de unidade) **continuam
 > como estavam** — o chat substituiu apenas o antigo balão flutuante de WhatsApp.
 

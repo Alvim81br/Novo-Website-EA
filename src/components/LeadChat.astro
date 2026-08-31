@@ -90,58 +90,61 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
     <div id="ea-chat-actions" class="border-t border-gray-100 bg-white p-3"></div>
   </section>
 
-  <!-- "Digitando..." antes da chamada de conversão -->
-  <div
-    id="ea-chat-typing"
-    class="hidden rounded-2xl rounded-br-md bg-white px-4 py-3.5 shadow-xl ring-1 ring-black/5"
-    aria-hidden="true"
-  >
-    <span class="ea-chat-dots ea-chat-dots--brand"><span></span><span></span><span></span></span>
-  </div>
-
-  <!-- Chamada de conversão (aparece antes de a janela abrir) -->
-  <div
-    id="ea-chat-teaser"
-    class="hidden max-w-[16rem] items-start gap-1 rounded-2xl rounded-br-md bg-white px-4 py-3 shadow-xl ring-1 ring-black/5"
-  >
-    <button id="ea-chat-teaser-open" type="button" class="text-left text-sm leading-snug text-navy-800">
-      <span set:html={teaser} />
-    </button>
-    <button
-      id="ea-chat-teaser-close"
-      type="button"
-      aria-label="Dispensar mensagem"
-      class="-mt-1 -mr-1 shrink-0 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+  <!-- Linha de baixo: as bolhas ficam à ESQUERDA do balão, na mesma altura -->
+  <div class="flex items-center justify-end gap-2">
+    <!-- "Digitando..." antes da chamada de conversão -->
+    <div
+      id="ea-chat-typing"
+      class="ea-chat-callout hidden bg-white px-4 py-3.5 shadow-xl ring-1 ring-black/5"
+      aria-hidden="true"
     >
-      <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+      <span class="ea-chat-dots ea-chat-dots--brand"><span></span><span></span><span></span></span>
+    </div>
+
+    <!-- Chamada de conversão (aparece antes de a janela abrir) -->
+    <div
+      id="ea-chat-teaser"
+      class="ea-chat-callout hidden max-w-[15rem] items-start gap-1 bg-white px-4 py-3 shadow-xl ring-1 ring-black/5 sm:max-w-[17rem]"
+    >
+      <button id="ea-chat-teaser-open" type="button" class="text-left text-sm leading-snug text-navy-800">
+        <span set:html={teaser} />
+      </button>
+      <button
+        id="ea-chat-teaser-close"
+        type="button"
+        aria-label="Dispensar mensagem"
+        class="-mt-1 -mr-1 shrink-0 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Balão flutuante -->
+    <button
+      id="ea-chat-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="ea-chat-panel"
+      aria-label="Abrir conversa com a English Academy"
+      class="ea-chat-toggle relative flex h-[4.375rem] w-[4.375rem] shrink-0 items-center justify-center rounded-full bg-white shadow-xl ring-1 ring-black/5 transition hover:scale-110 hover:shadow-2xl"
+    >
+      <img src={agent.avatar} alt="" width="70" height="70" class="h-[4.375rem] w-[4.375rem] rounded-full object-cover" />
+      <span class="absolute right-1 bottom-1 h-4 w-4 rounded-full border-2 border-white bg-green-500"></span>
+      <svg
+        id="ea-chat-toggle-close"
+        class="absolute hidden h-7 w-7 text-navy-800"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
       </svg>
     </button>
   </div>
-
-  <!-- Balão flutuante -->
-  <button
-    id="ea-chat-toggle"
-    type="button"
-    aria-expanded="false"
-    aria-controls="ea-chat-panel"
-    aria-label="Abrir conversa com a English Academy"
-    class="ea-chat-toggle relative flex h-[4.375rem] w-[4.375rem] items-center justify-center rounded-full bg-white shadow-xl ring-1 ring-black/5 transition hover:scale-110 hover:shadow-2xl"
-  >
-    <img src={agent.avatar} alt="" width="70" height="70" class="h-[4.375rem] w-[4.375rem] rounded-full object-cover" />
-    <span class="absolute right-1 bottom-1 h-4 w-4 rounded-full border-2 border-white bg-green-500"></span>
-    <svg
-      id="ea-chat-toggle-close"
-      class="absolute hidden h-7 w-7 text-navy-800"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
-    </svg>
-  </button>
 </div>
 
 <!-- Estilos globais (não escopados): as bolhas são criadas por JS e não
@@ -156,6 +159,35 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes ea-chat-callout-in {
+    from {
+      opacity: 0;
+      transform: translateX(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Bolhas ao lado do balão: cantos arredondados e a "pontinha" apontando
+     para a foto, à direita. */
+  .ea-chat-callout {
+    position: relative;
+    border-radius: 1rem;
+    animation: ea-chat-callout-in 0.3s ease-out both;
+  }
+  .ea-chat-callout::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -7px;
+    margin-top: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #fff;
   }
 
   @keyframes ea-chat-dot {
@@ -242,6 +274,7 @@ const chatUnits = listedUnits.map((unit) => ({ name: unit.name, whatsapp: unit.w
 
   @media (prefers-reduced-motion: reduce) {
     .ea-chat-row,
+    .ea-chat-callout,
     .ea-chat-dots span {
       animation: none;
     }

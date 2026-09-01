@@ -1,0 +1,17 @@
+{
+  "name": "English Academy Website",
+  "install": "npm ci",
+  "terminals": [
+    {
+      "name": "dev server",
+      "command": "npm run dev -- --host 0.0.0.0 --port 4321",
+      "description": "Astro dev server for the English Academy site (http://localhost:4321)."
+    }
+  ],
+  "ports": [
+    {
+      "name": "dev server",
+      "port": 4321
+    }
+  ]
+}

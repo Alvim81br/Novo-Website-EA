@@ -125,9 +125,11 @@ const year = new Date().getFullYear();
           ))
         }
       </p>
-      <p>© {year} English Academy — Todos os direitos reservados.</p>
       <p>
-        <a href="/politica-de-privacidade/" class="transition hover:text-gold-300">Política de Privacidade</a>
+        © {year} English Academy — Todos os direitos reservados.
+        <span aria-hidden="true"> · </span>
+        <!-- nowrap: no mobile a linha quebra depois do separador, nunca no meio do link -->
+        <a href="/politica-de-privacidade/" class="whitespace-nowrap transition hover:text-gold-300">Política de Privacidade</a>
       </p>
     </div>
   </div>

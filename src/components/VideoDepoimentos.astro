@@ -6,6 +6,11 @@ import { depoimentos } from '../data/depoimentos';
 // Sem nenhum vídeo publicado, a seção inteira fica oculta — prometer
 // "assista" sem nada para assistir derruba a confiança.
 const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
+
+// O carrossel gira sem fim: o bloco de vídeos é repetido três vezes lado a lado
+// e o script mantém o scroll na cópia do meio (src/scripts/loop-carousel.ts).
+// As duas cópias extras nascem escondidas — sem JS a seção fica igual a antes.
+const carrossel = [...videos, ...videos, ...videos];
 ---
 
 {videos.length > 0 && (
@@ -18,19 +23,28 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
       subtitleShort="Assista abaixo a experiência de quem já fala inglês fluente!"
     />
 
-    <!-- Carrossel: 3 vídeos por vista no desktop, setas para ir e voltar (swipe no mobile) -->
-    <div class="reveal relative mx-auto mt-12 max-w-4xl">
+    <!-- Carrossel infinito: 3 vídeos por vista no desktop, setas giram sem parar (swipe no mobile) -->
+    <div class="reveal relative mx-auto mt-12 max-w-4xl" data-carousel>
       <div
         id="videos-track"
+        data-carousel-track
         class="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:gap-5 [&::-webkit-scrollbar]:hidden"
       >
         {
-        videos.map((dep) => (
+        carrossel.map((dep, i) => {
+          const clone = i >= videos.length;
+          return (
           <button
             type="button"
-            class="group relative aspect-[9/16] w-[58vw] max-w-[230px] shrink-0 snap-center overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-ea lg:w-[calc((100%-2.5rem)/3)] lg:max-w-none"
+            class:list={[
+              'group relative aspect-[9/16] w-[58vw] max-w-[230px] shrink-0 snap-start overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-ea lg:w-[calc((100%-2.5rem)/3)] lg:max-w-none',
+              clone && 'hidden',
+            ]}
             data-video={dep.youtube ?? ''}
             data-mp4={dep.mp4 ?? ''}
+            data-carousel-clone={clone ? '' : undefined}
+            aria-hidden={clone ? 'true' : undefined}
+            tabindex={clone ? -1 : undefined}
             aria-label={`Assistir depoimento${dep.name ? ' de ' + dep.name : ' de aluno'}`}
           >
             {dep.thumb || dep.youtube ? (
@@ -85,7 +99,8 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
               </div>
             )}
           </button>
-        ))
+          );
+        })
       }
       </div>
 
@@ -94,9 +109,9 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
         type="button"
         id="videos-prev"
         aria-controls="videos-track"
-        class="absolute top-1/2 left-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white disabled:pointer-events-none disabled:opacity-35 lg:-left-16"
+        data-carousel-prev
+        class="absolute top-1/2 left-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white lg:-left-16"
         aria-label="Vídeo anterior"
-        disabled
       >
         <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -106,7 +121,8 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
         type="button"
         id="videos-next"
         aria-controls="videos-track"
-        class="absolute top-1/2 right-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white disabled:pointer-events-none disabled:opacity-35 lg:-right-16"
+        data-carousel-next
+        class="absolute top-1/2 right-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white lg:-right-16"
         aria-label="Próximo vídeo"
       >
         <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -148,6 +164,10 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
 )}
 
 <script>
+  // As setas giram sem parar: a mecânica do carrossel infinito vive no módulo
+  // compartilhado, usado também pelos cards de cursos da home.
+  import '../scripts/loop-carousel';
+
   const modal = document.getElementById('video-modal');
   const frame = document.getElementById('video-frame') as HTMLIFrameElement | null;
   const player = document.getElementById('video-player') as HTMLVideoElement | null;
@@ -183,12 +203,14 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
     document.body.style.overflow = '';
   };
 
-  document.querySelectorAll<HTMLButtonElement>('[data-video]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const youtube = btn.dataset.video ?? '';
-      const mp4 = btn.dataset.mp4 ?? '';
-      if (youtube || mp4) open(youtube, mp4);
-    });
+  // Delegação: um só listener atende os cards do bloco real e os das cópias
+  // que o carrossel infinito coloca em cena.
+  document.getElementById('videos-track')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement | null)?.closest<HTMLElement>('[data-video]');
+    if (!btn) return;
+    const youtube = btn.dataset.video ?? '';
+    const mp4 = btn.dataset.mp4 ?? '';
+    if (youtube || mp4) open(youtube, mp4);
   });
 
   closeBtn?.addEventListener('click', close);
@@ -199,31 +221,4 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
     if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) close();
   });
 
-  // Carrossel: as setas avançam/voltam um card; nas pontas ficam desabilitadas
-  const track = document.getElementById('videos-track');
-  const prevBtn = document.getElementById('videos-prev') as HTMLButtonElement | null;
-  const nextBtn = document.getElementById('videos-next') as HTMLButtonElement | null;
-
-  const cardStep = () => {
-    if (!track) return 300;
-    const card = track.querySelector<HTMLElement>('[data-video]');
-    const gap = parseFloat(getComputedStyle(track).columnGap) || 16;
-    return (card?.getBoundingClientRect().width ?? 280) + gap;
-  };
-  const updateArrows = () => {
-    if (!track || !prevBtn || !nextBtn) return;
-    prevBtn.disabled = track.scrollLeft <= 2;
-    nextBtn.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
-  };
-  const slide = (dir: number) => {
-    if (!track) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    track.scrollBy({ left: dir * cardStep(), behavior: reduce ? 'auto' : 'smooth' });
-  };
-
-  prevBtn?.addEventListener('click', () => slide(-1));
-  nextBtn?.addEventListener('click', () => slide(1));
-  track?.addEventListener('scroll', updateArrows, { passive: true });
-  window.addEventListener('resize', updateArrows);
-  updateArrows();
 </script>

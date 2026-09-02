@@ -103,6 +103,12 @@ const comparativo = [
   { beneficio: 'Foco em Conversação', callan: true, intercambio: true, gramatica: false, apps: false },
 ];
 
+// O carrossel de cursos gira sem fim: o bloco de segmentos é repetido três vezes
+// lado a lado e o script mantém o scroll na cópia do meio
+// (src/scripts/loop-carousel.ts). As duas cópias extras nascem escondidas — sem
+// JS a faixa mostra só os cursos uma vez, rolando no toque.
+const carrosselCursos = [...segments, ...segments, ...segments];
+
 // Fundo temático de cada turma no card (gradiente da marca + ícone representativo).
 const cardThemes: Record<string, { gradient: string; icon: string }> = {
   adultos: {
@@ -459,16 +465,28 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
         title="Cursos para cada fase da vida"
         subtitle="Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças — presenciais ou online ao vivo."
       />
-      <!-- 5 segmentos: em telas grandes cabem lado a lado; abaixo disso, 2 por linha. -->
-      <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-5">
-        {
-          segments.map((segment) => (
-            /* Wrapper .reveal separado: o card inclina em 3D e ganha holofote no hover */
-            <div class="reveal">
+      <!-- Carrossel infinito: 3 cursos por vista no desktop, 2 no mobile, e as
+           setas giram sem parar (mesma mecânica dos depoimentos em vídeo). -->
+      <div class="reveal relative mx-auto mt-12 max-w-6xl" data-carousel>
+        <div
+          id="cursos-track"
+          data-carousel-track
+          class="flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pt-2 pb-4 [scrollbar-width:none] sm:gap-6 [&::-webkit-scrollbar]:hidden"
+        >
+          {
+          carrosselCursos.map((segment, i) => {
+            const clone = i >= segments.length;
+            return (
             <a
               href={`/cursos/#${segment.id}`}
               data-tilt="5"
-              class="card-glow group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:-translate-y-1.5 hover:shadow-xl"
+              data-carousel-clone={clone ? '' : undefined}
+              aria-hidden={clone ? 'true' : undefined}
+              tabindex={clone ? -1 : undefined}
+              class:list={[
+                'card-glow group flex w-[45vw] max-w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1.5 hover:shadow-xl sm:w-[calc((100%-1.5rem)/2)] sm:max-w-none lg:w-[calc((100%-3rem)/3)]',
+                clone && 'hidden',
+              ]}
             >
               <div
                 class:list={[
@@ -515,9 +533,36 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                 aria-hidden="true"
               />
             </a>
-            </div>
-          ))
+            );
+          })
         }
+        </div>
+
+        <!-- setas de navegação do carrossel -->
+        <button
+          type="button"
+          id="cursos-prev"
+          aria-controls="cursos-track"
+          data-carousel-prev
+          class="absolute top-16 left-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white lg:top-1/2 lg:-left-16"
+          aria-label="Curso anterior"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          id="cursos-next"
+          aria-controls="cursos-track"
+          data-carousel-next
+          class="absolute top-16 right-1 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-navy-800 shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 hover:text-white lg:top-1/2 lg:-right-16"
+          aria-label="Próximo curso"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   </section>
@@ -673,6 +718,9 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
 
 
   <script>
+    // Setas que giram sem parar nos cards de cursos (mesmo módulo dos depoimentos).
+    import '../scripts/loop-carousel';
+
     // Carrossel de alunos no hero: crossfade entre as fotos + banner (nome/idade)
     // sincronizado com a foto ativa.
     const carousel = document.querySelector<HTMLElement>('[data-aluna-carousel]');

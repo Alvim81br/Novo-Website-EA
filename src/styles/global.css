@@ -36,8 +36,46 @@
   --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
 }
 
+/* Curva de easing "suave e premium" usada nas entradas e nos hovers */
+:root {
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 html {
   scroll-behavior: smooth;
+  /* Âncoras (#garantia, #app…) param abaixo do cabeçalho fixo */
+  scroll-padding-top: 5.5rem;
+}
+
+/* Seleção de texto nas cores da marca */
+::selection {
+  background: var(--color-gold-400);
+  color: var(--color-navy-900);
+}
+
+/* Foco visível consistente (teclado) — dourado sobre qualquer fundo */
+:focus-visible {
+  outline: 3px solid var(--color-gold-400);
+  outline-offset: 3px;
+}
+
+/* ===== Transição entre páginas (View Transitions cross-document) =====
+   Navegação normal (MPA): o navegador faz um crossfade suave entre as
+   páginas e mantém o cabeçalho "parado" enquanto o conteúdo troca. Onde não
+   há suporte, nada muda. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.32s;
+    animation-timing-function: ease;
+  }
+  .site-header {
+    view-transition-name: site-header;
+  }
 }
 
 /* Hero da home: gradiente diagonal navy → vermelho EA (identidade visual) */
@@ -135,30 +173,87 @@ html {
   }
 }
 
-/* ===== Animações de entrada no scroll ===== */
+/* ===== Animações de entrada no scroll =====
+   .reveal sobe e aparece; as variantes mudam a direção. O script em
+   src/scripts/effects.ts adiciona .is-visible e define --reveal-delay para
+   que elementos que entram juntos na tela apareçam em cascata. */
 .reveal {
   opacity: 0;
   transform: translateY(24px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
+  /* Além da entrada, os hovers dos cards (translate/scale/sombra/borda)
+     continuam suaves; o atraso da cascata vale só para opacidade/transform. */
+  transition-property: opacity, transform, translate, scale, box-shadow, border-color, background-color, color;
+  transition-duration: 0.7s, 0.8s, 0.35s, 0.35s, 0.35s, 0.35s, 0.3s, 0.2s;
+  transition-timing-function: ease, var(--ease-out-expo), var(--ease-out-expo), ease, ease, ease, ease, ease;
+  transition-delay: var(--reveal-delay, 0s), var(--reveal-delay, 0s), 0s, 0s, 0s, 0s, 0s, 0s;
+}
+.reveal-left {
+  transform: translateX(-32px);
+}
+.reveal-right {
+  transform: translateX(32px);
+}
+.reveal-scale {
+  transform: scale(0.94) translateY(12px);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
-/* Cascata sutil quando vários cartões revelam juntos num grid */
-.grid > .reveal:nth-child(2) {
-  transition-delay: 0.08s;
+/* Barra colorida abaixo dos títulos de seção: cresce quando o título aparece */
+.heading-bar {
+  transform: scaleX(0);
+  transition: transform 0.9s var(--ease-out-expo) 0.25s;
 }
-.grid > .reveal:nth-child(3) {
-  transition-delay: 0.16s;
+.reveal.is-visible .heading-bar {
+  transform: scaleX(1);
 }
-.grid > .reveal:nth-child(4) {
-  transition-delay: 0.08s;
+
+/* ===== Cartões com holofote (spotlight) =====
+   Um brilho dourado acompanha o cursor dentro do card (--mx/--my vêm do
+   script). Em telas de toque o brilho simplesmente não aparece. */
+.card-glow {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
 }
-.grid > .reveal:nth-child(5) {
-  transition-delay: 0.16s;
+/* Cards com holofote que não usam .reveal: hover igualmente suave */
+.card-glow:not(.reveal) {
+  transition-property: transform, translate, scale, box-shadow, border-color, background-color, color;
+  transition-duration: 0.35s;
+  transition-timing-function: var(--ease-out-expo);
 }
-.grid > .reveal:nth-child(6) {
-  transition-delay: 0.24s;
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(207, 161, 63, 0.22),
+    transparent 62%
+  );
+  transition: opacity 0.45s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+  .card-glow:hover {
+    border-color: var(--color-gold-300);
+  }
+}
+
+/* Inclinação 3D sutil seguindo o cursor (--rx/--ry vêm do script) */
+[data-tilt] {
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition-property: transform, translate, scale, box-shadow, border-color, background-color, color;
+  transition-duration: 0.25s, 0.35s, 0.35s, 0.35s, 0.35s, 0.3s, 0.2s;
+  transition-timing-function: ease, var(--ease-out-expo), ease, ease, ease, ease, ease;
 }
 
 /* ===== Micro-animações e brilhos ===== */
@@ -203,6 +298,121 @@ html {
   transform: scaleX(1);
 }
 
+/* Sublinhado que desliza da esquerda (links do rodapé e de texto) */
+.link-slide {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: left 100%;
+  background-size: 0% 1px;
+  transition:
+    background-size 0.3s var(--ease-out-expo),
+    color 0.2s ease;
+}
+.link-slide:hover {
+  background-size: 100% 1px;
+}
+
+/* ===== Cabeçalho =====
+   Ganha sombra mais funda depois que a página rola (classe pelo script) e
+   uma barra de progresso de leitura na base. */
+.site-header {
+  transition:
+    box-shadow 0.35s ease,
+    background-color 0.35s ease;
+}
+.site-header.is-scrolled {
+  background-color: rgba(0, 20, 51, 0.92);
+  box-shadow: 0 14px 34px -14px rgba(0, 20, 51, 0.7);
+}
+.scroll-progress {
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: left;
+}
+
+/* Ícone do menu móvel: as três linhas viram um "X" */
+.menu-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    opacity 0.2s ease;
+}
+[aria-expanded='true'] .menu-bar-1 {
+  transform: translateY(5px) rotate(45deg);
+}
+[aria-expanded='true'] .menu-bar-2 {
+  opacity: 0;
+  transform: scaleX(0);
+}
+[aria-expanded='true'] .menu-bar-3 {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* Botão "voltar ao topo" (canto inferior esquerdo, a partir de sm) */
+.to-top {
+  opacity: 0;
+  translate: 0 12px;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    translate 0.3s var(--ease-out-expo),
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.to-top.is-visible {
+  opacity: 1;
+  translate: 0 0;
+  pointer-events: auto;
+}
+
+/* Borda luminosa girando ao redor de um card (formulário de leads).
+   Só a moldura de 2px é pintada — o interior fica transparente via máscara. */
+@property --ea-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.border-beam {
+  position: relative;
+}
+.border-beam::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--ea-angle),
+    transparent 0%,
+    transparent 55%,
+    var(--color-gold-300) 75%,
+    var(--color-red-ea) 88%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Texto com reflexo dourado (destaque do H1) */
+.text-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold-400) 0%,
+    var(--color-gold-300) 30%,
+    #fff5d6 50%,
+    var(--color-gold-300) 70%,
+    var(--color-gold-400) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* ===== Selo "Accredited School" do hero =====
    Em telas estreitas (abaixo de 416px, onde a pílula compacta não caberia numa
    linha) o selo acompanha a largura do texto abaixo e a fonte escala com a
@@ -220,6 +430,19 @@ html {
     width: auto;
     font-size: 0.875rem;
   }
+}
+
+/* ===== Faixa de marca em movimento (marquee) =====
+   Duas cópias da lista lado a lado; a trilha anda meia largura e recomeça,
+   sem emenda. Para no hover; sem animação em reduced-motion. */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
 }
 
 /* ===== Indicador de rolagem horizontal (mobile) =====
@@ -300,6 +523,8 @@ html {
   color: var(--color-red-ea);
 }
 
+/* ===== Tudo que se move sozinho fica aqui dentro: quem prefere menos
+   movimento (prefers-reduced-motion) não vê nenhuma dessas animações. ===== */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes ea-nudge-x {
     0%,
@@ -360,6 +585,97 @@ html {
       box-shadow: 0 0 0 18px rgba(37, 211, 102, 0);
     }
   }
+  @keyframes ea-pulse-red {
+    0% {
+      box-shadow: 0 0 0 0 rgba(217, 46, 46, 0.55);
+    }
+    100% {
+      box-shadow: 0 0 0 18px rgba(217, 46, 46, 0);
+    }
+  }
+  @keyframes ea-cta-glow {
+    0%,
+    100% {
+      box-shadow: 0 10px 28px -8px rgba(217, 46, 46, 0.55);
+    }
+    50% {
+      box-shadow: 0 16px 44px -6px rgba(217, 46, 46, 0.9);
+    }
+  }
+  @keyframes ea-rise {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes ea-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.18);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes ea-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes ea-shimmer {
+    to {
+      background-position: -200% center;
+    }
+  }
+  @keyframes ea-blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(7%, -5%) scale(1.08);
+    }
+    66% {
+      transform: translate(-5%, 7%) scale(0.94);
+    }
+  }
+  @keyframes ea-spin-angle {
+    to {
+      --ea-angle: 360deg;
+    }
+  }
+  @keyframes ea-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes ea-route-flow {
+    to {
+      stroke-dashoffset: -10;
+    }
+  }
+  @keyframes ea-menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 
   .animate-float {
     animation: ea-float 6s ease-in-out infinite;
@@ -395,17 +711,142 @@ html {
   .pulse-ring {
     animation: ea-pulse-ring 2.2s ease-out infinite;
   }
-}
+  /* Anel pulsante vermelho (botão de play dos depoimentos) */
+  .pulse-ring-red {
+    animation: ea-pulse-red 2.4s ease-out infinite;
+  }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+  /* Sombra que respira no CTA principal — chama o olhar sem gritar.
+     No hover a animação para e a sombra do próprio botão assume. */
+  .cta-glow {
+    animation: ea-cta-glow 2.8s ease-in-out infinite;
+  }
+  .cta-glow:hover {
+    animation: none;
+  }
+
+  /* Entrada em cascata dos elementos do hero (título, texto, botões…) */
+  .hero-stagger > * {
+    animation: ea-rise 0.9s var(--ease-out-expo) both;
+  }
+  .hero-stagger > :nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .hero-stagger > :nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .hero-stagger > :nth-child(3) {
+    animation-delay: 0.25s;
+  }
+  .hero-stagger > :nth-child(4) {
+    animation-delay: 0.33s;
+  }
+  .hero-stagger > :nth-child(5) {
+    animation-delay: 0.41s;
+  }
+  .hero-stagger > :nth-child(6) {
+    animation-delay: 0.49s;
+  }
+  .hero-stagger > :nth-child(7) {
+    animation-delay: 0.57s;
+  }
+  .hero-stagger > :nth-child(n + 8) {
+    animation-delay: 0.65s;
+  }
+
+  /* Reflexo dourado deslizando pelo destaque do título */
+  .text-shimmer {
+    animation: ea-shimmer 5s linear infinite;
+  }
+
+  /* Ícones ✔/✘ da tabela comparativa "pipocam" quando ela aparece. O estado
+     final (visível) é o estilo base — a animação só cuida da entrada. */
+  .reveal .check-pop {
+    display: inline-block;
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  .reveal.is-visible .check-pop {
+    opacity: 1;
+    transform: none;
+    animation: ea-pop 0.5s var(--ease-spring) backwards;
+    animation-delay: calc(0.25s + var(--i, 0) * 40ms);
+  }
+
+  /* Elementos que "pipocam" ao aparecer (ícone de sucesso, selos) */
+  .animate-pop {
+    animation: ea-pop 0.7s var(--ease-spring) 0.2s both;
+  }
+
+  /* Borda luminosa girando (formulário) */
+  .border-beam::before {
+    animation: ea-spin-angle 7s linear infinite;
+  }
+
+  /* Faixa de marca em movimento; para no hover */
+  .marquee-track {
+    animation: ea-marquee 42s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Rotas pontilhadas do mapa "fluem" entre as cidades */
+  .map-route path {
+    animation: ea-route-flow 1.4s linear infinite;
+  }
+
+  /* Menu móvel desce suavemente ao abrir */
+  #mobile-menu:not(.hidden) {
+    animation: ea-menu-in 0.3s var(--ease-out-expo);
+  }
+
+  /* Lightbox dos depoimentos: fundo esmaece e o vídeo cresce do centro */
+  #video-modal.flex {
+    animation: ea-fade-in 0.25s ease;
+  }
+  #video-modal.flex .video-box {
+    animation: ea-pop 0.45s var(--ease-out-expo);
+  }
+
+  /* Aviso de cookies sobe ao aparecer */
+  #cookie-consent:not([hidden]) > div {
+    animation: ea-rise 0.5s var(--ease-out-expo) both;
+  }
+
+  /* Bolhas de luz dos heros se movem devagar — só no desktop, onde há GPU
+     de sobra para animar um blur grande. */
+  @media (min-width: 1024px) {
+    .animate-blob {
+      animation: ea-blob 18s ease-in-out infinite;
+    }
+    .animate-blob-slow {
+      animation: ea-blob 26s ease-in-out -8s infinite reverse;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
     opacity: 1;
     transform: none;
+    transition: none;
+  }
+  .heading-bar {
+    transform: none;
+    transition: none;
+  }
+  [data-tilt] {
+    transform: none;
+    transition: none;
+  }
+  .to-top {
+    transition: none;
+  }
+  .card-glow {
     transition: none;
   }
 }

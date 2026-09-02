@@ -28,7 +28,7 @@ const year = new Date().getFullYear();
             target="_blank"
             rel="noopener"
             aria-label="Instagram"
-            class="rounded-full bg-white/10 p-2.5 transition hover:bg-gold-400 hover:text-navy-900"
+            class="rounded-full bg-white/10 p-2.5 transition hover:-translate-y-1 hover:bg-gold-400 hover:text-navy-900 hover:shadow-lg hover:shadow-gold-400/30"
           >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -41,7 +41,7 @@ const year = new Date().getFullYear();
             target="_blank"
             rel="noopener"
             aria-label="YouTube"
-            class="rounded-full bg-white/10 p-2.5 transition hover:bg-gold-400 hover:text-navy-900"
+            class="rounded-full bg-white/10 p-2.5 transition hover:-translate-y-1 hover:bg-gold-400 hover:text-navy-900 hover:shadow-lg hover:shadow-gold-400/30"
           >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -54,7 +54,7 @@ const year = new Date().getFullYear();
             target="_blank"
             rel="noopener"
             aria-label="TikTok"
-            class="rounded-full bg-white/10 p-2.5 transition hover:bg-gold-400 hover:text-navy-900"
+            class="rounded-full bg-white/10 p-2.5 transition hover:-translate-y-1 hover:bg-gold-400 hover:text-navy-900 hover:shadow-lg hover:shadow-gold-400/30"
           >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -71,19 +71,19 @@ const year = new Date().getFullYear();
           {
             nav.map((item) => (
               <li>
-                <a href={item.href} class="text-navy-100 transition hover:text-gold-300">
+                <a href={item.href} class="link-slide text-navy-100 hover:text-gold-300">
                   {item.label}
                 </a>
               </li>
             ))
           }
           <li>
-            <a href="/aula-experimental/" class="font-semibold text-gold-300 transition hover:text-gold-200">
+            <a href="/aula-experimental/" class="link-slide font-semibold text-gold-300 hover:text-gold-200">
               Aula Experimental Grátis
             </a>
           </li>
           <li>
-            <a href="/politica-de-privacidade/" class="text-navy-100 transition hover:text-gold-300">
+            <a href="/politica-de-privacidade/" class="link-slide text-navy-100 hover:text-gold-300">
               Política de Privacidade
             </a>
           </li>
@@ -100,7 +100,7 @@ const year = new Date().getFullYear();
                   href={unit.whatsappLink}
                   target="_blank"
                   rel="noopener"
-                  class="text-navy-100 transition hover:text-gold-300"
+                  class="link-slide text-navy-100 hover:text-gold-300"
                 >
                   {unit.name}
                 </a>

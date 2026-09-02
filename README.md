@@ -42,6 +42,7 @@ Construído com [Astro](https://astro.build) + [Tailwind CSS 4](https://tailwind
 - **Navegação, redes sociais, textos globais** → `src/data/site.ts`
 - **Artigos do blog** → adicione arquivos `.md` em `src/content/blog/`
 - **Cores e fontes da marca** → `src/styles/global.css` (tokens `@theme`)
+- **Efeitos visuais** → animações e hovers em `src/styles/global.css` (revelação em cascata, holofote/inclinação dos cards, brilho do título, moldura do formulário, bolhas dos heros, transição entre páginas); comportamento em `src/scripts/effects.ts` (cascata do scroll, cabeçalho com barra de progresso, botão "voltar ao topo", parallax, FAQ animado); itens da faixa de marca acima do rodapé em `src/components/BrandMarquee.astro`. Tudo respeita `prefers-reduced-motion`.
 - **Logo** → `src/components/Logo.astro` usa a arte oficial `public/logo-ea.png`; favicons em `public/favicon-16x16.png`, `favicon-32x32.png` e `apple-touch-icon.png` (gerados do escudo oficial)
 
 ## 📥 Formulário de leads (Supabase)

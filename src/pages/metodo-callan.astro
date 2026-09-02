@@ -128,22 +128,22 @@ const courseSchema = {
 >
   <!-- Hero -->
   <section class="hero-grad-callan relative flex min-h-[22.25rem] items-center overflow-hidden py-5">
-    <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="12">
       <!-- Linhas diagonais de velocidade -->
       <div class="absolute top-[-10%] left-[6%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
       <div class="absolute top-[-10%] left-[13%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-gold-400/25 to-transparent"></div>
       <div class="absolute top-[-10%] right-[10%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
       <div class="absolute top-[-10%] right-[17%] h-[130%] w-px rotate-[24deg] bg-gradient-to-b from-transparent via-red-ea/30 to-transparent"></div>
       <!-- Brilhos -->
-      <div class="absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-red-ea/25 blur-3xl"></div>
-      <div class="absolute -top-24 right-10 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <div class="animate-blob absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-red-ea/25 blur-3xl"></div>
+      <div class="animate-blob-slow absolute -top-24 right-10 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
       <span class="animate-twinkle absolute top-[24%] left-[20%] text-xl text-gold-300/60">✦</span>
       <span class="animate-twinkle-slow absolute right-[22%] bottom-[20%] text-base text-white/40">✦</span>
     </div>
-    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+    <div class="hero-stagger relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Desde 1960 · +40 países</p>
       <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
-        O método mais <span class="text-gold-400">rápido do mundo</span> para aprender inglês
+        O método mais <span class="text-shimmer">rápido do mundo</span> para aprender inglês
       </h1>
       <p class="mx-auto mt-4 max-w-3xl text-lg text-navy-100">
         Criado na Inglaterra por Robin Callan, o Método Callan é consagrado mundialmente por ensinar inglês e
@@ -156,7 +156,7 @@ const courseSchema = {
   <section class="bg-white py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <div class="grid items-center gap-12 lg:grid-cols-2">
-        <div class="reveal">
+        <div class="reveal reveal-left">
           <p class="text-sm font-bold tracking-widest text-red-ea uppercase">O que é o Método Callan?</p>
           <h2 class="mt-2 text-4xl font-bold text-navy-700 sm:text-5xl">
             Uma revolução comprovada no aprendizado de inglês
@@ -176,7 +176,7 @@ const courseSchema = {
             <p>Você não apenas aprende inglês — você vive o inglês em cada aula.</p>
           </div>
         </div>
-        <div class="reveal space-y-6">
+        <div class="reveal reveal-right space-y-6">
           <!-- Tela do vídeo do Método Callan.
                Para publicar o vídeo, troque este bloco pelo iframe do YouTube:
                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/ID_DO_VIDEO"
@@ -194,7 +194,7 @@ const courseSchema = {
             </span>
             <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
               <span
-                class="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-red-ea shadow-lg"
+                class="pulse-ring-red flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-red-ea shadow-lg"
                 aria-hidden="true"
               >
                 <svg class="ml-1 h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
@@ -206,15 +206,15 @@ const courseSchema = {
           </div>
 
           <div class="grid grid-cols-3 gap-4 text-center">
-          <div class="rounded-2xl bg-navy-700 p-6">
+          <div data-tilt="6" class="card-glow rounded-2xl bg-navy-700 p-6 shadow-md hover:shadow-xl">
             <p class="font-display text-4xl font-extrabold text-gold-400" data-counter>4x</p>
             <p class="mt-2 text-sm font-semibold text-white">mais rápido que métodos tradicionais</p>
           </div>
-          <div class="rounded-2xl bg-gold-400 p-6">
+          <div data-tilt="6" class="card-glow rounded-2xl bg-gold-400 p-6 shadow-md hover:shadow-xl">
             <p class="font-display text-4xl font-extrabold text-navy-900" data-counter>40+</p>
             <p class="mt-2 text-sm font-semibold text-navy-900">países aplicam a metodologia</p>
           </div>
-          <div class="rounded-2xl bg-red-ea p-6">
+          <div data-tilt="6" class="card-glow rounded-2xl bg-red-ea p-6 shadow-md hover:shadow-xl">
             <p class="font-display text-4xl font-extrabold text-white" data-counter>60+</p>
             <p class="mt-2 text-sm font-semibold text-white">anos de resultados comprovados</p>
           </div>
@@ -231,7 +231,7 @@ const courseSchema = {
       <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           pilares.map((item) => (
-            <div class="reveal group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <div class="reveal card-glow group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm hover:-translate-y-1 hover:shadow-xl">
               <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-navy-700 to-navy-900 text-gold-300 shadow-md transition group-hover:scale-110">
                 <Icon name={item.icon} class="h-6 w-6" />
               </span>
@@ -254,7 +254,7 @@ const courseSchema = {
         light
       />
       <div class="mt-12 grid gap-6 md:grid-cols-3">
-        <div class="reveal rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center">
+        <div class="reveal card-glow rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center hover:-translate-y-1 hover:bg-white/[0.08]">
           <span class="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-navy-900 shadow-md">
             <Icon name="compromisso" class="h-6 w-6" />
           </span>
@@ -264,7 +264,7 @@ const courseSchema = {
             conosco completamente grátis até alcançar seu objetivo.
           </p>
         </div>
-        <div class="reveal rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center">
+        <div class="reveal card-glow rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center hover:-translate-y-1 hover:bg-white/[0.08]">
           <span class="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-navy-900 shadow-md">
             <Icon name="escudo" class="h-6 w-6" />
           </span>
@@ -274,7 +274,7 @@ const courseSchema = {
             genuíno com seu sucesso.
           </p>
         </div>
-        <div class="reveal rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center">
+        <div class="reveal card-glow rounded-2xl border border-gold-400/30 bg-white/5 p-7 text-center hover:-translate-y-1 hover:bg-white/[0.08]">
           <span class="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-navy-900 shadow-md">
             <Icon name="alvo" class="h-6 w-6" />
           </span>
@@ -292,7 +292,7 @@ const courseSchema = {
   <section id="passaporte" class="scroll-mt-24 bg-white py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <div class="grid items-center gap-12 lg:grid-cols-2">
-        <div class="reveal">
+        <div class="reveal reveal-left">
           <p class="text-sm font-bold tracking-widest text-red-ea uppercase">Exclusivo</p>
           <h2 class="mt-2 text-4xl font-bold text-navy-700 sm:text-5xl">
             Programa Passaporte: dobre seu aprendizado gratuitamente
@@ -309,8 +309,8 @@ const courseSchema = {
             <li class="flex gap-3"><span class="font-bold text-gold-500">4.</span> Flexibilidade total para se adaptar à sua agenda.</li>
           </ul>
         </div>
-        <div class="reveal grid gap-5">
-          <div class="flex items-center justify-center rounded-2xl bg-navy-700 p-4 text-center shadow-sm">
+        <div class="reveal reveal-right grid gap-5">
+          <div data-tilt="4" class="card-glow flex items-center justify-center rounded-2xl bg-navy-700 p-4 text-center shadow-sm hover:shadow-xl">
             <img
               src="/logo-passport.webp"
               alt="English Academy Passport"
@@ -321,12 +321,12 @@ const courseSchema = {
               decoding="async"
             />
           </div>
-          <div class="rounded-2xl bg-gold-400 p-8 text-center">
-            <p class="font-display text-5xl font-extrabold text-navy-900">100%</p>
+          <div data-tilt="4" class="card-glow rounded-2xl bg-gold-400 p-8 text-center shadow-sm hover:shadow-xl">
+            <p class="font-display text-5xl font-extrabold text-navy-900" data-counter>100%</p>
             <p class="mt-2 font-bold text-navy-900">grátis — sem custos adicionais</p>
           </div>
-          <div class="rounded-2xl bg-red-ea p-8 text-center">
-            <p class="font-display text-5xl font-extrabold text-white">2x</p>
+          <div data-tilt="4" class="card-glow rounded-2xl bg-red-ea p-8 text-center shadow-sm hover:shadow-xl">
+            <p class="font-display text-5xl font-extrabold text-white" data-counter>2x</p>
             <p class="mt-2 font-bold text-white">mais prática e tempo de exposição ao inglês</p>
           </div>
         </div>
@@ -345,7 +345,7 @@ const courseSchema = {
       <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           extraClubs.map((club) => (
-            <div class="reveal group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <div class="reveal card-glow group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm hover:-translate-y-1 hover:shadow-xl">
               <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-ea to-red-ea-dark text-white shadow-md transition group-hover:scale-110">
                 <Icon name={club.icon} class="h-6 w-6" />
               </span>
@@ -373,7 +373,7 @@ const courseSchema = {
       <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           appFeatures.map((feature) => (
-            <div class="reveal group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <div class="reveal card-glow group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm hover:-translate-y-1 hover:shadow-xl">
               <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-navy-700 to-navy-900 text-gold-300 shadow-md transition group-hover:scale-110">
                 <Icon name={feature.icon} class="h-6 w-6" />
               </span>

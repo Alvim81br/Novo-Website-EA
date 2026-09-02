@@ -33,8 +33,8 @@ const articleSchema = {
         <div class="absolute -top-20 left-1/3 h-72 w-72 rounded-full bg-gold-400/15 blur-3xl"></div>
         <span class="animate-twinkle absolute top-[30%] right-[10%] text-lg text-gold-300/50">✦</span>
       </div>
-      <div class="relative mx-auto max-w-3xl px-4 lg:px-8">
-        <a href="/blog/" class="text-sm font-bold text-gold-300 hover:text-gold-200">← Voltar para o blog</a>
+      <div class="hero-stagger relative mx-auto max-w-3xl px-4 lg:px-8">
+        <a href="/blog/" class="link-slide inline-block text-sm font-bold text-gold-300 hover:text-gold-200">← Voltar para o blog</a>
         <div class="mt-6 flex flex-wrap gap-2">
           {
             post.data.categories.map((category) => (
@@ -58,7 +58,7 @@ const articleSchema = {
 
       <!-- Autor (E-E-A-T): quem assina o conteúdo e por que sabe do que fala -->
       <aside class="mx-auto mt-14 max-w-3xl px-4 lg:px-8">
-        <div class="flex items-start gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-6">
+        <div class="reveal card-glow flex items-start gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-6">
           <span
             class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-navy-700 font-display text-lg font-bold text-gold-300"
             aria-hidden="true"

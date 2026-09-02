@@ -1,0 +1,40 @@
+---
+// Faixa de marca em movimento contínuo, entre o conteúdo e o rodapé de todas
+// as páginas: reforça os diferenciais num relance. A lista é renderizada duas
+// vezes (a cópia é decorativa, aria-hidden) para o loop não ter emenda.
+// Para mudar os itens, edite `items`; a velocidade fica no CSS (.marquee-track).
+const items = [
+  'The Best English Experience',
+  'Método Callan desde 2013',
+  'Accredited School',
+  'Fluência 4x mais rápido',
+  '+7 mil alunos',
+  'Aulas todos os dias',
+  '100% conversação',
+  'Garantia de Fluência',
+  '8 unidades no PA, MA e online',
+  'Programa Passaporte',
+];
+---
+
+<div class="marquee border-y border-white/10 bg-navy-950 py-3.5 text-white">
+  <div class="marquee-track">
+    {
+      [false, true].map((decorative) => (
+        <ul
+          class="flex shrink-0 items-center gap-x-10 pr-10 font-display text-sm font-bold tracking-wide whitespace-nowrap uppercase"
+          aria-hidden={decorative ? 'true' : undefined}
+        >
+          {items.map((item) => (
+            <li class="flex items-center gap-x-10">
+              <span class="text-navy-100">{item}</span>
+              <span class="text-gold-400" aria-hidden="true">
+                ✦
+              </span>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>

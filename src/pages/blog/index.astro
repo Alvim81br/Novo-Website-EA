@@ -16,7 +16,7 @@ const formatDate = (date: Date) =>
   description="Dicas para aprender inglês mais rápido: artigos sobre fluência, metodologia, rotina de estudos e como escolher a melhor escola de inglês da sua cidade."
 >
   <section class="hero-grad-blog relative flex min-h-[22.25rem] items-center overflow-hidden py-10">
-    <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="10">
       <!-- Aspas editoriais gigantes -->
       <span class="font-display absolute -top-10 left-[6%] text-[14rem] leading-none font-extrabold text-white/5 select-none">“</span>
       <span class="font-display absolute -bottom-24 right-[6%] text-[14rem] leading-none font-extrabold text-gold-400/10 select-none">”</span>
@@ -26,13 +26,13 @@ const formatDate = (date: Date) =>
         <div class="h-1.5 w-3/4 rounded-full bg-gold-400/20"></div>
         <div class="h-1.5 w-5/6 rounded-full bg-white/10"></div>
       </div>
-      <div class="absolute -top-20 left-1/3 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <div class="animate-blob absolute -top-20 left-1/3 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
       <span class="animate-twinkle absolute top-[30%] left-[18%] text-lg text-gold-300/50">✦</span>
     </div>
-    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+    <div class="hero-stagger relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Blog English Academy</p>
       <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
-        Dicas para aprender inglês <span class="text-gold-400">mais rápido</span>
+        Dicas para aprender inglês <span class="text-shimmer">mais rápido</span>
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
         Conteúdo prático sobre fluência, rotina de estudos e tudo que acelera sua jornada no inglês.
@@ -47,7 +47,7 @@ const formatDate = (date: Date) =>
           posts.map((post) => (
             <a
               href={`/blog/${post.id}/`}
-              class="reveal group flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              class="reveal card-glow group flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-7 shadow-sm hover:-translate-y-1 hover:shadow-xl"
             >
               <div class="flex flex-wrap gap-2">
                 {post.data.categories.map((category) => (
@@ -58,8 +58,13 @@ const formatDate = (date: Date) =>
                 {post.data.title}
               </h2>
               <p class="mt-3 flex-1 text-sm leading-relaxed text-gray-600">{post.data.description}</p>
-              <p class="mt-5 text-xs text-gray-500">
-                {post.data.author} · {formatDate(post.data.pubDate)}
+              <p class="mt-5 flex items-center justify-between gap-3 text-xs text-gray-500">
+                <span>
+                  {post.data.author} · {formatDate(post.data.pubDate)}
+                </span>
+                <span class="inline-flex shrink-0 items-center gap-1 text-sm font-bold text-navy-700 transition-all group-hover:gap-2 group-hover:text-red-ea">
+                  Ler artigo <span aria-hidden="true">→</span>
+                </span>
               </p>
             </a>
           ))

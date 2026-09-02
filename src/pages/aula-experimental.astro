@@ -27,7 +27,7 @@ const faqSchema = {
   schema={faqSchema}
 >
   <section class="hero-grad-aula relative overflow-hidden py-16 lg:py-20">
-    <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="10">
       <!-- Aro de destaque e energia -->
       <div class="animate-float-diamond absolute top-[14%] left-[42%] hidden h-16 w-16 rounded-xl border-2 border-gold-400/35 lg:block"></div>
       <div class="absolute -bottom-10 left-[8%] h-40 w-40 rounded-full border-2 border-white/10"></div>
@@ -36,15 +36,15 @@ const faqSchema = {
       <span class="animate-twinkle-slow absolute bottom-[26%] left-[44%] text-base text-white/40">✦</span>
       <span class="animate-twinkle absolute top-[48%] left-[8%] text-sm text-gold-300/50" style="animation-delay: 0.8s">✦</span>
       <!-- Brilhos -->
-      <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/25 blur-3xl"></div>
+      <div class="animate-blob absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/25 blur-3xl"></div>
     </div>
 
     <div class="relative mx-auto max-w-7xl px-4 lg:px-8">
       <div class="grid items-start gap-12 lg:grid-cols-2">
-        <div>
+        <div class="hero-stagger">
           <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">The Best English Experience</p>
           <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
-            Conheça nosso método em uma <span class="text-gold-400">aula gratuita</span>
+            Conheça nosso método em uma <span class="text-shimmer">aula gratuita</span>
           </h1>
           <p class="mt-6 max-w-xl text-lg leading-relaxed text-navy-100">
             Conheça o Método Callan na prática e veja por que ele é considerado uma das melhores metodologias
@@ -70,7 +70,8 @@ const faqSchema = {
           </ul>
         </div>
 
-        <div class="reveal rounded-3xl bg-white p-8 shadow-2xl lg:p-10">
+        <!-- .border-beam: moldura luminosa girando ao redor do formulário -->
+        <div class="reveal reveal-right border-beam rounded-3xl bg-white p-8 shadow-2xl lg:p-10">
           <h2 class="font-display text-2xl font-bold text-navy-700 not-italic">Agende sua aula experimental</h2>
           <p class="mt-2 text-sm text-gray-600">
             Preencha seus dados e nossa equipe entrará em contato pelo WhatsApp para confirmar o melhor dia e horário.

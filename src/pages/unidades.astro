@@ -32,10 +32,10 @@ const unitsSchema = listedUnits
   schema={unitsSchema}
 >
   <section class="hero-grad-unidades relative flex min-h-[22.25rem] items-center overflow-hidden py-10">
-    <div class="absolute inset-0" aria-hidden="true">
-      <!-- Rota pontilhada conectando as unidades -->
-      <svg class="absolute inset-x-0 top-1/2 h-40 w-full -translate-y-1/2 opacity-30" viewBox="0 0 1440 160" fill="none" preserveAspectRatio="none">
-        <path d="M-20 120 C 240 30, 480 150, 720 70 S 1200 20, 1460 90" stroke="#CFA13F" stroke-width="2.5" stroke-dasharray="2 12" stroke-linecap="round"/>
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="12">
+      <!-- Rota pontilhada conectando as unidades (os pontos "viajam", ver .map-route) -->
+      <svg class="map-route absolute inset-x-0 top-1/2 h-40 w-full -translate-y-1/2 opacity-30" viewBox="0 0 1440 160" fill="none" preserveAspectRatio="none">
+        <path d="M-20 120 C 240 30, 480 150, 720 70 S 1200 20, 1460 90" stroke="#CFA13F" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"/>
       </svg>
       <!-- Pinos de mapa estilizados -->
       <div class="animate-float absolute top-[24%] left-[12%] h-4 w-4 rounded-full bg-gold-400/80 ring-4 ring-gold-400/25"></div>
@@ -43,12 +43,12 @@ const unitsSchema = listedUnits
       <div class="animate-float absolute top-[30%] right-[20%] h-4 w-4 rounded-full bg-red-ea/80 ring-4 ring-red-ea/25" style="animation-delay: 0.6s"></div>
       <div class="animate-float absolute bottom-[20%] right-[36%] h-3 w-3 rounded-full bg-gold-400/70 ring-4 ring-gold-400/20" style="animation-delay: 1.8s"></div>
       <!-- Brilho -->
-      <div class="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <div class="animate-blob absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
     </div>
-    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+    <div class="hero-stagger relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Pará · Maranhão · Online</p>
       <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
-        Conheça nossas <span class="text-gold-400">unidades</span>
+        Conheça nossas <span class="text-shimmer">unidades</span>
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
         A maior rede de escolas de inglês da região Norte — encontre a unidade mais próxima de você
@@ -77,7 +77,7 @@ const unitsSchema = listedUnits
           href={site.livePlatform}
           target="_blank"
           rel="noopener"
-          class="inline-block rounded-full bg-navy-700 px-8 py-4 font-bold text-white transition hover:bg-navy-600"
+          class="btn-shine inline-block rounded-full bg-navy-700 px-8 py-4 font-bold text-white shadow-md transition hover:bg-navy-600 hover:shadow-lg active:scale-[0.98]"
         >
           Conhecer a English Academy Live →
         </a>

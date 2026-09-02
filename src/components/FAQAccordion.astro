@@ -7,23 +7,26 @@ interface Props {
 const { items } = Astro.props;
 ---
 
+<!-- Abre e fecha com a altura animada (script global, src/scripts/effects.ts);
+     sem JS ou com reduced-motion vale o comportamento nativo do <details>. -->
 <div class="mx-auto max-w-3xl space-y-3">
   {
     items.map((item) => (
-      <details class="reveal group rounded-xl border border-gray-200 bg-white shadow-sm transition open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-navy-700 select-none">
+      <details class="faq reveal card-glow group rounded-xl border border-gray-200 bg-white shadow-sm open:shadow-md hover:shadow-md">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-display font-semibold text-navy-700 transition-colors select-none group-open:text-navy-900 hover:text-navy-900">
           {item.question}
-          <svg
-            class="h-5 w-5 shrink-0 text-gold-500 transition-transform group-open:rotate-180"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gold-50 text-gold-500 transition-all duration-300 group-open:rotate-180 group-open:bg-gold-400 group-open:text-navy-900"
+            aria-hidden="true"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-          </svg>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
+            </svg>
+          </span>
         </summary>
-        <p class="px-5 pb-5 leading-relaxed text-gray-600">{item.answer}</p>
+        <div class="faq-body overflow-hidden">
+          <p class="px-5 pb-5 leading-relaxed text-gray-600">{item.answer}</p>
+        </div>
       </details>
     ))
   }

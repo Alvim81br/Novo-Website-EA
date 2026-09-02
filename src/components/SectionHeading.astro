@@ -28,10 +28,11 @@ const subtitleClass = ['mt-4 text-lg leading-relaxed', light ? 'text-navy-100' :
   >
     {title}
   </h2>
+  <!-- A barra cresce quando o título entra na tela (.heading-bar em global.css) -->
   <div
     class:list={[
-      'mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-navy-500 via-red-ea to-gold-400',
-      align === 'center' ? 'mx-auto' : '',
+      'heading-bar mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-navy-500 via-red-ea to-gold-400',
+      align === 'center' ? 'mx-auto origin-center' : 'origin-left',
     ]}
     aria-hidden="true"
   >

@@ -70,7 +70,7 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
 
             {/* botão play: círculo vermelho, triângulo branco centrado no viewBox */}
             <span
-              class="absolute top-1/2 left-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-ea text-white shadow-lg transition group-hover:scale-110"
+              class="pulse-ring-red absolute top-1/2 left-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-ea text-white shadow-lg transition group-hover:scale-110"
               aria-hidden="true"
             >
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@ const videos = depoimentos.filter((dep) => dep.youtube || dep.mp4);
     >
       ✕
     </button>
-    <div class="relative aspect-[9/16] w-full max-w-sm overflow-hidden rounded-2xl bg-black shadow-2xl">
+    <div class="video-box relative aspect-[9/16] w-full max-w-sm overflow-hidden rounded-2xl bg-black shadow-2xl">
       <iframe
         id="video-frame"
         class="h-full w-full"

@@ -59,26 +59,52 @@ alter table public.leads
 -- O painel abre a lista da unidade pela ordem de chegada.
 create index if not exists leads_unit_created_idx on public.leads (unit, created_at desc);
 
--- Uma chave de acesso por pessoa/unidade. `unit` nulo = enxerga todas as
--- unidades (direção/matriz). O link entregue ao comercial é
--- .../functions/v1/leads?k=<token>.
+-- Uma chave de acesso por pessoa/unidade, com senha (PIN) própria. `unit` nulo
+-- = enxerga todas as unidades (direção/matriz). O link entregue ao comercial é
+-- https://www.englishacademy.net.br/painel/?k=<token> e, na primeira vez, ele
+-- digita o PIN. Duas travas: a chave diz a unidade, o PIN diz quem é a pessoa.
 create table if not exists public.unit_access (
   token text primary key,
   unit text,
   label text not null,
+  -- SHA-256 de (pin || token): o token é o sal, e o PIN nunca fica em claro.
+  pin_hash text,
+  failed_attempts integer not null default 0,
+  locked_until timestamptz,
   active boolean not null default true,
   created_at timestamptz not null default now(),
   last_seen_at timestamptz
 );
 
--- Sem policies: só a service role (a Edge Function) lê as chaves.
-alter table public.unit_access enable row level security;
+-- Sessão de quem acertou o PIN: o aparelho guarda o id e não repete a senha.
+create table if not exists public.unit_sessions (
+  id text primary key,
+  token text not null references public.unit_access(token) on delete cascade,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null,
+  last_seen_at timestamptz
+);
 
--- Gerar a chave de uma unidade (o token aparece no retorno — entregue-o à
--- pessoa e nunca o publique):
---   insert into public.unit_access (token, unit, label)
---   values (encode(gen_random_bytes(16), 'hex'), 'Marabá — Novo Horizonte', 'Comercial — Marabá NH')
---   returning token;
+create index if not exists unit_sessions_token_idx on public.unit_sessions (token);
+
+-- Sem policies: só a service role (a Edge Function) lê chaves e sessões.
+alter table public.unit_access enable row level security;
+alter table public.unit_sessions enable row level security;
+
+-- Criar um acesso com PIN (guarde o token e o PIN do retorno; eles não são
+-- recuperáveis depois — para trocar, gere de novo):
+--   with novo as (
+--     select encode(gen_random_bytes(16), 'hex') as token,
+--            lpad((floor(random() * 1000000))::int::text, 6, '0') as pin
+--   )
+--   insert into public.unit_access (token, unit, label, pin_hash)
+--   select token, 'Marabá — Novo Horizonte', 'Comercial — Marabá NH',
+--          encode(extensions.digest(pin || token, 'sha256'), 'hex')
+--   from novo returning token, (select pin from novo);
 --
--- Revogar o acesso de alguém (o link para de funcionar na hora):
+-- Revogar o acesso de alguém (o link e as sessões param na hora):
 --   update public.unit_access set active = false where label = 'Comercial — Marabá NH';
+--   delete from public.unit_sessions where token = '<token da pessoa>';
+--
+-- Destravar quem errou o PIN 5 vezes, sem esperar os 15 minutos:
+--   update public.unit_access set failed_attempts = 0, locked_until = null where label = '...';

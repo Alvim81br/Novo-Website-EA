@@ -158,10 +158,39 @@ def run_triage(manifest: dict) -> None:
     print(f'pack: {zip_path} ({zip_path.stat().st_size / 1e6:.1f} MB)', flush=True)
 
 
+def transcribe_words(model, video: Path, dest: Path) -> None:
+    """Transcrição em inglês com timestamps por palavra (base dos cortes e legendas)."""
+    wav = video.with_suffix('.wav')
+    sh(
+        'ffmpeg', '-v', 'error', '-y', '-i', str(video),
+        '-vn', '-ac', '1', '-ar', '16000', str(wav),
+        check=False,
+    )
+    segments, info = model.transcribe(
+        str(wav), language='en', word_timestamps=True, beam_size=5,
+        vad_filter=True, vad_parameters={'min_silence_duration_ms': 400},
+    )
+    out = {'language': info.language, 'duration': info.duration, 'segments': []}
+    for seg in segments:
+        out['segments'].append({
+            'start': round(seg.start, 3),
+            'end': round(seg.end, 3),
+            'text': seg.text.strip(),
+            'words': [
+                {'start': round(w.start, 3), 'end': round(w.end, 3), 'word': w.word, 'p': round(w.probability, 3)}
+                for w in (seg.words or [])
+            ],
+        })
+    dest.write_text(json.dumps(out, ensure_ascii=False, indent=1))
+    wav.unlink(missing_ok=True)
+    print(f'transcrito: {dest.name} ({len(out["segments"])} segmentos)', flush=True)
+
+
 def run_finalists(manifest: dict) -> None:
     OUT.mkdir(exist_ok=True)
     WORK.mkdir(exist_ok=True)
     missing = []
+    downloaded = []
     for item in manifest['files']:
         fid, alias = item['id'], safe_name(item['name'])
         dl_dir = WORK / alias
@@ -173,10 +202,23 @@ def run_finalists(manifest: dict) -> None:
             missing.append(alias)
             continue
         src = max(files, key=lambda p: p.stat().st_size)
-        shutil.move(str(src), OUT / f'{alias}{src.suffix.lower()}')
+        target = OUT / f'{alias}{src.suffix.lower()}'
+        shutil.move(str(src), target)
+        downloaded.append((alias, target))
     print('finalists prontos:', [p.name for p in OUT.iterdir()], flush=True)
     if missing:
         raise SystemExit(f'Finalistas não baixados: {missing}')
+
+    if manifest.get('transcribe'):
+        from faster_whisper import WhisperModel
+
+        model = WhisperModel('large-v3', device='cpu', compute_type='int8')
+        for alias, video in downloaded:
+            try:
+                transcribe_words(model, video, OUT / f'{alias}.words.json')
+            except Exception as exc:  # noqa: BLE001
+                print(f'ERRO na transcrição de {alias}: {exc}', flush=True)
+                (OUT / f'{alias}.words.json').write_text(json.dumps({'error': str(exc)}))
 
 
 def main() -> None:

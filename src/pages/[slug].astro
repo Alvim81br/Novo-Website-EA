@@ -78,25 +78,25 @@ const porQue = [
 <BaseLayout title={cidade.titulo} description={cidade.descricao} schema={unitsSchema}>
   <!-- Hero local -->
   <section class="hero-grad-unidades relative overflow-hidden py-16 lg:py-20">
-    <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="12">
       <div class="animate-float absolute top-[22%] left-[8%] h-4 w-4 rounded-full bg-gold-400/80 ring-4 ring-gold-400/25"></div>
       <div class="animate-float absolute top-[30%] right-[14%] h-4 w-4 rounded-full bg-red-ea/80 ring-4 ring-red-ea/25" style="animation-delay: 0.7s"></div>
       <span class="animate-twinkle absolute top-[18%] left-[38%] text-xl text-gold-300/60">✦</span>
       <span class="animate-twinkle-slow absolute bottom-[24%] right-[30%] text-base text-white/40">✦</span>
-      <div class="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <div class="animate-blob absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
     </div>
-    <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
+    <div class="hero-stagger relative mx-auto max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">
         English Academy · {cidade.online ? '100% online ao vivo' : `${cidade.nome} — ${cidade.uf}`}
       </p>
       <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
-        {h1} <span class="text-gold-400">{cidade.headlineDestaque}</span>
+        {h1} <span class="text-shimmer">{cidade.headlineDestaque}</span>
       </h1>
       <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-navy-100">{cidade.intro}</p>
       <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
         <a
           href="#agendar"
-          class="btn-shine w-full rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:scale-[1.02] hover:bg-red-ea-dark sm:w-auto"
+          class="btn-shine cta-glow w-full rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:scale-[1.02] hover:bg-red-ea-dark hover:shadow-2xl active:scale-[0.98] sm:w-auto"
         >
           Agendar Aula Experimental Grátis
         </a>
@@ -142,7 +142,7 @@ const porQue = [
               href={site.livePlatform}
               target="_blank"
               rel="noopener"
-              class="inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white transition hover:bg-navy-600"
+              class="btn-shine inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white shadow-md transition hover:bg-navy-600 hover:shadow-lg active:scale-[0.98]"
             >
               Conhecer a plataforma EA Live →
             </a>
@@ -165,7 +165,7 @@ const porQue = [
           porQue.map((item) => (
             <a
               href={item.href}
-              class="reveal group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              class="reveal card-glow group rounded-2xl border border-gray-100 bg-white p-7 shadow-sm hover:-translate-y-1 hover:shadow-xl"
             >
               <h3 class="font-display text-lg font-bold text-navy-700">{item.title}</h3>
               <p class="mt-2 leading-relaxed text-gray-600">{item.text}</p>
@@ -206,10 +206,11 @@ const porQue = [
     <div class="absolute inset-0" aria-hidden="true">
       <span class="animate-twinkle absolute top-[16%] left-[16%] text-2xl text-gold-300/70">✦</span>
       <span class="animate-twinkle-slow absolute bottom-[22%] right-[18%] text-base text-white/40">✦</span>
-      <div class="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/25 blur-3xl"></div>
+      <div class="animate-blob absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-red-ea/25 blur-3xl"></div>
     </div>
     <div class="relative mx-auto max-w-2xl px-4 lg:px-8">
-      <div class="reveal rounded-3xl bg-white p-8 shadow-2xl lg:p-10">
+      <!-- .border-beam: moldura luminosa girando ao redor do formulário -->
+      <div class="reveal reveal-scale border-beam rounded-3xl bg-white p-8 shadow-2xl lg:p-10">
         <h2 class="font-display text-2xl font-bold text-navy-700 not-italic">
           {cidade.online ? 'Agende sua aula experimental online' : `Agende sua aula experimental em ${cidade.nome}`}
         </h2>

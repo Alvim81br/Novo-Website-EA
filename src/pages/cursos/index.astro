@@ -12,22 +12,22 @@ import { site } from '../../data/site';
 >
   <!-- Hero -->
   <section class="hero-grad-cursos relative flex min-h-[22.25rem] items-center overflow-hidden py-10">
-    <div class="absolute inset-0" aria-hidden="true">
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="12">
       <!-- Quadrados arredondados flutuando (blocos de turmas) -->
       <div class="animate-float absolute top-[18%] right-[10%] h-20 w-20 rotate-12 rounded-2xl border-2 border-gold-400/30"></div>
       <div class="animate-float-diamond absolute top-[55%] right-[22%] h-12 w-12 rounded-xl border-2 border-white/20"></div>
       <div class="absolute bottom-[-2rem] right-[38%] h-24 w-24 -rotate-6 rounded-2xl border-2 border-white/10"></div>
       <div class="absolute top-[-2rem] left-[16%] h-16 w-16 rotate-45 rounded-xl border-2 border-red-ea/30"></div>
       <!-- Brilhos -->
-      <div class="absolute -top-20 left-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
-      <div class="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-red-ea/20 blur-3xl"></div>
+      <div class="animate-blob absolute -top-20 left-1/4 h-80 w-80 rounded-full bg-gold-400/15 blur-3xl"></div>
+      <div class="animate-blob-slow absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-red-ea/20 blur-3xl"></div>
       <span class="animate-twinkle absolute top-[30%] right-[30%] text-lg text-gold-300/60">✦</span>
       <span class="animate-twinkle-slow absolute bottom-[24%] left-[28%] text-sm text-white/40">✦</span>
     </div>
-    <div class="relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
+    <div class="hero-stagger relative mx-auto w-full max-w-4xl px-4 text-center lg:px-8">
       <p class="text-sm font-bold tracking-widest text-gold-300 uppercase">Encontre aqui a sua turma</p>
       <h1 class="mt-4 text-4xl font-extrabold text-white sm:text-5xl">
-        Cursos para cada <span class="text-gold-400">fase da vida</span>
+        Cursos para cada <span class="text-shimmer">fase da vida</span>
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg text-navy-100">
         Fale inglês ou espanhol em turmas focadas em adultos, adolescentes e crianças — presenciais ou online
@@ -36,14 +36,16 @@ import { site } from '../../data/site';
     </div>
   </section>
 
-  <!-- Navegação rápida -->
+  <!-- Navegação rápida: a pílula da seção visível fica destacada (scroll-spy no
+       script desta página) e, no celular, a barra rola até ela sozinha. -->
   <nav class="sticky top-[68px] z-40 border-b border-gray-100 bg-white/95 backdrop-blur-sm" aria-label="Seções de cursos">
-    <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-3 lg:px-8">
+    <div id="cursos-nav" class="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] lg:px-8 [&::-webkit-scrollbar]:hidden">
       {
         segments.map((segment) => (
           <a
             href={`#${segment.id}`}
-            class="shrink-0 rounded-full border border-navy-100 px-4 py-2 text-sm font-semibold text-navy-700 transition hover:bg-navy-50"
+            data-spy-link
+            class="shrink-0 rounded-full border border-navy-100 px-4 py-2 text-sm font-semibold text-navy-700 transition hover:bg-navy-50 aria-[current=true]:border-navy-700 aria-[current=true]:bg-navy-700 aria-[current=true]:text-white aria-[current=true]:shadow-md"
           >
             {segment.title}
           </a>
@@ -101,7 +103,7 @@ import { site } from '../../data/site';
                     {group.classes.map((turma) => (
                       <div
                         class:list={[
-                          'rounded-2xl border bg-white p-5 shadow-sm',
+                          'card-glow rounded-2xl border bg-white p-5 shadow-sm',
                           turma.highlight ? 'border-gold-400 bg-gold-50' : 'border-gray-200',
                         ]}
                       >
@@ -133,7 +135,7 @@ import { site } from '../../data/site';
                   </div>
 
                   <!-- Tablet/desktop: tabela -->
-                  <div class="mt-4 hidden overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm sm:block">
+                  <div class="card-glow mt-4 hidden overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md sm:block">
                     <table class="w-full text-left text-sm">
                       <thead>
                         <tr class="bg-navy-700 text-white">
@@ -169,7 +171,7 @@ import { site } from '../../data/site';
           )}
 
           {segment.id === 'online' && (
-            <div class="reveal mt-10 rounded-2xl border border-navy-100 bg-navy-50 p-8 text-center">
+            <div class="reveal card-glow mt-10 rounded-2xl border border-navy-100 bg-navy-50 p-8 text-center">
               <p class="font-display text-xl font-bold text-navy-700">English Academy Live</p>
               <p class="mx-auto mt-2 max-w-xl text-gray-600">
                 Aulas ao vivo com o Método Callan, de qualquer lugar do Brasil, na nossa plataforma exclusiva.
@@ -178,7 +180,7 @@ import { site } from '../../data/site';
                 href={site.livePlatform}
                 target="_blank"
                 rel="noopener"
-                class="mt-5 inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white transition hover:bg-navy-600"
+                class="btn-shine mt-5 inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white shadow-md transition hover:bg-navy-600 hover:shadow-lg active:scale-[0.98]"
               >
                 Conhecer a plataforma →
               </a>
@@ -199,15 +201,15 @@ import { site } from '../../data/site';
         light
       />
       <div class="reveal mt-10 grid gap-6 sm:grid-cols-3">
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-7">
+        <div data-tilt="5" class="card-glow rounded-2xl border border-white/10 bg-white/5 p-7 hover:bg-white/[0.08]">
           <p class="font-display text-4xl font-extrabold text-gold-400">até 20h</p>
           <p class="mt-2 text-sm text-navy-100">de aulas mensais nas turmas diárias</p>
         </div>
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-7">
+        <div data-tilt="5" class="card-glow rounded-2xl border border-white/10 bg-white/5 p-7 hover:bg-white/[0.08]">
           <p class="font-display text-4xl font-extrabold text-gold-400">Preço fixo</p>
           <p class="mt-2 text-sm text-navy-100">do início ao fim do contrato, sem reajustes por nível</p>
         </div>
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-7">
+        <div data-tilt="5" class="card-glow rounded-2xl border border-white/10 bg-white/5 p-7 hover:bg-white/[0.08]">
           <p class="font-display text-4xl font-extrabold text-gold-400">Material acessível</p>
           <p class="mt-2 text-sm text-navy-100">livros importados da Inglaterra pelo menor preço do mercado</p>
         </div>
@@ -216,4 +218,46 @@ import { site } from '../../data/site';
   </section>
 
   <CTABand />
+
+  <script>
+    // Scroll-spy da navegação rápida: destaca a pílula da seção que está no
+    // meio da tela e, no celular, rola a barra até ela (só na horizontal).
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-spy-link]'));
+    const bar = document.getElementById('cursos-nav');
+    const sections = links
+      .map((link) => document.querySelector<HTMLElement>(link.getAttribute('href') ?? ''))
+      .filter((section): section is HTMLElement => section !== null);
+
+    if (links.length && sections.length && 'IntersectionObserver' in window) {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const setActive = (id: string) => {
+        for (const link of links) {
+          const active = link.getAttribute('href') === `#${id}`;
+          if (active) link.setAttribute('aria-current', 'true');
+          else link.removeAttribute('aria-current');
+          if (active && bar && bar.scrollWidth > bar.clientWidth) {
+            bar.scrollTo({
+              left: link.offsetLeft - bar.clientWidth / 2 + link.offsetWidth / 2,
+              behavior: reduceMotion ? 'auto' : 'smooth',
+            });
+          }
+        }
+      };
+      // Seções que cruzam a faixa central agora; sem nenhuma (topo da página,
+      // no hero), nenhuma pílula fica destacada.
+      const visible = new Set<string>();
+      const spy = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) visible.add(entry.target.id);
+            else visible.delete(entry.target.id);
+          }
+          setActive(sections.find((section) => visible.has(section.id))?.id ?? '');
+        },
+        // Faixa estreita no meio da tela: só uma seção "está ativa" por vez
+        { rootMargin: '-40% 0px -55% 0px' }
+      );
+      sections.forEach((section) => spy.observe(section));
+    }
+  </script>
 </BaseLayout>

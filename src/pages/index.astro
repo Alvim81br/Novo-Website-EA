@@ -140,10 +140,11 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
 >
   <!-- ===== HERO ===== -->
   <section class="hero-gradient relative overflow-hidden">
-    <div class="absolute inset-0" aria-hidden="true">
-      <!-- Brilhos de profundidade -->
-      <div class="absolute -top-32 right-0 h-[30rem] w-[30rem] rounded-full bg-red-ea/30 blur-3xl"></div>
-      <div class="absolute bottom-0 -left-32 h-[24rem] w-[24rem] rounded-full bg-gold-400/15 blur-3xl"></div>
+    <!-- Toda a camada decorativa acompanha o cursor de leve (parallax, desktop) -->
+    <div class="absolute inset-0" aria-hidden="true" data-parallax="14">
+      <!-- Brilhos de profundidade (se movem devagar no desktop) -->
+      <div class="animate-blob absolute -top-32 right-0 h-[30rem] w-[30rem] rounded-full bg-red-ea/30 blur-3xl"></div>
+      <div class="animate-blob-slow absolute bottom-0 -left-32 h-[24rem] w-[24rem] rounded-full bg-gold-400/15 blur-3xl"></div>
       <!-- Losangos geométricos (lado direito) -->
       <div class="absolute top-1/2 right-[-6rem] hidden h-[26rem] w-[26rem] -translate-y-1/2 rotate-45 rounded-3xl border-2 border-white/15 lg:block"></div>
       <div class="absolute top-1/2 right-[-2rem] hidden h-[19rem] w-[19rem] -translate-y-1/2 rotate-45 rounded-3xl border-2 border-white/10 lg:block"></div>
@@ -168,14 +169,15 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
 
     <div class="relative mx-auto max-w-7xl px-4 pt-6 pb-16 lg:px-8 lg:pt-3 lg:pb-16">
       <div class="grid items-center gap-12 lg:grid-cols-2">
-        <div class="lg:self-start lg:pt-8">
+        <!-- .hero-stagger: selo, título, texto e botões entram em cascata -->
+        <div class="hero-stagger lg:self-start lg:pt-8">
           <!-- Selo: no mobile ocupa a mesma largura do texto abaixo e a fonte
                acompanha a tela para caber em UMA linha (ver .hero-badge). -->
           <p class="hero-badge items-center gap-2 rounded-full border border-gold-400/40 bg-gold-400/10 px-4 py-1.5 font-bold text-gold-300">
             ★ Accredited School — Método Callan desde 2013
           </p>
           <h1 class="font-serif mt-6 text-5xl leading-[1.05] font-extrabold text-white italic sm:text-6xl lg:text-7xl">
-            Fale Inglês Fluente <span class="text-gold-400">4x Mais Rápido</span>
+            Fale Inglês Fluente <span class="text-shimmer">4x Mais Rápido</span>
           </h1>
           <!-- Mobile: versão resumida -->
           <p class="mt-6 max-w-xl text-lg leading-relaxed text-navy-100 sm:hidden">
@@ -191,7 +193,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           <div class="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
               href="/aula-experimental/"
-              class="btn-shine rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:scale-[1.02] hover:bg-red-ea-dark hover:shadow-2xl"
+              class="btn-shine cta-glow rounded-full bg-red-ea px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-red-ea/30 transition hover:scale-[1.02] hover:bg-red-ea-dark hover:shadow-2xl active:scale-[0.98]"
             >
               Agendar Aula Experimental Grátis
             </a>
@@ -199,7 +201,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
               href={defaultWhatsappLink}
               target="_blank"
               rel="noopener"
-              class="rounded-full border-2 border-white/30 px-8 py-4 text-center text-base font-bold text-white transition hover:border-white hover:bg-white/10"
+              class="rounded-full border-2 border-white/30 px-8 py-4 text-center text-base font-bold text-white transition hover:border-white hover:bg-white/10 active:scale-[0.98]"
             >
               Falar no WhatsApp
             </a>
@@ -218,6 +220,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           <div
             class="hero-aluna-stack relative z-10 aspect-[2/3] w-full"
             data-aluna-carousel
+            data-parallax="-8"
             data-interval="4000"
           >
             {
@@ -250,7 +253,8 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
           <!-- Cartão de identificação (nome + idade do aluno; muda junto com a foto) -->
           <div
             id="hero-aluna-card"
-            class="absolute right-0 bottom-20 z-20 w-max max-w-full overflow-hidden rounded-2xl bg-white shadow-2xl transition-opacity duration-500 sm:-right-6"
+            class="animate-float absolute right-0 bottom-20 z-20 w-max max-w-full overflow-hidden rounded-2xl bg-white shadow-2xl transition-opacity duration-500 sm:-right-6"
+            style="animation-duration: 7s"
           >
             <div class="h-1.5 bg-gradient-to-r from-navy-700 via-red-ea to-gold-400" aria-hidden="true"></div>
             <div class="flex items-center gap-3.5 p-4">
@@ -274,7 +278,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
   <!-- ===== NÚMEROS EM DESTAQUE ===== -->
   <section class="relative z-20 flow-root bg-white">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <div class="band-shine -mt-16 grid grid-cols-2 gap-y-6 rounded-2xl bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 px-8 py-5 shadow-2xl ring-1 ring-navy-900/10 sm:grid-cols-4 sm:divide-x sm:divide-navy-900/15 lg:-mt-32 lg:px-10 lg:py-6">
+      <div class="reveal reveal-scale band-shine -mt-16 grid grid-cols-2 gap-y-6 rounded-2xl bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 px-8 py-5 shadow-2xl ring-1 ring-navy-900/10 sm:grid-cols-4 sm:divide-x sm:divide-navy-900/15 lg:-mt-32 lg:px-10 lg:py-6">
         <div class="text-center">
           <p class="font-display text-3xl font-extrabold text-navy-800 sm:text-4xl" data-counter>+7 mil</p>
           <p class="mt-1.5 text-sm font-semibold text-navy-700">alunos rumo à fluência</p>
@@ -309,7 +313,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
             <a
               href={item.href}
               class:list={[
-                'reveal group rounded-2xl p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-7',
+                'reveal card-glow group rounded-2xl p-5 shadow-sm hover:-translate-y-1 hover:shadow-xl sm:p-7',
                 index === 0 ? 'bg-navy-700 text-white lg:col-span-1' : 'border border-gray-100 bg-white',
               ]}
             >
@@ -349,12 +353,12 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
             </a>
           ))
         }
-        <div class="reveal flex flex-col justify-center rounded-2xl border-2 border-dashed border-gold-400 bg-gold-50 p-5 sm:p-7">
+        <div class="reveal card-glow flex flex-col justify-center rounded-2xl border-2 border-dashed border-gold-400 bg-gold-50 p-5 sm:p-7">
           <h3 class="font-display text-xl font-bold text-navy-700">Quer ver tudo isso na prática?</h3>
           <p class="mt-2 text-gray-600">Agende uma aula experimental gratuita e comprove.</p>
           <a
             href="/aula-experimental/"
-            class="mt-5 rounded-full bg-red-ea px-6 py-3 text-center font-bold text-white transition hover:bg-red-ea-dark"
+            class="btn-shine mt-5 rounded-full bg-red-ea px-6 py-3 text-center font-bold text-white shadow-md transition hover:bg-red-ea-dark hover:shadow-lg active:scale-[0.98]"
           >
             Agendar Agora
           </a>
@@ -411,7 +415,9 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
               icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M16 14.6c2.6.3 4.5 2 4.5 4.4"/></svg>`,
             },
           ].map((stat) => (
-            <div class="reveal group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 text-center backdrop-blur-sm transition hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.08] sm:p-8">
+            /* Wrapper .reveal separado: o card interno inclina em 3D com o cursor */
+            <div class="reveal h-full">
+            <div data-tilt="6" class="card-glow group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 text-center backdrop-blur-sm hover:-translate-y-1 hover:bg-white/[0.08] sm:p-8">
               <div
                 class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 text-navy-900 shadow-md transition group-hover:scale-110 sm:h-12 sm:w-12"
                 aria-hidden="true"
@@ -426,6 +432,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                 class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-navy-500 via-red-ea to-gold-400 opacity-0 transition group-hover:opacity-100"
                 aria-hidden="true"
               />
+            </div>
             </div>
           ))
         }
@@ -456,9 +463,12 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
       <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-5">
         {
           segments.map((segment) => (
+            /* Wrapper .reveal separado: o card inclina em 3D e ganha holofote no hover */
+            <div class="reveal">
             <a
               href={`/cursos/#${segment.id}`}
-              class="reveal group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1.5 hover:border-navy-200 hover:shadow-xl"
+              data-tilt="5"
+              class="card-glow group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:-translate-y-1.5 hover:shadow-xl"
             >
               <div
                 class:list={[
@@ -505,6 +515,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
                 aria-hidden="true"
               />
             </a>
+            </div>
           ))
         }
       </div>
@@ -524,7 +535,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
       <div class="mt-12 space-y-3 sm:hidden">
         {
           comparativo.map((linha) => (
-            <div class="reveal rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div class="reveal card-glow rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
               <p class="font-display font-bold text-navy-700">{linha.beneficio}</p>
               <div class="mt-3 flex flex-wrap gap-2">
                 {(
@@ -570,25 +581,29 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
             </thead>
             <tbody class="divide-y divide-gray-100">
               {
-                comparativo.map((linha) => (
+                comparativo.map((linha, row) => (
                   <tr class="transition hover:bg-navy-50/50">
                     <td class="px-5 py-4 font-semibold text-gray-700">{linha.beneficio}</td>
-                    <td class="bg-gold-50/60 px-4 py-4 text-center text-xl">
-                      <span aria-hidden="true" class={linha.callan ? 'text-green-600' : 'text-red-ea'}>{linha.callan ? '✔' : '✘'}</span>
-                      <span class="sr-only">{linha.callan ? 'Sim' : 'Não'}</span>
-                    </td>
-                    <td class="px-4 py-4 text-center text-xl">
-                      <span aria-hidden="true" class={linha.intercambio ? 'text-green-600' : 'text-red-ea'}>{linha.intercambio ? '✔' : '✘'}</span>
-                      <span class="sr-only">{linha.intercambio ? 'Sim' : 'Não'}</span>
-                    </td>
-                    <td class="px-4 py-4 text-center text-xl">
-                      <span aria-hidden="true" class={linha.gramatica ? 'text-green-600' : 'text-red-ea'}>{linha.gramatica ? '✔' : '✘'}</span>
-                      <span class="sr-only">{linha.gramatica ? 'Sim' : 'Não'}</span>
-                    </td>
-                    <td class="px-4 py-4 text-center text-xl">
-                      <span aria-hidden="true" class={linha.apps ? 'text-green-600' : 'text-red-ea'}>{linha.apps ? '✔' : '✘'}</span>
-                      <span class="sr-only">{linha.apps ? 'Sim' : 'Não'}</span>
-                    </td>
+                    {/* Os ✔/✘ "pipocam" em sequência quando a tabela aparece (.check-pop) */}
+                    {(
+                      [
+                        [linha.callan, true],
+                        [linha.intercambio, false],
+                        [linha.gramatica, false],
+                        [linha.apps, false],
+                      ] as [boolean, boolean][]
+                    ).map(([tem, destaque], col) => (
+                      <td class:list={['px-4 py-4 text-center text-xl', destaque && 'bg-gold-50/60']}>
+                        <span
+                          aria-hidden="true"
+                          class:list={['check-pop', tem ? 'text-green-600' : 'text-red-ea']}
+                          style={`--i: ${row * 4 + col}`}
+                        >
+                          {tem ? '✔' : '✘'}
+                        </span>
+                        <span class="sr-only">{tem ? 'Sim' : 'Não'}</span>
+                      </td>
+                    ))}
                   </tr>
                 ))
               }
@@ -648,7 +663,7 @@ const cardThemes: Record<string, { gradient: string; icon: string }> = {
       <div class="reveal mt-10 text-center">
         <a
           href="/unidades/"
-          class="inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white transition hover:bg-navy-600"
+          class="btn-shine inline-block rounded-full bg-navy-700 px-8 py-3.5 font-bold text-white shadow-md transition hover:bg-navy-600 hover:shadow-lg active:scale-[0.98]"
         >
           Ver todas as unidades →
         </a>

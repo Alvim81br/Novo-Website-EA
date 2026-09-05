@@ -108,3 +108,65 @@ alter table public.unit_sessions enable row level security;
 --
 -- Destravar quem errou o PIN 5 vezes, sem esperar os 15 minutos:
 --   update public.unit_access set failed_attempts = 0, locked_until = null where label = '...';
+
+-- ---------------------------------------------------------------------------
+-- Leads → CRM do SGEA (Cloud Function crmSiteLeadWebhook)
+-- ---------------------------------------------------------------------------
+--
+-- Todo lead novo é empurrado para o CRM da rede, que cria o contato e o card
+-- na primeira etapa do funil comercial, na unidade que a pessoa escolheu no
+-- site. O site NÃO muda por causa disso: ele continua gravando aqui com a anon
+-- key, e o painel de /painel/ continua lendo esta mesma tabela — o CRM é mais
+-- um leitor, não o dono. É de propósito: se o `fetch` do formulário apontasse
+-- para a função do SGEA, o cadastro de um lead passaria a depender de o SGEA
+-- estar de pé, e o lead que chegasse com ele fora se perderia.
+--
+-- Duas decisões que não se mudam sem pensar:
+--
+-- 1) É `pg_net` DIRETO, e não o `supabase_functions.http_request` dos
+--    "Database Webhooks" do painel. Aquele só existe depois de o recurso ser
+--    ligado por lá (é o que cria o schema `supabase_functions`), e um SQL que
+--    só funciona depois de um clique noutro lugar é um SQL que não funciona.
+--    O `pg_net` é ASSÍNCRONO — enfileira o pedido e devolve na hora —, então
+--    nem a lentidão nem a queda do SGEA seguram o INSERT do lead.
+--
+-- 2) A CHAVE (`x-ea-chave`) é gerada no SGEA, em Administração → CRM →
+--    Integrações → Leads do site, e é lá que este comando sai pronto para
+--    colar. Os dois lados precisam da mesma chave; sem ela a função responde
+--    401 e o lead fica gravado aqui como sempre. Rodar de novo (ao trocar a
+--    chave) SUBSTITUI — daí o `create or replace` e o `drop trigger if exists`.
+--
+-- O comando abaixo é o que está aplicado, com a chave trocada por um lembrete:
+
+create extension if not exists pg_net;
+
+-- create or replace function public.lead_para_o_crm()
+-- returns trigger
+-- language plpgsql
+-- security definer
+-- set search_path = public
+-- as $$
+-- begin
+--   perform net.http_post(
+--     url := 'https://us-central1-sgea-app.cloudfunctions.net/crmSiteLeadWebhook',
+--     body := jsonb_build_object('type', 'INSERT', 'table', 'leads', 'record', to_jsonb(new)),
+--     params := '{}'::jsonb,
+--     headers := jsonb_build_object(
+--       'Content-Type', 'application/json',
+--       'x-ea-chave', '<a chave que o SGEA gera>'
+--     ),
+--     timeout_milliseconds := 5000
+--   );
+--   return new;
+-- end;
+-- $$;
+--
+-- drop trigger if exists leads_para_o_crm on public.leads;
+--
+-- create trigger leads_para_o_crm
+--   after insert on public.leads
+--   for each row
+--   execute function public.lead_para_o_crm();
+--
+-- Conferir o que o gatilho mandou (as últimas chamadas e as respostas):
+--   select id, created, url, status_code from net._http_response order by created desc limit 20;
